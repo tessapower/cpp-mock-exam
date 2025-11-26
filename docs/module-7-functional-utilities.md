@@ -334,6 +334,503 @@ int main() {
 
 ---
 
+---
+
+## Understanding Lambdas: The Complete Guide
+
+**Lambda Syntax:**
+
+```cpp
+[capture](parameters) -> return_type { body }
+  ↑        ↑             ↑              ↑
+  |        |             |              |
+  |        |             |              Function body
+  |        |             Return type (often auto-deduced)
+  |        Parameters
+  Capture clause - access to external variables
+```
+
+**Capture Modes:**
+
+```cpp
+int x = 10, y = 20;
+
+// [=] - Capture all by value (copy)
+auto f1 = [=]() { return x + y; };  // x and y copied
+// x and y inside are const copies
+
+// [&] - Capture all by reference
+auto f2 = [&]() { x++; y++; };  // Can modify x and y
+
+// [x] - Capture x by value
+auto f3 = [x]() { return x * 2; };
+
+// [&x] - Capture x by reference  
+auto f4 = [&x]() { x *= 2; };
+
+// [=, &x] - Capture all by value except x by reference
+auto f5 = [=, &x]() { x = y; };
+
+// [&, x] - Capture all by reference except x by value
+auto f6 = [&, x]() { y = x; };
+
+// [this] - Capture this pointer in member function
+// [*this] - Capture object by value (C++17)
+```
+
+**Common Patterns:**
+
+```cpp
+std::vector<int> vec = {1, 2, 3, 4, 5};
+
+// Pattern 1: Stateless lambda (can convert to function pointer)
+auto is_even = [](int x) { return x % 2 == 0; };
+
+// Pattern 2: Mutable lambda (modify captured value copies)
+int count = 0;
+auto counter = [count]() mutable { return ++count; };
+std::cout << counter();  // 1
+std::cout << counter();  // 2
+std::cout << count;      // Still 0! Modified copy
+
+// Pattern 3: Generic lambda (C++14)
+auto print = [](const auto& x) { std::cout << x << '\n'; };
+print(42);       // Works with int
+print("hello");  // Works with string
+
+// Pattern 4: Init capture (C++14)
+auto ptr = std::make_unique<int>(42);
+auto f = [p = std::move(ptr)]() { return *p; };
+// ptr is now null, ownership moved into lambda
+```
+
+## Decision Guide: Choosing the Right Callable
+
+### Decision Tree
+
+```
+What do you need?
+
+SIMPLE, one-time function
+└─ Use lambda directly
+   auto f = [](int x) { return x * 2; };
+
+NEED TO STORE different callable types
+└─ Use std::function
+   std::function<int(int)> f;
+   f = [](int x) { return x * 2; };
+   f = &some_function;
+
+REUSABLE logic across codebase
+├─ Simple? → Lambda in common header
+└─ Complex? → Regular function
+
+PARTIAL function application (binding arguments)
+├─ Modern (C++11+) → Use lambda with capture
+│  auto add5 = [](int x) { return x + 5; };
+└─ Legacy → std::bind (avoid if possible)
+
+MEMBER function call
+├─ Simple → Lambda
+│  [obj](int x) { return obj.method(x); }
+└─ Need function object → std::mem_fn
+   auto f = std::mem_fn(&Class::method);
+```
+
+### Real-World Scenarios
+
+#### Scenario 1: Event System with Callbacks
+
+```cpp
+#include <functional>
+#include <vector>
+#include <iostream>
+
+class EventManager {
+    std::vector<std::function<void(int)>> listeners;
+    
+public:
+    void subscribe(std::function<void(int)> callback) {
+        listeners.push_back(callback);
+    }
+    
+    void notify(int value) {
+        for (auto& listener : listeners) {
+            listener(value);
+        }
+    }
+};
+
+int main() {
+    EventManager mgr;
+    
+    // Subscribe with lambda
+    mgr.subscribe([](int x) { 
+        std::cout << "Listener 1: " << x << '\n'; 
+    });
+    
+    // Subscribe with capturing lambda
+    int multiplier = 2;
+    mgr.subscribe([multiplier](int x) { 
+        std::cout << "Listener 2: " << (x * multiplier) << '\n'; 
+    });
+    
+    // Subscribe with named function
+    mgr.subscribe([](int x) {
+        if (x > 100) std::cout << "High value alert!\n";
+    });
+    
+    mgr.notify(50);   // All listeners called
+    mgr.notify(150);  // Triggers alert
+    
+    return 0;
+}
+```
+
+#### Scenario 2: Custom Sorting Logic
+
+```cpp
+struct Person {
+    std::string name;
+    int age;
+    double salary;
+};
+
+std::vector<Person> people = {
+    {"Alice", 30, 50000},
+    {"Bob", 25, 60000},
+    {"Charlie", 30, 55000}
+};
+
+// Sort by age, then by salary (descending), then by name
+std::sort(people.begin(), people.end(),
+    [](const Person& a, const Person& b) {
+        if (a.age != b.age) return a.age < b.age;
+        if (a.salary != b.salary) return a.salary > b.salary;
+        return a.name < b.name;
+    });
+
+// Filter high earners
+std::vector<Person> high_earners;
+std::copy_if(people.begin(), people.end(), 
+    std::back_inserter(high_earners),
+    [threshold = 55000.0](const Person& p) { 
+        return p.salary >= threshold; 
+    });
+```
+
+#### Scenario 3: State Machine with std::function
+
+```cpp
+#include <functional>
+#include <map>
+#include <iostream>
+
+enum class State { Idle, Running, Paused, Stopped };
+enum class Event { Start, Pause, Resume, Stop };
+
+class StateMachine {
+    State current = State::Idle;
+    using Transition = std::function<State(State)>;
+    std::map<std::pair<State, Event>, Transition> transitions;
+    
+public:
+    StateMachine() {
+        // Define transitions
+        transitions[{State::Idle, Event::Start}] = 
+            [](State) { 
+                std::cout << "Starting...\n"; 
+                return State::Running; 
+            };
+            
+        transitions[{State::Running, Event::Pause}] = 
+            [](State) { 
+                std::cout << "Pausing...\n"; 
+                return State::Paused; 
+            };
+            
+        transitions[{State::Paused, Event::Resume}] = 
+            [](State) { 
+                std::cout << "Resuming...\n"; 
+                return State::Running; 
+            };
+            
+        transitions[{State::Running, Event::Stop}] = 
+            [](State) { 
+                std::cout << "Stopping...\n"; 
+                return State::Stopped; 
+            };
+    }
+    
+    void handleEvent(Event e) {
+        auto key = std::make_pair(current, e);
+        if (transitions.count(key)) {
+            current = transitions[key](current);
+        } else {
+            std::cout << "Invalid transition!\n";
+        }
+    }
+};
+```
+
+#### Scenario 4: Lazy Evaluation with std::function
+
+```cpp
+#include <functional>
+#include <iostream>
+#include <cmath>
+
+class LazyValue {
+    std::function<double()> computation;
+    mutable double cached_value = 0;
+    mutable bool computed = false;
+    
+public:
+    LazyValue(std::function<double()> comp) : computation(comp) {}
+    
+    double get() const {
+        if (!computed) {
+            cached_value = computation();
+            computed = true;
+        }
+        return cached_value;
+    }
+};
+
+int main() {
+    // Expensive computation only happens when needed
+    LazyValue expensive([](){ 
+        std::cout << "Computing...\n";
+        return std::sqrt(12345.6789);
+    });
+    
+    // Not computed yet
+    std::cout << "Created lazy value\n";
+    
+    // First access - triggers computation
+    std::cout << expensive.get() << '\n';
+    
+    // Second access - uses cached value
+    std::cout << expensive.get() << '\n';
+    
+    return 0;
+}
+```
+
+### Common Mistakes and Solutions
+
+#### Mistake 1: Dangling References in Captures
+
+```cpp
+std::function<int()> create_function() {
+    int local = 42;
+    
+    // ❌ DANGER - captures reference to local variable!
+    return [&local]() { return local; };
+    // local is destroyed when function returns!
+}
+
+// ✅ CORRECT - capture by value
+std::function<int()> create_function() {
+    int local = 42;
+    return [local]() { return local; };
+    // Copy of local stored in lambda
+}
+```
+
+#### Mistake 2: Forgetting mutable for Modifying Captures
+
+```cpp
+int count = 0;
+
+// ❌ WRONG - trying to modify const capture
+auto bad = [count]() { count++; };  // Compile error!
+
+// ✅ CORRECT - mutable lambda
+auto good = [count]() mutable { return ++count; };
+
+// Note: Modifies copy, not original
+std::cout << good();  // 1
+std::cout << good();  // 2
+std::cout << count;   // Still 0
+```
+
+#### Mistake 3: Using std::bind When Lambda is Clearer
+
+```cpp
+void process(int x, int y, int z) {
+    std::cout << x + y + z << '\n';
+}
+
+// ❌ UGLY - std::bind with placeholders
+auto f1 = std::bind(process, 10, std::placeholders::_1, std::placeholders::_2);
+f1(20, 30);  // Calls process(10, 20, 30)
+
+// ✅ CLEAR - lambda
+auto f2 = [](int y, int z) { process(10, y, z); };
+f2(20, 30);  // Much clearer intent
+
+// Lambda advantages:
+// - More readable
+// - Better optimization
+// - Easier debugging
+// - Type-safe
+```
+
+#### Mistake 4: Unnecessary std::function Overhead
+
+```cpp
+// ❌ SLOW - unnecessary type erasure
+void process_vector(const std::vector<int>& vec, 
+                   std::function<bool(int)> pred) {
+    // Type erasure overhead on every call
+}
+
+// ✅ FAST - template with auto deduction
+template<typename Pred>
+void process_vector(const std::vector<int>& vec, Pred pred) {
+    // Can inline the predicate!
+}
+
+// Or C++20 concepts:
+void process_vector(const std::vector<int>& vec, 
+                   auto pred) {
+    // Same performance, cleaner syntax
+}
+```
+
+### Lambda Performance Analysis
+
+**Zero-Cost Abstraction:**
+
+```cpp
+// These compile to identical machine code:
+
+// Manual loop
+int sum1 = 0;
+for (const auto& x : vec) {
+    if (x % 2 == 0) sum1 += x;
+}
+
+// Lambda with algorithm
+int sum2 = 0;
+std::for_each(vec.begin(), vec.end(), 
+    [&sum2](int x) { if (x % 2 == 0) sum2 += x; });
+
+// Both optimize to the same assembly!
+```
+
+**When Performance Matters:**
+
+```cpp
+// ✅ FAST - Lambda inlined
+std::sort(vec.begin(), vec.end(), 
+    [](int a, int b) { return a < b; });
+
+// ⚠️ SLOWER - Virtual call overhead
+std::function<bool(int, int)> comp = 
+    [](int a, int b) { return a < b; };
+std::sort(vec.begin(), vec.end(), comp);
+
+// Performance difference:
+// - Lambda: ~0 overhead (inlined)
+// - std::function: ~10-100ns per call (virtual dispatch)
+```
+
+### Member Function Utilities
+
+**std::mem_fn - Calling Member Functions:**
+
+```cpp
+struct Person {
+    std::string name;
+    int age;
+    
+    void print() const {
+        std::cout << name << ": " << age << '\n';
+    }
+    
+    int getAge() const { return age; }
+};
+
+std::vector<Person> people = {
+    {"Alice", 30},
+    {"Bob", 25},
+    {"Charlie", 35}
+};
+
+// Using std::mem_fn
+auto get_age = std::mem_fn(&Person::getAge);
+std::vector<int> ages;
+std::transform(people.begin(), people.end(), 
+              std::back_inserter(ages), get_age);
+// ages: {30, 25, 35}
+
+// Modern alternative: lambda (clearer!)
+std::transform(people.begin(), people.end(), 
+              std::back_inserter(ages),
+              [](const Person& p) { return p.getAge(); });
+```
+
+**std::reference_wrapper - Storing References:**
+
+```cpp
+#include <functional>
+#include <vector>
+#include <iostream>
+
+int main() {
+    int a = 10, b = 20, c = 30;
+    
+    // Can't store references directly in vector
+    // std::vector<int&> refs;  // Compile error!
+    
+    // ✅ Use std::ref to create reference_wrapper
+    std::vector<std::reference_wrapper<int>> refs;
+    refs.push_back(std::ref(a));
+    refs.push_back(std::ref(b));
+    refs.push_back(std::ref(c));
+    
+    // Modify through references
+    for (auto& ref : refs) {
+        ref.get() *= 2;
+    }
+    
+    std::cout << a << " " << b << " " << c;  // 20 40 60
+    
+    return 0;
+}
+```
+
+### Best Practices Summary
+
+**When to Use Each:**
+
+| Feature | Use When | Avoid When |
+|---------|----------|------------|
+| Lambda | Almost always | Never! |
+| std::function | Need type erasure, store different callables | Performance critical, know exact type |
+| std::bind | Legacy code | New code (use lambda) |
+| Functors | Heavy state, reused across files | Simple one-off operations |
+| Function pointers | C API compatibility | Modern C++ code |
+| std::mem_fn | Calling member functions in algorithms | Simple cases (lambda clearer) |
+
+**Capture Guidelines:**
+
+- ✅ Capture by value `[=]` for small, cheap-to-copy types
+- ✅ Capture by reference `[&]` when you need to modify or avoid copies
+- ⚠️ Be careful with reference captures - they can dangle!
+- ✅ Use init capture `[x = expr]` for move-only types
+- ❌ Avoid capturing `this` by reference `[&]` - use `[this]` explicitly
+
+**Performance Guidelines:**
+
+- ✅ Use lambdas directly in algorithms (inlined)
+- ⚠️ Use `std::function` only when necessary (virtual call overhead)
+- ✅ Template parameters preserve type for optimization
+- ✅ Capture by reference to avoid copies of large objects
+- ❌ Don't use `std::function` in hot loops if avoidable
+
 ## Key Takeaways
 
 ✅ **std::function** - type-erased callable wrapper  

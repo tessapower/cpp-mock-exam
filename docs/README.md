@@ -1,10 +1,36 @@
 # C++ Certified Professional Programmer (CPP) Study Guide
 
-Welcome to the comprehensive study guide for the C++ Institute's CPP certification exam! This wiki covers all 9 modules of the exam with detailed explanations, examples, and references.
+Welcome to the **comprehensive teaching resource** for the C++ Institute's 
+CPP certification exam! This documentation covers content for 9 modules of the 
+exam with:
 
-## 📚 Table of Contents
+- **Detailed conceptual explanations** - Understand the "why" behind each concept
+- **Internal implementation details** - Learn how things work under the hood
+- **Visual diagrams and walk-throughs** - See concepts illustrated
+- **Real-world scenarios** - Apply knowledge to practical problems
+- **Decision-making guides** - Choose the right tool for the job
+- **Common mistakes and solutions** - Avoid pitfalls proactively
+- **Performance analysis** - Understand trade-offs
 
-### Exam Modules
+## 🚀 Practice Exam
+
+Ready to test your knowledge? Try the [C++ Advanced Mock Exam](../README.md)!
+
+- Mix of conceptual and code-based questions
+- Instant feedback with explanations
+- Progress tracking and history
+- Simulates real exam conditions
+
+## ⚡ Quick Reference
+
+Need a quick refresher? Check the [Quick Reference Cheat Sheet](./quick-reference.md) for:
+
+- Complexity tables
+- Common patterns
+- Algorithm selection guides
+- Container comparison charts
+
+## Exam Modules
 
 1. **[Sequence Containers and Container Adapters](./module-1-sequence-containers.md)**
    - `std::vector`, `std::deque`, `std::list`, `std::forward_list`, `std::array`
@@ -37,18 +63,14 @@ Welcome to the comprehensive study guide for the C++ Institute's CPP certificati
 
 ## 🎯 Exam Information
 
-- **Total Questions**: 40 (randomly selected)
+- **Total Questions**: 40 questions (randomly selected from question bank)
+- **Question Types**: Mix of single-choice and multiple-choice questions
+- **Format**: Single-choice (radio buttons) or multiple-choice (checkboxes - count shown)
 - **Duration**: 65 minutes
 - **Passing Score**: 70% (28/40 correct)
-- **Question Types**: Mix of single-choice and multiple-choice
+- **Coverage**: 9 modules covering STL containers, algorithms, I/O, and templates
 
-## 🚀 Practice Exam
-
-Ready to test your knowledge? Try the [C++ Advanced Mock Exam](../README.md)!
-
-## ⚡ Quick Reference
-
-Need a quick refresher? Check the [Quick Reference Cheat Sheet](./quick-reference.md) for complexity tables and common patterns.
+---
 
 ## 📖 Additional Resources
 
@@ -56,15 +78,6 @@ Need a quick refresher? Check the [Quick Reference Cheat Sheet](./quick-referenc
 - [C++ Institute Official Website](https://cppinstitute.org/)
 - [ISO C++ Standard](https://isocpp.org/)
 
-## 💡 Study Tips
-
-1. **Understand Time Complexity**: Know the performance characteristics of each container and algorithm
-2. **Practice Code Examples**: Don't just read - write and compile code
-3. **Use cppreference**: Familiarize yourself with reading standard library documentation
-4. **Focus on Differences**: Understand when to use one container/algorithm over another
-5. **Master Iterator Concepts**: Many STL operations rely on iterator types
-
 ---
 
 Good luck with your CPP certification! 🎓
-

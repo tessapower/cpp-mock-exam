@@ -2,7 +2,64 @@
 
 ## Overview
 
-Sorting algorithms and binary search operations for efficient data manipulation.
+**What Makes Sorting Special?**
+
+Sorting is one of the most fundamental operations in computer science. Once data is sorted, many other operations become dramatically faster - searching changes from O(n) to O(log n), finding duplicates becomes trivial, and range queries are possible.
+
+**The Big Picture:**
+
+```
+Unsorted data: [3, 1, 4, 1, 5, 9, 2, 6]
+- Finding 5: Must check each element (O(n))
+- Finding duplicates: Must compare all pairs (O(n²))
+- Range queries: Must scan everything (O(n))
+
+Sorted data: [1, 1, 2, 3, 4, 5, 6, 9]
+- Finding 5: Binary search (O(log n))
+- Finding duplicates: Check adjacent elements (O(n))
+- Range queries: Find start and end (O(log n))
+```
+
+**Critical Concept: Strict Weak Ordering**
+
+This is THE most important concept for sorting. Your comparator MUST satisfy these rules or you get undefined behavior:
+
+1. **Irreflexivity**: `comp(a, a)` must be false
+   - Nothing is less than itself
+
+2. **Asymmetry**: If `comp(a, b)` is true, then `comp(b, a)` must be false
+   - If a < b, then b is not < a
+
+3. **Transitivity**: If `comp(a, b)` and `comp(b, c)`, then `comp(a, c)`
+   - If a < b and b < c, then a < c
+
+4. **Equivalence Transitivity**: If a==b and b==c, then a==c
+   - Equality is transitive
+
+**Common Violations (Bugs!):**
+
+```cpp
+// ❌ WRONG - violates irreflexivity
+[](int a, int b) { return a <= b; }  // a <= a is true!
+
+// ❌ WRONG - violates transitivity
+// Comparing strings by first letter only
+[](const string& a, const string& b) { return a[0] < b[0]; }
+// "apple" < "banana" (a < b) ✓
+// "banana" < "berry" (b < b) ✗ - not transitive!
+
+// ✅ CORRECT
+[](int a, int b) { return a < b; }
+```
+
+**The Sorting Family:**
+
+| Algorithm | Stable? | Complexity | Use When |
+|-----------|---------|------------|----------|
+| `sort` | No | O(n log n) | Default choice - fastest |
+| `stable_sort` | Yes | O(n log n) | Need to preserve order of equal elements |
+| `partial_sort` | No | O(n log k) | Only need top k elements |
+| `nth_element` | No | O(n) avg | Only need element at position n |
 
 📖 [cppreference: Sorting operations](https://en.cppreference.com/w/cpp/algorithm)
 
@@ -11,7 +68,30 @@ Sorting algorithms and binary search operations for efficient data manipulation.
 ## Sorting Algorithms
 
 ### std::sort
-**Unstable sort - O(n log n) average**
+**Unstable sort - O(n log n) average - Your default choice**
+
+**What "Unstable" Means:**
+
+```cpp
+struct Person {
+    std::string name;
+    int age;
+};
+
+std::vector<Person> people = {
+    {"Alice", 25},
+    {"Bob", 25},    // Same age as Alice
+    {"Charlie", 30}
+};
+
+// Sort by age (unstable)
+std::sort(people.begin(), people.end(),
+    [](const Person& a, const Person& b) { return a.age < b.age; });
+
+// Alice and Bob might swap order! (both age 25)
+// Result could be: {Bob, Alice, Charlie} or {Alice, Bob, Charlie}
+// No guarantee which comes first
+```
 
 ```cpp
 #include <algorithm>
@@ -21,32 +101,92 @@ Sorting algorithms and binary search operations for efficient data manipulation.
 int main() {
     std::vector<int> vec = {3, 1, 4, 1, 5, 9, 2, 6};
     
-    // Sort ascending
+    // Sort ascending (default: uses operator<)
     std::sort(vec.begin(), vec.end());
     // vec: {1, 1, 2, 3, 4, 5, 6, 9}
     
-    // Sort descending
+    // Sort descending (use std::greater)
     std::sort(vec.begin(), vec.end(), std::greater<int>());
     // vec: {9, 6, 5, 4, 3, 2, 1, 1}
     
-    // Custom comparator
+    // Custom comparator - sort by length
     std::vector<std::string> words = {"apple", "pie", "zoo", "a"};
     std::sort(words.begin(), words.end(),
               [](const std::string& a, const std::string& b) {
-                  return a.length() < b.length();
+                  return a.length() < b.length();  // ✅ Correct: strict weak ordering
               });
     // words: {"a", "pie", "zoo", "apple"}
+    
+    // Complex example: sort by multiple criteria
+    struct Person {
+        std::string name;
+        int age;
+    };
+    
+    std::vector<Person> people = {
+        {"Alice", 30},
+        {"Bob", 25},
+        {"Charlie", 30},
+        {"David", 25}
+    };
+    
+    // Sort by age first, then by name
+    std::sort(people.begin(), people.end(),
+        [](const Person& a, const Person& b) {
+            if (a.age != b.age) {
+                return a.age < b.age;  // Sort by age first
+            }
+            return a.name < b.name;     // If ages equal, sort by name
+        });
+    // Result: {Bob, David, Alice, Charlie}
+    //         (25) (25)   (30)   (30)
     
     return 0;
 }
 ```
+
+**When to Use:**
+- ✅ General-purpose sorting (default choice)
+- ✅ Don't need stable order
+- ✅ Want fastest possible sort
+
+**When NOT to Use:**
+- ❌ Need to preserve relative order of equal elements (use `stable_sort`)
+- ❌ Only need partial results (use `partial_sort`)
+- ❌ Only need nth element (use `nth_element`)
 
 📖 [cppreference: std::sort](https://en.cppreference.com/w/cpp/algorithm/sort)
 
 ### std::stable_sort
 **Stable sort - preserves relative order of equal elements**
 
+**Why Stability Matters:**
+
 ```cpp
+struct Email {
+    std::string sender;
+    std::time_t timestamp;
+};
+
+std::vector<Email> inbox = {
+    {"alice@ex.com", 1000},
+    {"bob@ex.com", 1001},
+    {"alice@ex.com", 1002},  // Later email from Alice
+    {"charlie@ex.com", 1003}
+};
+
+// Emails already sorted by time
+// Now sort by sender, but keep time order within each sender
+
+std::stable_sort(inbox.begin(), inbox.end(),
+    [](const Email& a, const Email& b) { return a.sender < b.sender; });
+
+// Result: Alice's emails still in time order!
+// {alice@ex.com:1000, alice@ex.com:1002, bob@ex.com:1001, charlie@ex.com:1003}
+//  ↑ Earlier           ↑ Later
+```
+
+### std::stable_sort
 #include <algorithm>
 #include <vector>
 #include <iostream>
@@ -281,6 +421,275 @@ auto wrong = [](int a, int b) { return a <= b; };  // Not asymmetric!
 | Binary search ops | O(log n) | N/A |
 
 ---
+
+---
+
+## Understanding Binary Search Requirements
+
+**The Golden Rule: Data MUST Be Sorted!**
+
+Binary search algorithms only work correctly on sorted data. Using them on unsorted data gives wrong results (not errors!).
+
+```cpp
+std::vector<int> unsorted = {5, 2, 8, 1, 9};
+
+// ❌ WRONG RESULT - not sorted!
+bool found = std::binary_search(unsorted.begin(), unsorted.end(), 2);
+// Might return false even though 2 exists!
+
+// ✅ CORRECT - sort first
+std::sort(unsorted.begin(), unsorted.end());
+bool found = std::binary_search(unsorted.begin(), unsorted.end(), 2);
+// Returns true
+```
+
+**How Binary Search Works:**
+
+```
+Sorted array: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+Find 6:
+
+Step 1: Check middle (5)
+        [1, 2, 3, 4, 5] | [6, 7, 8, 9]
+        6 > 5, search right half →
+
+Step 2: Check middle of right (7)
+        [6] | [7, 8, 9]
+        6 < 7, search left half →
+
+Step 3: Check [6]
+        Found!
+
+Only 3 comparisons instead of 9!
+```
+
+## Sorting Algorithm Selection Guide
+
+### Decision Tree
+
+```
+What do you need?
+
+FULLY SORTED array
+├─ Don't need stable? → std::sort (fastest)
+└─ Need stable? → std::stable_sort
+
+PARTIALLY SORTED
+├─ Need first k elements sorted? → std::partial_sort
+└─ Need element at position k? → std::nth_element (fastest)
+
+CHECK IF SORTED
+├─ Boolean check? → std::is_sorted
+└─ Find where it stops being sorted? → std::is_sorted_until
+
+SEARCH IN SORTED DATA  
+├─ Does element exist? → std::binary_search
+├─ Find position? → std::lower_bound / std::upper_bound
+└─ Find range of equal elements? → std::equal_range
+```
+
+### Real-World Scenarios
+
+#### Scenario 1: Top-K Elements
+**Problem:** Find top 10 scores from 1 million scores
+
+```cpp
+std::vector<int> scores(1'000'000);
+// ... fill with scores ...
+
+// ❌ SLOW - sorts everything
+std::sort(scores.begin(), scores.end(), std::greater<int>());
+auto top10 = std::vector<int>(scores.begin(), scores.begin() + 10);
+// Time: O(n log n) for n=1,000,000
+
+// ✅ FAST - only sorts top 10
+std::partial_sort(scores.begin(), scores.begin() + 10, scores.end(),
+                 std::greater<int>());
+auto top10 = std::vector<int>(scores.begin(), scores.begin() + 10);
+// Time: O(n log k) for k=10 - MUCH faster!
+```
+
+#### Scenario 2: Finding Median
+**Problem:** Find median value in large dataset
+
+```cpp
+std::vector<int> data = {5, 2, 9, 1, 7, 6, 3};
+
+// ❌ OVERKILL - sorts everything
+std::sort(data.begin(), data.end());
+int median = data[data.size() / 2];
+// O(n log n)
+
+// ✅ OPTIMAL - only positions median correctly
+std::nth_element(data.begin(), data.begin() + data.size()/2, data.end());
+int median = data[data.size() / 2];
+// O(n) average - much faster for large datasets!
+```
+
+#### Scenario 3: Checking Duplicates in Sorted Data
+**Problem:** Find if array has duplicates
+
+```cpp
+std::vector<int> numbers = {1, 2, 3, 4, 5};
+
+// Method 1: Use set (O(n log n))
+std::set<int> unique(numbers.begin(), numbers.end());
+bool has_duplicates = (unique.size() != numbers.size());
+
+// Method 2: Sort + adjacent check (O(n log n) + O(n))
+std::sort(numbers.begin(), numbers.end());
+bool has_duplicates = std::adjacent_find(numbers.begin(), numbers.end()) 
+                     != numbers.end();
+
+// Method 3: If already sorted, just check adjacent
+if (std::is_sorted(numbers.begin(), numbers.end())) {
+    bool has_duplicates = std::adjacent_find(numbers.begin(), numbers.end())
+                         != numbers.end();  // O(n) only!
+}
+```
+
+#### Scenario 4: Maintaining Sorted Insertion
+**Problem:** Keep vector sorted as elements are added
+
+```cpp
+std::vector<int> sorted_vec;
+
+void insert_sorted(int value) {
+    // Find insertion point - O(log n)
+    auto it = std::lower_bound(sorted_vec.begin(), sorted_vec.end(), value);
+    
+    // Insert at correct position - O(n) due to shifting
+    sorted_vec.insert(it, value);
+    
+    // Note: For frequent insertions, consider std::set instead!
+    // Set insertion is O(log n) without shifting
+}
+
+// Better alternative for many insertions:
+std::set<int> sorted_set;
+sorted_set.insert(value);  // O(log n) with no shifting
+```
+
+### Common Mistakes with Comparators
+
+#### Mistake 1: Using <= Instead of <
+
+```cpp
+// ❌ UNDEFINED BEHAVIOR - violates strict weak ordering
+std::sort(vec.begin(), vec.end(), 
+    [](int a, int b) { return a <= b; });
+// Problem: comp(a, a) returns true (violates irreflexivity)
+
+// ✅ CORRECT
+std::sort(vec.begin(), vec.end(),
+    [](int a, int b) { return a < b; });
+```
+
+#### Mistake 2: Inconsistent Comparison
+
+```cpp
+struct Person {
+    std::string first, last;
+    int age;
+};
+
+// ❌ WRONG - inconsistent logic
+auto comp = [](const Person& a, const Person& b) {
+    if (rand() % 2) return a.age < b.age;
+    else return a.first < b.first;
+    // Violates transitivity!
+};
+
+// ✅ CORRECT - deterministic, transitive
+auto comp = [](const Person& a, const Person& b) {
+    if (a.age != b.age) return a.age < b.age;
+    if (a.first != b.first) return a.first < b.first;
+    return a.last < b.last;
+};
+```
+
+#### Mistake 3: Binary Search on Unsorted Data
+
+```cpp
+std::vector<int> vec = {5, 2, 8, 1, 9};
+
+// ❌ WRONG RESULTS - data not sorted!
+if (std::binary_search(vec.begin(), vec.end(), 2)) {
+    // Might not find 2 even though it exists!
+}
+
+// ✅ CORRECT - sort first
+std::sort(vec.begin(), vec.end());
+if (std::binary_search(vec.begin(), vec.end(), 2)) {
+    // Now reliable
+}
+
+// Or use non-sorted search:
+if (std::find(vec.begin(), vec.end(), 2) != vec.end()) {
+    // Works on unsorted data, but O(n) instead of O(log n)
+}
+```
+
+### Performance Comparison
+
+| Algorithm | Best | Average | Worst | Stable? | Use Case |
+|-----------|------|---------|-------|---------|----------|
+| sort | O(n log n) | O(n log n) | O(n log n) | No | General sorting |
+| stable_sort | O(n log n) | O(n log n) | O(n log² n) | Yes | Preserve order |
+| partial_sort | O(n log k) | O(n log k) | O(n log k) | No | Top k elements |
+| nth_element | O(n) | O(n) | O(n²)* | No | Median, percentiles |
+| binary_search | O(log n) | O(log n) | O(log n) | N/A | Existence check |
+| lower_bound | O(log n) | O(log n) | O(log n) | N/A | Insert position |
+
+*Typically O(n) average with good implementations
+
+### Understanding lower_bound vs upper_bound
+
+**This confuses everyone at first!**
+
+```cpp
+std::vector<int> vec = {1, 2, 2, 2, 3, 4, 5};
+//                       0  1  2  3  4  5  6
+
+// lower_bound: First element >= value
+auto it1 = std::lower_bound(vec.begin(), vec.end(), 2);
+std::cout << (it1 - vec.begin());  // 1 (first 2)
+
+// upper_bound: First element > value  
+auto it2 = std::upper_bound(vec.begin(), vec.end(), 2);
+std::cout << (it2 - vec.begin());  // 4 (first element after 2s)
+
+// equal_range: Pair of lower_bound and upper_bound
+auto [lower, upper] = std::equal_range(vec.begin(), vec.end(), 2);
+std::cout << (upper - lower);  // 3 (count of 2s)
+
+// Visual:
+//        [1, 2, 2, 2, 3, 4, 5]
+//            ↑        ↑
+//         lower    upper
+//         (first >=) (first >)
+```
+
+**Practical Use:**
+
+```cpp
+// Insert value while keeping sorted
+void insert_sorted(std::vector<int>& vec, int value) {
+    auto it = std::lower_bound(vec.begin(), vec.end(), value);
+    vec.insert(it, value);
+}
+
+// Count occurrences in sorted vector
+int count_in_sorted(const std::vector<int>& vec, int value) {
+    auto [lower, upper] = std::equal_range(vec.begin(), vec.end(), value);
+    return upper - lower;
+}
+
+// Find all elements in range [a, b]
+auto lower = std::lower_bound(vec.begin(), vec.end(), a);
+auto upper = std::upper_bound(vec.begin(), vec.end(), b);
+std::vector<int> range(lower, upper);
+```
 
 ## Key Takeaways
 
