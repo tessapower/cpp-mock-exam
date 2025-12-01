@@ -1,6 +1,9 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight, Flag } from 'lucide-react';
 import type { Question } from '../types/exam.types';
+import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 interface QuestionCardProps {
   question: Question;
@@ -31,7 +34,36 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     <div className="bg-white rounded-lg shadow-lg p-8">
       <div className="mb-6">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-          {question.question}
+          <ReactMarkdown
+            components={{
+              code(codeProps: any) {
+                const { inline, children, className } = codeProps;
+                const languageMatch = /language-(\w+)/.exec(className || '');
+
+                if (inline || !languageMatch) {
+                  return (
+                    <code className="bg-gray-100 rounded px-1 py-0.5 text-sm">
+                      {children}
+                    </code>
+                  );
+                }
+
+                const language = languageMatch[1];
+                return (
+                  <SyntaxHighlighter
+                    style={oneDark}
+                    language={language}
+                    PreTag="div"
+                    className="rounded-md text-sm my-2"
+                  >
+                    {String(children).replace(/\n$/, '')}
+                  </SyntaxHighlighter>
+                );
+              }
+            }}
+          >
+            {question.question}
+          </ReactMarkdown>
         </h2>
 
         <div className={`inline-block px-4 py-2 rounded-lg text-sm font-semibold mb-6 ${
@@ -118,4 +150,3 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 };
 
 export default QuestionCard;
-

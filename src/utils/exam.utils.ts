@@ -9,6 +9,15 @@ export const selectRandomQuestions = (questionBank: Question[], count: number): 
 };
 
 /**
+ * Select random questions from a specific module
+ */
+export const selectModuleQuestions = (questionBank: Question[], moduleNumber: number, count: number): Question[] => {
+  const moduleQuestions = questionBank.filter(q => q.module === moduleNumber);
+  const shuffled = [...moduleQuestions].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, Math.min(count, moduleQuestions.length));
+};
+
+/**
  * Format time in MM:SS format
  */
 export const formatTime = (seconds: number): string => {

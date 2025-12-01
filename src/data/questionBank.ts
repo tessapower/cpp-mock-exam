@@ -2172,7 +2172,7 @@ export const QuestionBank: Question[] = [
     id: 154,
     type: "multiple",
     module: 4,
-    question: "What happens with this code?\n```cpp\nstd::vector<int> v = {1, 1, 2, 2, 3, 3};\nauto new_end = std::unique(v.begin(), v.end());\nv.erase(new_end, v.end());\n```",
+    question: "What is the output?\n```cpp\nstd::vector<int> v = {1, 1, 2, 2, 3, 3};\nauto new_end = std::unique(v.begin(), v.end());\nv.erase(new_end, v.end());\n```",
     options: [
       "v becomes {1, 2, 3}",
       "v size becomes 3",
@@ -2180,7 +2180,7 @@ export const QuestionBank: Question[] = [
       "All duplicates are removed"
     ],
     correct: [0, 1],
-    explanation: "unique removes consecutive duplicates, then erase actually removes them. v becomes {1,2,3}."
+    explanation: "unique removes consecutive duplicates, returns new end, works best after sorting. It doesn't actually delete - use erase for that."
   },
   {
     id: 155,
@@ -2384,21 +2384,21 @@ export const QuestionBank: Question[] = [
     id: 169,
     type: "multiple",
     module: 5,
-    question: "Which are correct about this code?\n```cpp\nstd::vector<int> v = {1, 2, 3, 4, 5};\nauto [lower, upper] = std::equal_range(v.begin(), v.end(), 3);\n```",
+    question: "Which statements are true about std::partial_sort?",
     options: [
-      "lower points to element with value 3",
-      "upper points to element with value 4",
-      "Uses C++17 structured bindings",
-      "Range is [lower, upper)"
+      "Sorts the entire range",
+      "Guarantees that the range is fully sorted",
+      "Is stable",
+      "Can be more efficient than sort when only a portion needs sorting"
     ],
-    correct: [0, 2],
-    explanation: "equal_range returns [lower_bound, upper_bound). Uses structured bindings (C++17). upper points to first >3."
+    correct: [3],
+    explanation: "partial_sort only sorts the specified range [first, middle) and is not stable. It's faster than sort only when the sorted portion is small."
   },
   {
     id: 170,
     type: "single",
     module: 5,
-    question: "What happens?\n```cpp\nstd::vector<int> v = {1, 2, 3};\nstd::sort(v.begin(), v.end(), [](int a, int b){ return a <= b; });\n```",
+    question: "What is the output?\n```cpp\nstd::vector<int> v = {1, 2, 3};\nstd::sort(v.begin(), v.end(), [](int a, int b){ return a <= b; });\n```",
     options: [
       "Sorts ascending",
       "Sorts descending",
@@ -2695,6 +2695,1842 @@ export const QuestionBank: Question[] = [
     ],
     correct: [1],
     explanation: "sizeof...(args) returns number of arguments. Output: 5."
+  },
+  {
+    id: 191,
+    type: "single",
+    module: 1,
+    question: "Which operation on std::vector is most likely to invalidate all iterators?",
+    options: [
+      "push_back when capacity is sufficient",
+      "push_back when reallocation occurs",
+      "front()",
+      "operator[]"
+    ],
+    correct: [1],
+    explanation: "When std::vector needs to reallocate (typically when size exceeds capacity), all iterators, pointers, and references to its elements are invalidated."
+  },
+  {
+    id: 192,
+    type: "single",
+    module: 1,
+    question: "Which container is best suited for frequent insertions and erasures in the middle with stable iterators?",
+    options: [
+      "std::vector",
+      "std::deque",
+      "std::list",
+      "std::array"
+    ],
+    correct: [2],
+    explanation: "std::list provides stable iterators and efficient insertion/erasure anywhere in the list given an iterator, at the cost of cache locality."
+  },
+  {
+    id: 193,
+    type: "single",
+    module: 1,
+    question: "Which container guarantees that taking the address of an element remains valid as long as the element is not erased?",
+    options: [
+      "std::vector",
+      "std::list",
+      "std::deque",
+      "std::forward_list"
+    ],
+    correct: [1],
+    explanation: "For std::list, elements are individually allocated nodes and are never moved in memory except when erased, so pointers and references remain valid."
+  },
+  {
+    id: 194,
+    type: "multiple",
+    module: 1,
+    question: "Which statements about std::vector::reserve are correct?",
+    options: [
+      "reserve may increase capacity but never decreases it",
+      "reserve changes the vector's size",
+      "reserve can prevent multiple reallocations during push_back",
+      "reserve invalidates all iterators if reallocation occurs"
+    ],
+    correct: [0, 2, 3],
+    explanation: "reserve only affects capacity, not size. It can reduce reallocations when many insertions are expected, and if it triggers a reallocation, existing iterators become invalid."
+  },
+  {
+    id: 195,
+    type: "single",
+    module: 1,
+    question: "Which container adapter exposes front() and back() but not random access by index?",
+    options: [
+      "std::stack",
+      "std::queue",
+      "std::priority_queue",
+      "std::array"
+    ],
+    correct: [1],
+    explanation: "std::queue provides access to the front and back elements but deliberately hides random access to enforce FIFO semantics."
+  },
+  {
+    id: 196,
+    type: "single",
+    module: 1,
+    question: "Which container has the best cache locality for sequential iteration over many elements?",
+    options: [
+      "std::list",
+      "std::vector",
+      "std::deque",
+      "std::forward_list"
+    ],
+    correct: [1],
+    explanation: "std::vector stores elements contiguously in memory, which usually results in superior cache performance during sequential access."
+  },
+  {
+    id: 197,
+    type: "single",
+    module: 1,
+    question: "What is the effect of calling shrink_to_fit() on a std::vector?",
+    options: [
+      "It must reduce capacity to match size",
+      "It requests but does not guarantee capacity reduction",
+      "It also changes the vector's size",
+      "It is not provided by std::vector"
+    ],
+    correct: [1],
+    explanation: "shrink_to_fit is a non-binding request to reduce capacity; an implementation may choose to ignore it. It never changes size."
+  },
+  {
+    id: 198,
+    type: "single",
+    module: 1,
+    question: "Which sequential container does NOT support constant-time size() in the C++ standard?",
+    options: [
+      "std::vector",
+      "std::deque",
+      "std::list",
+      "std::forward_list"
+    ],
+    correct: [3],
+    explanation: "std::forward_list intentionally omits size() to avoid requiring O(n) tracking; size() can be computed manually by iterating if needed."
+  },
+  {
+    id: 199,
+    type: "single",
+    module: 1,
+    question: "Which container is most appropriate to implement a FIFO queue with efficient push and pop at opposite ends?",
+    options: [
+      "std::vector",
+      "std::deque",
+      "std::list",
+      "std::array"
+    ],
+    correct: [1],
+    explanation: "std::deque supports efficient insertion and removal at both the front and back, making it a natural underlying container for queue-like behavior."
+  },
+  {
+    id: 200,
+    type: "single",
+    module: 1,
+    question: "What is the complexity of inserting an element in the middle of a std::vector?",
+    options: [
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "Amortized O(1)"
+    ],
+    correct: [2],
+    explanation: "Insertion in the middle of a std::vector requires shifting all following elements, giving linear O(n) complexity."
+  },
+  {
+    id: 201,
+    type: "single",
+    module: 1,
+    question: "Which statement about std::array is true?",
+    options: [
+      "Its size() is computed in O(n)",
+      "It supports dynamic resizing via resize()",
+      "It can be used with range-based for loops",
+      "It does not support begin() and end()"
+    ],
+    correct: [2],
+    explanation: "std::array is a fixed-size container but provides begin()/end(), making it fully compatible with range-based for loops and algorithms."
+  },
+  {
+    id: 202,
+    type: "single",
+    module: 1,
+    question: "Which container is best if you frequently need to insert elements at both the front and back with minimal overhead?",
+    options: [
+      "std::vector",
+      "std::deque",
+      "std::array",
+      "std::forward_list"
+    ],
+    correct: [1],
+    explanation: "std::deque offers efficient push_front and push_back operations, unlike std::vector which is efficient only at the back."
+  },
+  {
+    id: 203,
+    type: "multiple",
+    module: 1,
+    question: "Which sequential containers provide bidirectional iterators?",
+    options: [
+      "std::vector",
+      "std::list",
+      "std::deque",
+      "std::forward_list"
+    ],
+    correct: [0, 1, 2],
+    explanation: "std::vector and std::deque provide random-access iterators (which are bidirectional), and std::list provides bidirectional iterators. std::forward_list is singly linked and only provides forward iterators."
+  },
+  {
+    id: 204,
+    type: "multiple",
+    module: 1,
+    question: "Which statements about container adapters like std::stack and std::queue are correct?",
+    options: [
+      "They provide a restricted interface on top of an underlying container",
+      "The default underlying container for std::stack is std::deque",
+      "They always use std::vector internally",
+      "They cannot be instantiated with user-specified underlying containers"
+    ],
+    correct: [0, 1],
+    explanation: "Adapters expose a limited interface over a configurable underlying container. By default, std::stack and std::queue use std::deque, but you can choose other containers that meet the requirements."
+  },
+  {
+    id: 205,
+    type: "single",
+    module: 1,
+    question: "Which operation is cheapest for std::forward_list compared to std::list?",
+    options: [
+      "Random access by index",
+      "Insertion before a known position",
+      "Bidirectional iteration",
+      "Computing size()"
+    ],
+    correct: [1],
+    explanation: "std::forward_list is optimized for singly linked behavior where insertion before a known position via insert_after is very cheap; it does not support random access or bidirectional iteration."
+  },
+  {
+    id: 206,
+    type: "single",
+    module: 1,
+    question: "Which container guarantees that iterators are not invalidated when inserting at either end, except for iterators to erased elements?",
+    options: [
+      "std::deque",
+      "std::vector",
+      "std::array",
+      "std::forward_list"
+    ],
+    correct: [0],
+    explanation: "std::deque typically keeps iterators valid when adding elements at either end, though insertions in the middle may invalidate them."
+  },
+  {
+    id: 207,
+    type: "single",
+    module: 1,
+    question: "Which is the correct way to obtain a C-style array pointer from a std::vector<int> v?",
+    options: [
+      "int* p = &v;",
+      "int* p = v.data();",
+      "int* p = &v[0];",
+      "int* p = std::begin(v);"
+    ],
+    correct: [1],
+    explanation: "The idiomatic way in modern C++ is to use v.data(), which returns a pointer to the underlying array (or nullptr if empty). &v[0] also works if the vector is non-empty, but data() is safer and clearer."
+  },
+  {
+    id: 208,
+    type: "single",
+    module: 1,
+    question: "Which container is most appropriate when you need a fixed-size sequence whose size is known at compile time and stored inline?",
+    options: [
+      "std::vector",
+      "std::array",
+      "std::deque",
+      "std::list"
+    ],
+    correct: [1],
+    explanation: "std::array is designed for fixed-size sequences with compile-time length and typically stores elements inline (e.g., on the stack when used as a local variable)."
+  },
+
+  // Additional MODULE 2 questions
+  {
+    id: 209,
+    type: "single",
+    module: 2,
+    question: "Which associative container maintains elements in sorted key order by default?",
+    options: [
+      "std::unordered_map",
+      "std::map",
+      "std::unordered_set",
+      "std::unordered_multimap"
+    ],
+    correct: [1],
+    explanation: "std::map is an ordered associative container and maintains keys in sorted order according to its comparison function."
+  },
+  {
+    id: 210,
+    type: "single",
+    module: 2,
+    question: "Which statement about the key type of std::unordered_map is true?",
+    options: [
+      "It must be an integral type",
+      "It must support operator<",
+      "It must be hashable and equality comparable",
+      "It must be default-constructible"
+    ],
+    correct: [2],
+    explanation: "std::unordered_map relies on hashing and equality comparison; it does not require operator< or integral keys."
+  },
+  {
+    id: 211,
+    type: "multiple",
+    module: 2,
+    question: "Which operations on std::unordered_map can cause rehashing?",
+    options: [
+      "insert",
+      "erase",
+      "reserve",
+      "clear"
+    ],
+    correct: [0, 2],
+    explanation: "Inserting new elements or reserving more buckets can trigger rehashing. Erase and clear remove elements but may or may not shrink buckets depending on the implementation."
+  },
+  {
+    id: 212,
+    type: "single",
+    module: 2,
+    question: "Which method would you use to traverse all elements in a specific bucket of std::unordered_set?",
+    options: [
+      "begin() / end()",
+      "bucket_count()",
+      "bucket_begin() / bucket_end()",
+      "load_factor()"
+    ],
+    correct: [2],
+    explanation: "bucket_begin(bucket_index) and bucket_end(bucket_index) allow you to iterate specifically over elements in a given bucket of an unordered associative container."
+  },
+  {
+    id: 213,
+    type: "single",
+    module: 2,
+    question: "What is the effect of calling clear() on a std::map?",
+    options: [
+      "Removes all elements but keeps allocated memory",
+      "Removes all elements and deallocates all memory",
+      "Marks all elements as logically deleted but keeps them",
+      "Does nothing"
+    ],
+    correct: [0],
+    explanation: "clear removes all elements but usually retains allocated internal structures so future insertions may reuse them (implementation-dependent but typical)."
+  },
+  {
+    id: 214,
+    type: "multiple",
+    module: 2,
+    question: "Which statements about std::set and std::multiset are correct?",
+    options: [
+      "Both maintain elements in sorted order",
+      "std::multiset allows duplicate keys",
+      "Both provide lower_bound and upper_bound",
+      "std::set iterators are random-access"
+    ],
+    correct: [0, 1, 2],
+    explanation: "Both are ordered containers with tree-based iterators (bidirectional). std::multiset supports duplicates, and both offer lower_bound/upper_bound."
+  },
+  {
+    id: 215,
+    type: "single",
+    module: 2,
+    question: "Which is the usual complexity of inserting a single element into a std::map?",
+    options: [
+      "Amortized O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n log n)"
+    ],
+    correct: [1],
+    explanation: "std::map is typically implemented as a balanced tree, giving O(log n) for insertion, lookup, and erasure by key."
+  },
+  {
+    id: 216,
+    type: "single",
+    module: 2,
+    question: "Which container is best when you frequently need to check for existence of a key with average constant time and ordering is unimportant?",
+    options: [
+      "std::map",
+      "std::unordered_map",
+      "std::set",
+      "std::multimap"
+    ],
+    correct: [1],
+    explanation: "std::unordered_map offers average O(1) lookup based on hashing when order does not matter."
+  },
+  {
+    id: 217,
+    type: "single",
+    module: 2,
+    question: "What does std::map::at(key) do if the key is not present?",
+    options: [
+      "Inserts a default-constructed element",
+      "Returns a reference to a static default object",
+      "Throws std::out_of_range",
+      "Returns a null pointer"
+    ],
+    correct: [2],
+    explanation: "Unlike operator[], at() throws std::out_of_range if the key is not found, making it safer when you do not intend to insert."
+  },
+  {
+    id: 218,
+    type: "multiple",
+    module: 2,
+    question: "Which statements about custom key comparison in std::map are correct?",
+    options: [
+      "The comparison function must impose a strict weak ordering",
+      "The comparison function is stored as part of the map type",
+      "Changing the comparison function after construction is allowed",
+      "The comparison can be a function object or lambda type"
+    ],
+    correct: [0, 1, 3],
+    explanation: "The comparator is part of the map's type, must define strict weak ordering, and is typically provided as a functor or lambda type (not changed at runtime)."
+  },
+  {
+    id: 219,
+    type: "single",
+    module: 2,
+    question: "Which container is most appropriate to store a set of unique keys and occasionally iterate over them in sorted order?",
+    options: [
+      "std::unordered_set",
+      "std::set",
+      "std::multiset",
+      "std::unordered_multiset"
+    ],
+    correct: [1],
+    explanation: "std::set maintains keys in sorted order and enforces uniqueness, which fits this scenario."
+  },
+  {
+    id: 220,
+    type: "single",
+    module: 2,
+    question: "Which method on std::unordered_map reports the average number of elements per bucket?",
+    options: [
+      "bucket_count()",
+      "max_load_factor()",
+      "load_factor()",
+      "bucket_size()"
+    ],
+    correct: [2],
+    explanation: "load_factor returns the ratio size()/bucket_count(), representing the average number of elements per bucket."
+  },
+  {
+    id: 221,
+    type: "single",
+    module: 2,
+    question: "Which operation on std::unordered_set is guaranteed not to invalidate iterators to existing elements (except erased ones)?",
+    options: [
+      "rehash()",
+      "insert()",
+      "erase() of a different element",
+      "clear()"
+    ],
+    correct: [2],
+    explanation: "Erasing an element invalidates only iterators to that element. Rehashing and clear can invalidate all iterators. Inserting may invalidate iterators if rehashing occurs."
+  },
+  {
+    id: 222,
+    type: "multiple",
+    module: 2,
+    question: "Which associative containers provide equal_range(key)?",
+    options: [
+      "std::map",
+      "std::multimap",
+      "std::set",
+      "std::unordered_map"
+    ],
+    correct: [0, 1, 2],
+    explanation: "Ordered associative containers (map, multimap, set, multiset) provide equal_range. Unordered containers also provide it, but here the focus is on ordered ones; consult cppreference for precise signatures."
+  },
+  {
+    id: 223,
+    type: "single",
+    module: 2,
+    question: "Which container would you choose to represent a phone book where each person can have multiple phone numbers, and you frequently iterate in sorted order by name?",
+    options: [
+      "std::multimap<std::string, std::string>",
+      "std::unordered_map<std::string, std::string>",
+      "std::map<std::string, std::string>",
+      "std::unordered_multimap<std::string, std::string>"
+    ],
+    correct: [0],
+    explanation: "std::multimap allows multiple values per key (multiple phone numbers) and maintains keys in sorted order, ideal for this scenario."
+  },
+  {
+    id: 224,
+    type: "single",
+    module: 2,
+    question: "Which operation on std::map has average-case constant complexity?",
+    options: [
+      "find()",
+      "insert()",
+      "erase() by key",
+      "size()"
+    ],
+    correct: [3],
+    explanation: "size() is constant time on map; operations like find, insert, and erase by key are O(log n)."
+  },
+
+  // Additional MODULE 3 questions
+  {
+    id: 225,
+    type: "single",
+    module: 3,
+    question: "Which algorithm would you use to count how many elements in a sequence are equal to a specific value?",
+    options: [
+      "std::count",
+      "std::find",
+      "std::for_each",
+      "std::accumulate"
+    ],
+    correct: [0],
+    explanation: "std::count iterates over the range and counts elements equal to a given value."
+  },
+  {
+    id: 226,
+    type: "single",
+    module: 3,
+    question: "Which algorithm checks if at least one element in a range satisfies a predicate?",
+    options: [
+      "std::all_of",
+      "std::any_of",
+      "std::none_of",
+      "std::find"
+    ],
+    correct: [1],
+    explanation: "std::any_of returns true if any element in the range makes the predicate true."
+  },
+  {
+    id: 227,
+    type: "multiple",
+    module: 3,
+    question: "Which statements about std::find and std::find_if are correct?",
+    options: [
+      "std::find compares elements to a given value",
+      "std::find_if uses a predicate to test elements",
+      "Both return an iterator to the first matching element or end()",
+      "std::find_if modifies elements"
+    ],
+    correct: [0, 1, 2],
+    explanation: "Both algorithms are non-modifying; they differ in that find uses value equality while find_if uses a predicate."
+  },
+  {
+    id: 228,
+    type: "single",
+    module: 3,
+    question: "Which algorithm would you use to compute the sum of a sequence of integers in a range?",
+    options: [
+      "std::count_if",
+      "std::accumulate",
+      "std::for_each",
+      "std::mismatch"
+    ],
+    correct: [1],
+    explanation: "std::accumulate is the standard algorithm to reduce a range to a single value, such as a sum."
+  },
+  {
+    id: 229,
+    type: "multiple",
+    module: 3,
+    question: "Which statements about std::for_each are correct?",
+    options: [
+      "It applies a function to each element in a range",
+      "It can be used with lambdas that capture external state",
+      "It returns the function object after traversal",
+      "It guarantees parallel execution"
+    ],
+    correct: [0, 1, 2],
+    explanation: "for_each is sequential and returns the callable used, which may have accumulated state through captures or references."
+  },
+  {
+    id: 230,
+    type: "single",
+    module: 3,
+    question: "Which algorithm checks if two ranges contain the same elements in the same order?",
+    options: [
+      "std::mismatch",
+      "std::equal",
+      "std::search",
+      "std::adjacent_find"
+    ],
+    correct: [1],
+    explanation: "std::equal compares two ranges element-by-element and returns true if all corresponding elements are equal."
+  },
+  {
+    id: 231,
+    type: "single",
+    module: 3,
+    question: "Which algorithm would you use to determine whether any element of one range appears in another range?",
+    options: [
+      "std::find",
+      "std::find_first_of",
+      "std::search",
+      "std::adjacent_find"
+    ],
+    correct: [1],
+    explanation: "std::find_first_of searches a range for any element from another range, returning the position of the first match."
+  },
+  {
+    id: 232,
+    type: "multiple",
+    module: 3,
+    question: "Which statements about std::search and std::find_end are correct?",
+    options: [
+      "Both look for a subsequence within a sequence",
+      "std::search returns the first occurrence",
+      "std::find_end returns the last occurrence",
+      "Both require sorted input"
+    ],
+    correct: [0, 1, 2],
+    explanation: "search finds the first occurrence of a subsequence, while find_end finds the last. Neither requires the range to be sorted."
+  },
+  {
+    id: 233,
+    type: "single",
+    module: 3,
+    question: "Which algorithm would you use to check if two ranges are lexicographically ordered relative to each other?",
+    options: [
+      "std::lexicographical_compare",
+      "std::mismatch",
+      "std::equal",
+      "std::all_of"
+    ],
+    correct: [0],
+    explanation: "lexicographical_compare performs a dictionary-style comparison of two ranges."
+  },
+  {
+    id: 234,
+    type: "single",
+    module: 3,
+    question: "Which algorithm checks if no elements in a range satisfy a predicate?",
+    options: [
+      "std::any_of",
+      "std::none_of",
+      "std::all_of",
+      "std::count_if"
+    ],
+    correct: [1],
+    explanation: "std::none_of returns true if the predicate is false for all elements in the range."
+  },
+  {
+    id: 235,
+    type: "single",
+    module: 3,
+    question: "Which algorithm can you use to find the first position where two ranges differ?",
+    options: [
+      "std::equal",
+      "std::mismatch",
+      "std::search",
+      "std::find_if"
+    ],
+    correct: [1],
+    explanation: "std::mismatch returns a pair of iterators to the first elements that differ between two ranges."
+  },
+  {
+    id: 236,
+    type: "single",
+    module: 3,
+    question: "Which algorithm would you use to determine how many elements in a range satisfy a given predicate?",
+    options: [
+      "std::count_if",
+      "std::count",
+      "std::for_each",
+      "std::any_of"
+    ],
+    correct: [0],
+    explanation: "std::count_if counts the number of elements for which the predicate returns true."
+  },
+  {
+    id: 237,
+    type: "multiple",
+    module: 3,
+    question: "Which statements about non-modifying algorithms are correct?",
+    options: [
+      "They never change the values stored in the range",
+      "They may move iterators but do not re-order elements",
+      "They often return iterators, counts, or booleans",
+      "They can only be used with random-access iterators"
+    ],
+    correct: [0, 1, 2],
+    explanation: "Non-modifying algorithms observe the range without altering its content, and they typically return information about it; they work with various iterator categories, not just random-access."
+  },
+  {
+    id: 238,
+    type: "single",
+    module: 3,
+    question: "Which algorithm would you use to efficiently find the minimum element in a range?",
+    options: [
+      "std::min_element",
+      "std::min",
+      "std::accumulate",
+      "std::lower_bound"
+    ],
+    correct: [0],
+    explanation: "min_element scans the range and returns an iterator to the minimal element according to the comparison function."
+  },
+  {
+    id: 239,
+    type: "single",
+    module: 3,
+    question: "Which algorithm checks whether two ranges are permutations of each other (ignoring order)?",
+    options: [
+      "std::equal",
+      "std::is_permutation",
+      "std::search",
+      "std::find_first_of"
+    ],
+    correct: [1],
+    explanation: "is_permutation determines whether two ranges contain the same elements, possibly in different orders."
+  },
+  {
+    id: 240,
+    type: "single",
+    module: 3,
+    question: "Which algorithm can be used to test whether a range is partitioned according to a predicate?",
+    options: [
+      "std::is_partitioned",
+      "std::partition",
+      "std::adjacent_find",
+      "std::search"
+    ],
+    correct: [0],
+    explanation: "is_partitioned checks whether a range is already partitioned into elements for which the predicate is true followed by those for which it is false."
+  },
+
+  // Additional MODULE 4 questions
+  {
+    id: 241,
+    type: "single",
+    module: 4,
+    question: "Which algorithm would you use to reverse a sequence into another sequence, leaving the original unchanged?",
+    options: [
+      "std::reverse",
+      "std::reverse_copy",
+      "std::rotate",
+      "std::copy"
+    ],
+    correct: [1],
+    explanation: "reverse_copy writes the reversed sequence into an output range while leaving the input range intact."
+  },
+  {
+    id: 242,
+    type: "single",
+    module: 4,
+    question: "Which pair of algorithms is commonly used together to remove elements equal to a given value from a std::vector?",
+    options: [
+      "std::remove and std::erase",
+      "std::remove_if and std::copy",
+      "std::unique and std::sort",
+      "std::replace and std::fill"
+    ],
+    correct: [0],
+    explanation: "The remove-erase idiom uses std::remove (or remove_if) followed by container.erase(new_end, end()) to actually shrink the container."
+  },
+  {
+    id: 243,
+    type: "multiple",
+    module: 4,
+    question: "Which statements about std::transform are correct?",
+    options: [
+      "It can operate in-place by using the same input and output range",
+      "It can combine two input ranges into one output range",
+      "It always requires random-access iterators",
+      "It does not change the size of any container"
+    ],
+    correct: [0, 1, 4],
+    explanation: "transform works with at least input and output iterators, can operate in-place, and does not change container sizes—it only writes to existing elements."
+  },
+  {
+    id: 244,
+    type: "single",
+    module: 4,
+    question: "Which algorithm is best suited for shuffling elements randomly in a container?",
+    options: [
+      "std::shuffle",
+      "std::random_shuffle",
+      "std::rotate",
+      "std::swap_ranges"
+    ],
+    correct: [0],
+    explanation: "std::shuffle is the modern algorithm for randomizing the order of elements using a uniform random bit generator. random_shuffle is deprecated."
+  },
+  {
+    id: 245,
+    type: "single",
+    module: 4,
+    question: "What does std::fill_n(first, n, value) do?",
+    options: [
+      "Resizes the container to n elements",
+      "Assigns value to the first n elements starting at first",
+      "Inserts n copies of value at position first",
+      "Copies n elements from another range"
+    ],
+    correct: [1],
+    explanation: "fill_n writes value into the first n elements starting from the iterator first; the caller must ensure enough space."
+  },
+  {
+    id: 246,
+    type: "single",
+    module: 4,
+    question: "Which algorithm removes consecutive duplicates from a range in-place (logically), returning a new logical end?",
+    options: [
+      "std::unique",
+      "std::remove",
+      "std::remove_if",
+      "std::partition"
+    ],
+    correct: [0],
+    explanation: "unique compacts the range by removing consecutive duplicates, returning an iterator to the new logical end of the unique sequence."
+  },
+  {
+    id: 247,
+    type: "multiple",
+    module: 4,
+    question: "Which statements about std::copy and std::copy_backward are correct?",
+    options: [
+      "std::copy is safe for non-overlapping ranges",
+      "std::copy_backward can handle some overlapping cases",
+      "Both algorithms preserve the order of elements",
+      "Both algorithms can increase container size"
+    ],
+    correct: [0, 1, 2],
+    explanation: "copy is undefined for overlapping ranges; copy_backward is designed for overlaps where backward copying avoids overwriting. Neither changes container sizes; they only assign."
+  },
+  {
+    id: 248,
+    type: "single",
+    module: 4,
+    question: "Which algorithm would you use to generate a sequence of increasing integers starting from 1 into an existing vector?",
+    options: [
+      "std::generate",
+      "std::iota",
+      "std::fill_n",
+      "std::accumulate"
+    ],
+    correct: [1],
+    explanation: "iota assigns sequentially increasing values starting from a given initial value into a range."
+  },
+  {
+    id: 249,
+    type: "single",
+    module: 4,
+    question: "Which algorithm divides a range into two groups based on a predicate but does not preserve the relative order within groups?",
+    options: [
+      "std::stable_partition",
+      "std::partition",
+      "std::sort",
+      "std::rotate"
+    ],
+    correct: [1],
+    explanation: "partition groups elements by predicate result but does not guarantee stability. stable_partition maintains relative order."
+  },
+  {
+    id: 250,
+    type: "single",
+    module: 4,
+    question: "Which algorithm can be used to swap elements at corresponding positions between two ranges?",
+    options: [
+      "std::swap",
+      "std::swap_ranges",
+      "std::copy",
+      "std::transform"
+    ],
+    correct: [1],
+    explanation: "swap_ranges exchanges elements between two ranges element-wise."
+  },
+  {
+    id: 251,
+    type: "single",
+    module: 4,
+    question: "Which algorithm is specifically designed to randomly rearrange elements using a generator?",
+    options: [
+      "std::shuffle",
+      "std::random_shuffle",
+      "std::partition",
+      "std::generate_n"
+    ],
+    correct: [0],
+    explanation: "std::shuffle takes a uniform random bit generator and produces a random permutation of the input range. random_shuffle is deprecated."
+  },
+  {
+    id: 252,
+    type: "multiple",
+    module: 4,
+    question: "Which statements about modifying algorithms are correct?",
+    options: [
+      "They may change the values of elements in the range",
+      "Some of them may change the physical size of a container",
+      "They often work with output iterators",
+      "They always require bidirectional iterators"
+    ],
+    correct: [0, 2],
+    explanation: "Modifying algorithms update elements and often write results via output iterators, but they do not themselves change container sizes (erase/remove idioms are used with containers). Many work with forward or input iterators, not strictly bidirectional."
+  },
+  {
+    id: 253,
+    type: "single",
+    module: 4,
+    question: "Which algorithm can be used to fill a range with increasing values produced by repeatedly calling a stateful generator function?",
+    options: [
+      "std::fill",
+      "std::generate",
+      "std::copy_if",
+      "std::minmax_element"
+    ],
+    correct: [1],
+    explanation: "generate invokes a supplied callable for each position, allowing custom or stateful value generation."
+  },
+  {
+    id: 254,
+    type: "single",
+    module: 4,
+    question: "Which algorithm would you use to place all elements greater than a pivot value after all elements less than or equal to it, without fully sorting the range?",
+    options: [
+      "std::sort",
+      "std::partition",
+      "std::nth_element",
+      "std::lower_bound"
+    ],
+    correct: [1],
+    explanation: "partition groups elements according to a predicate (e.g., x <= pivot) without fully sorting."
+  },
+  {
+    id: 255,
+    type: "single",
+    module: 4,
+    question: "Which algorithm applies a binary operation to corresponding elements of two ranges and writes the result into a third range?",
+    options: [
+      "std::transform",
+      "std::copy_if",
+      "std::accumulate",
+      "std::adjacent_difference"
+    ],
+    correct: [0],
+    explanation: "The binary overload of transform takes two input ranges and applies a binary operation to compute each element of the output range."
+  },
+
+  // Additional MODULE 5 questions
+  {
+    id: 256,
+    type: "single",
+    module: 5,
+    question: "Which iterator category is required by std::sort?",
+    options: [
+      "Input iterators",
+      "Forward iterators",
+      "Bidirectional iterators",
+      "Random-access iterators"
+    ],
+    correct: [3],
+    explanation: "std::sort requires random-access iterators for efficiency and to perform partitioning operations."
+  },
+  {
+    id: 257,
+    type: "single",
+    module: 5,
+    question: "Which algorithm would you use to check if a range is sorted according to a custom comparator?",
+    options: [
+      "std::is_sorted",
+      "std::is_heap",
+      "std::binary_search",
+      "std::stable_sort"
+    ],
+    correct: [0],
+    explanation: "is_sorted accepts an optional comparator and reports whether the range is sorted according to it."
+  },
+  {
+    id: 258,
+    type: "single",
+    module: 5,
+    question: "Which algorithm partially sorts a range so that the smallest k elements are sorted at the beginning, leaving the rest unspecified?",
+    options: [
+      "std::nth_element",
+      "std::partial_sort",
+      "std::sort",
+      "std::stable_sort"
+    ],
+    correct: [1],
+    explanation: "partial_sort sorts the subrange [first, middle) and ensures those elements are the smallest in the full range."
+  },
+  {
+    id: 259,
+    type: "single",
+    module: 5,
+    question: "Which algorithm can be used to verify that a range is a heap according to a given comparator?",
+    options: [
+      "std::is_sorted",
+      "std::is_heap",
+      "std::is_partitioned",
+      "std::binary_search"
+    ],
+    correct: [1],
+    explanation: "is_heap checks whether the range satisfies the heap property under the given comparator."
+  },
+  {
+    id: 260,
+    type: "multiple",
+    module: 5,
+    question: "Which statements about std::binary_search are correct?",
+    options: [
+      "The range must be sorted according to the same comparator",
+      "It returns a boolean indicating presence",
+      "It can be combined with lower_bound to find the element",
+      "It can be used safely on unsorted ranges"
+    ],
+    correct: [0, 1, 2],
+    explanation: "binary_search assumes the range is sorted using the same ordering; it reports only whether the value is present. To locate it, use lower_bound or equal_range."
+  },
+  {
+    id: 261,
+    type: "single",
+    module: 5,
+    question: "Which pair of algorithms would you typically use to find the range of equal elements in a sorted sequence?",
+    options: [
+      "std::lower_bound and std::upper_bound",
+      "std::sort and std::reverse",
+      "std::partial_sort and std::nth_element",
+      "std::make_heap and std::sort_heap"
+    ],
+    correct: [0],
+    explanation: "lower_bound and upper_bound locate the first element >= value and first element > value, defining the equal range."
+  },
+  {
+    id: 262,
+    type: "single",
+    module: 5,
+    question: "Which algorithm rearranges a range into the next lexicographically greater permutation?",
+    options: [
+      "std::sort",
+      "std::next_permutation",
+      "std::rotate",
+      "std::partial_sort"
+    ],
+    correct: [1],
+    explanation: "next_permutation transforms the range into the next lexicographical ordering, or the first if none exists."
+  },
+  {
+    id: 263,
+    type: "single",
+    module: 5,
+    question: "Which algorithm checks if two sorted ranges contain the same elements (as sets)?",
+    options: [
+      "std::equal",
+      "std::includes",
+      "std::lexicographical_compare",
+      "std::set_union"
+    ],
+    correct: [1],
+    explanation: "includes can be used symmetrically to check whether each range is a subset of the other, implying equality as sets."
+  },
+  {
+    id: 264,
+    type: "multiple",
+    module: 5,
+    question: "Which statements about std::stable_sort are correct?",
+    options: [
+      "It preserves the relative order of equal elements",
+      "It may use extra memory internally",
+      "It is usually faster than std::sort",
+      "It can be used with forward iterators"
+    ],
+    correct: [0, 1],
+    explanation: "stable_sort trades some performance and memory for stability; it still requires random-access iterators."
+  },
+  {
+    id: 265,
+    type: "single",
+    module: 5,
+    question: "Which algorithm can be used to partition a sorted range into elements less than a value and those greater or equal, without fully sorting again?",
+    options: [
+      "std::sort",
+      "std::partition",
+      "std::nth_element",
+      "std::lower_bound"
+    ],
+    correct: [3],
+    explanation: "lower_bound finds the first element not less than the value, effectively splitting the sorted range into < value and >= value subranges."
+  },
+  {
+    id: 266,
+    type: "single",
+    module: 5,
+    question: "Which algorithm can you use to check if a range is sorted until some position and to get that position?",
+    options: [
+      "std::is_sorted",
+      "std::is_sorted_until",
+      "std::is_heap_until",
+      "std::is_partitioned"
+    ],
+    correct: [1],
+    explanation: "is_sorted_until returns an iterator to the first element that violates sorted order, or end() if the entire range is sorted."
+  },
+  {
+    id: 267,
+    type: "single",
+    module: 5,
+    question: "Which algorithm can be used to create a heap from an unsorted range?",
+    options: [
+      "std::make_heap",
+      "std::push_heap",
+      "std::pop_heap",
+      "std::is_heap"
+    ],
+    correct: [0],
+    explanation: "make_heap rearranges the elements into a heap in-place. push_heap assumes the range is already a heap with one extra element appended."
+  },
+  {
+    id: 268,
+    type: "single",
+    module: 5,
+    question: "Which algorithm would you use after push_heap to remove the largest element while maintaining the heap property?",
+    options: [
+      "std::pop_heap",
+      "std::sort_heap",
+      "std::next_permutation",
+      "std::remove"
+    ],
+    correct: [0],
+    explanation: "pop_heap moves the largest element to the end of the range and restores the heap property on the remaining elements."
+  },
+  {
+    id: 269,
+    type: "multiple",
+    module: 5,
+    question: "Which statements about the comparator used with std::sort are correct?",
+    options: [
+      "It must impose a strict weak ordering",
+      "It must return true if the arguments are equal",
+      "Violating comparator requirements can lead to undefined behavior",
+      "It can be a function object, function pointer, or lambda"
+    ],
+    correct: [0, 2, 3],
+    explanation: "A non-strict comparator (e.g., using <=) breaks invariants and leads to undefined behavior. Comparators can be provided in many forms as long as they satisfy strict weak ordering."
+  },
+
+  // Additional MODULE 6 questions
+  {
+    id: 270,
+    type: "single",
+    module: 6,
+    question: "Which algorithm merges two sorted ranges into a single sorted range stored in-place when the ranges are adjacent?",
+    options: [
+      "std::merge",
+      "std::inplace_merge",
+      "std::set_union",
+      "std::copy"
+    ],
+    correct: [1],
+    explanation: "inplace_merge merges two consecutive sorted subranges in-place. merge writes to a separate output range."
+  },
+  {
+    id: 271,
+    type: "single",
+    module: 6,
+    question: "Which algorithm computes the union of two sorted ranges treating them as sets (or multisets)?",
+    options: [
+      "std::set_union",
+      "std::merge",
+      "std::includes",
+      "std::set_difference"
+    ],
+    correct: [0],
+    explanation: "set_union computes the union of elements from both ranges according to multiset semantics."
+  },
+  {
+    id: 272,
+    type: "multiple",
+    module: 6,
+    question: "Which statements about std::set_intersection are correct?",
+    options: [
+      "It requires both input ranges to be sorted",
+      "It writes common elements into an output range",
+      "It treats inputs as multisets with multiplicities",
+      "It removes all duplicates from the result"
+    ],
+    correct: [0, 1, 2],
+    explanation: "set_intersection outputs elements that appear in both ranges, counting duplicates as min(count1, count2). It assumes sorted inputs."
+  },
+  {
+    id: 273,
+    type: "single",
+    module: 6,
+    question: "Which algorithm checks whether every element of one sorted range is contained in another sorted range?",
+    options: [
+      "std::set_union",
+      "std::includes",
+      "std::set_difference",
+      "std::set_symmetric_difference"
+    ],
+    correct: [1],
+    explanation: "includes returns true if the second range is a subset of the first when both are sorted under the same comparator."
+  },
+  {
+    id: 274,
+    type: "single",
+    module: 6,
+    question: "Which algorithm computes elements that belong to exactly one of the two sorted ranges (but not both)?",
+    options: [
+      "std::set_difference",
+      "std::set_intersection",
+      "std::set_symmetric_difference",
+      "std::merge"
+    ],
+    correct: [2],
+    explanation: "set_symmetric_difference yields elements that are present in one range or the other, but not both."
+  },
+  {
+    id: 275,
+    type: "multiple",
+    module: 6,
+    question: "Which statements about std::merge are correct?",
+    options: [
+      "It preserves the relative order of equivalent elements from each range",
+      "It runs in linear time O(n + m)",
+      "It can be used on unsorted ranges without preconditions",
+      "It requires the output range to be large enough to hold all elements"
+    ],
+    correct: [0, 1, 3],
+    explanation: "merge is stable with respect to each input range, runs linearly in the sum of the sizes, and assumes the output can hold all elements. Inputs must be sorted."
+  },
+  {
+    id: 276,
+    type: "single",
+    module: 6,
+    question: "Which standard algorithm would you use to transform a range into a max-heap?",
+    options: [
+      "std::make_heap",
+      "std::push_heap",
+      "std::pop_heap",
+      "std::sort_heap"
+    ],
+    correct: [0],
+    explanation: "make_heap rearranges the elements of a range so that they form a max-heap."
+  },
+  {
+    id: 277,
+    type: "single",
+    module: 6,
+    question: "After calling std::pop_heap on a heap range [first, last), where is the largest element placed?",
+    options: [
+      "At position first",
+      "At position last - 1",
+      "Removed from the range",
+      "In an unspecified position"
+    ],
+    correct: [1],
+    explanation: "pop_heap moves the largest element to last - 1 and adjusts the remaining range [first, last - 1) to remain a heap."
+  },
+  {
+    id: 278,
+    type: "single",
+    module: 6,
+    question: "Which algorithm can be used to sort a heap range into ascending order?",
+    options: [
+      "std::sort",
+      "std::sort_heap",
+      "std::make_heap",
+      "std::next_permutation"
+    ],
+    correct: [1],
+    explanation: "sort_heap assumes the range is a heap and sorts it into ascending order."
+  },
+  {
+    id: 279,
+    type: "multiple",
+    module: 6,
+    question: "Which statements about std::minmax_element are correct?",
+    options: [
+      "It finds both the minimum and maximum elements in a single pass",
+      "It returns a pair of iterators",
+      "It may perform fewer comparisons than separate min_element and max_element",
+      "It requires random-access iterators"
+    ],
+    correct: [0, 1, 2],
+    explanation: "minmax_element scans once, often using a technique that reduces the total number of comparisons; it only requires forward iterators."
+  },
+  {
+    id: 280,
+    type: "single",
+    module: 6,
+    question: "Which algorithm computes A − B for two sorted ranges A and B (elements in A that are not in B)?",
+    options: [
+      "std::set_difference",
+      "std::set_union",
+      "std::set_intersection",
+      "std::set_symmetric_difference"
+    ],
+    correct: [0],
+    explanation: "set_difference produces elements present in the first sorted range but not in the second."
+  },
+  {
+    id: 281,
+    type: "single",
+    module: 6,
+    question: "Which algorithm would you use to test if a given range already satisfies the heap property?",
+    options: [
+      "std::is_heap",
+      "std::is_sorted",
+      "std::is_partitioned",
+      "std::is_permutation"
+    ],
+    correct: [0],
+    explanation: "is_heap returns true if the range conforms to the heap property under the default or provided comparator."
+  },
+  {
+    id: 282,
+    type: "single",
+    module: 6,
+    question: "Which pair of algorithms is typically used to extend a heap by one element and then remove the largest element?",
+    options: [
+      "std::push_heap and std::pop_heap",
+      "std::make_heap and std::sort_heap",
+      "std::set_union and std::set_difference",
+      "std::merge and std::inplace_merge"
+    ],
+    correct: [0],
+    explanation: "push_heap assumes the new element is at the end and adjusts the heap; pop_heap then moves the maximum to the end."
+  },
+
+  // Additional MODULE 7 questions
+  {
+    id: 283,
+    type: "single",
+    module: 7,
+    question: "What is std::function primarily used for?",
+    options: [
+      "Defining compile-time constants",
+      "Type-erased storage and invocation of callables",
+      "Overloading operators",
+      "Allocating dynamic memory"
+    ],
+    correct: [1],
+    explanation: "std::function is a polymorphic function wrapper that can store and invoke any callable target with a compatible signature."
+  },
+  {
+    id: 284,
+    type: "single",
+    module: 7,
+    question: "Which header must you include to use std::function and std::bind?",
+    options: [
+      "<utility>",
+      "<functional>",
+      "<algorithm>",
+      "<memory>"
+    ],
+    correct: [1],
+    explanation: "Both std::function and std::bind are declared in the <functional> header."
+  },
+  {
+    id: 285,
+    type: "multiple",
+    module: 7,
+    question: "Which statements about lambda captures are correct?",
+    options: [
+      "[&] captures all automatic variables by reference",
+      "[=] captures all automatic variables by value",
+      "Explicit capture lists can mix by-value and by-reference",
+      "Lambdas cannot capture this pointer"
+    ],
+    correct: [0, 1, 2],
+    explanation: "Lambdas support rich capture lists including this; [&] and [=] are shorthand for capturing all used variables by reference or value."
+  },
+  {
+    id: 286,
+    type: "single",
+    module: 7,
+    question: "What does std::ref(x) do?",
+    options: [
+      "Creates a copy of x",
+      "Wraps x in a std::reference_wrapper",
+      "Allocates x on the heap",
+      "Makes x const"
+    ],
+    correct: [1],
+    explanation: "std::ref produces a reference_wrapper that can be copied while still referring to the original object, often used with algorithms and bind."
+  },
+  {
+    id: 287,
+    type: "single",
+    module: 7,
+    question: "In modern C++, what is usually preferred for simple function objects over std::bind?",
+    options: [
+      "std::mem_fun",
+      "Lambda expressions",
+      "std::bind1st",
+      "std::not1"
+    ],
+    correct: [1],
+    explanation: "Lambdas are generally clearer, safer, and more efficient than std::bind for most use cases."
+  },
+  {
+    id: 288,
+    type: "multiple",
+    module: 7,
+    question: "Which statements about std::bind are correct?",
+    options: [
+      "It can reorder arguments using placeholders",
+      "It can bind some arguments while leaving others unbound",
+      "It returns an object that models a callable",
+      "It requires all arguments to be bound at once"
+    ],
+    correct: [0, 1, 2],
+    explanation: "bind combines a callable with some bound arguments and placeholders; the result is a callable object. Not all arguments must be bound."
+  },
+  {
+    id: 289,
+    type: "single",
+    module: 7,
+    question: "What does std::not_fn(f) return?",
+    options: [
+      "The bitwise negation of f",
+      "A callable that negates the result of f",
+      "A callable that always returns false",
+      "A callable that throws on every call"
+    ],
+    correct: [1],
+    explanation: "not_fn takes a callable and returns another callable that returns !f(args...)."
+  },
+  {
+    id: 290,
+    type: "single",
+    module: 7,
+    question: "Which functor from <functional> represents logical AND on boolean values?",
+    options: [
+      "std::logical_and",
+      "std::logical_or",
+      "std::bit_and",
+      "std::plus"
+    ],
+    correct: [0],
+    explanation: "logical_and performs short-circuiting logical conjunction; bit_and operates on bits."
+  },
+  {
+    id: 291,
+    type: "single",
+    module: 7,
+    question: "Which utility allows you to call a member function pointer as if it were a regular function object?",
+    options: [
+      "std::mem_fn",
+      "std::bind1st",
+      "std::ptr_fun",
+      "std::not1"
+    ],
+    correct: [0],
+    explanation: "mem_fn wraps a pointer-to-member so that it can be called with an object or pointer to object like a regular callable."
+  },
+  {
+    id: 292,
+    type: "multiple",
+    module: 7,
+    question: "Which statements about std::reference_wrapper are correct?",
+    options: [
+      "It can be stored in standard containers",
+      "It can be used to simulate containers of references",
+      "It provides implicit conversion back to T&",
+      "It is movable but not copyable"
+    ],
+    correct: [0, 1, 2],
+    explanation: "reference_wrapper is copyable and implicitly convertible to T&, making it suitable for storing references in containers."
+  },
+  {
+    id: 293,
+    type: "single",
+    module: 7,
+    question: "Which is a disadvantage of std::function compared to a templated callable parameter?",
+    options: [
+      "It cannot store lambdas",
+      "It incurs runtime overhead due to type erasure",
+      "It cannot store function pointers",
+      "It requires C++20 concepts"
+    ],
+    correct: [1],
+    explanation: "std::function uses type erasure and dynamic dispatch, which generally adds runtime overhead compared to template-based callables."
+  },
+  {
+    id: 294,
+    type: "single",
+    module: 7,
+    question: "Which placeholder would you use in std::bind to represent the second argument of the resulting callable?",
+    options: [
+      "std::placeholders::_1",
+      "std::placeholders::_2",
+      "std::placeholders::_3",
+      "std::placeholders::_second"
+    ],
+    correct: [1],
+    explanation: "_1, _2, _3, ... designate the first, second, third, ... arguments of the bound callable."
+  },
+  {
+    id: 295,
+    type: "single",
+    module: 7,
+    question: "Which functional object template computes the sum of two values?",
+    options: [
+      "std::minus",
+      "std::plus",
+      "std::multiplies",
+      "std::divides"
+    ],
+    correct: [1],
+    explanation: "plus<T> implements operator+ for its operands."
+  },
+  {
+    id: 296,
+    type: "single",
+    module: 7,
+    question: "Which header provides std::hash for hashing standard types?",
+    options: [
+      "<functional>",
+      "<algorithm>",
+      "<hash>",
+      "<type_traits>"
+    ],
+    correct: [0],
+    explanation: "std::hash specializations for many standard types are declared in <functional>."
+  },
+
+  // Additional MODULE 8 questions
+  {
+    id: 297,
+    type: "single",
+    module: 8,
+    question: "Which manipulator prints boolean values as 'true' or 'false' instead of '1' or '0'?",
+    options: [
+      "std::boolalpha",
+      "std::showpos",
+      "std::showbase",
+      "std::fixed"
+    ],
+    correct: [0],
+    explanation: "boolalpha switches the stream to textual representation of bool values."
+  },
+  {
+    id: 298,
+    type: "single",
+    module: 8,
+    question: "Which ios flag do you use to open a file for appending output at the end?",
+    options: [
+      "std::ios::in",
+      "std::ios::out",
+      "std::ios::app",
+      "std::ios::trunc"
+    ],
+    correct: [2],
+    explanation: "app opens a file in append mode so that writes always go to the end."
+  },
+  {
+    id: 299,
+    type: "multiple",
+    module: 8,
+    question: "Which statements about stream state flags are correct?",
+    options: [
+      "fail() indicates a logical input/output error",
+      "bad() indicates a serious error such as loss of integrity",
+      "eof() indicates that end-of-file has been reached",
+      "good() is true if no error flags are set"
+    ],
+    correct: [0, 1, 2, 3],
+    explanation: "These functions query different aspects of stream state; good() is true only when none of the error flags (fail, bad, eof) are set."
+  },
+  {
+    id: 300,
+    type: "single",
+    module: 8,
+    question: "Which manipulator forces a plus sign to be shown for positive numbers?",
+    options: [
+      "std::showbase",
+      "std::showpos",
+      "std::uppercase",
+      "std::boolalpha"
+    ],
+    correct: [1],
+    explanation: "showpos requests that a leading + be shown for positive numbers."
+  },
+  {
+    id: 301,
+    type: "single",
+    module: 8,
+    question: "Which header must you include to use std::ostringstream and std::istringstream?",
+    options: [
+      "<iostream>",
+      "<fstream>",
+      "<sstream>",
+      "<iomanip>"
+    ],
+    correct: [2],
+    explanation: "The stringstream classes are declared in <sstream>."
+  },
+  {
+    id: 302,
+    type: "single",
+    module: 8,
+    question: "What is the typical effect of calling std::flush on an output stream?",
+    options: [
+      "It clears any error flags",
+      "It discards the output buffer",
+      "It forces the buffered output to be written",
+      "It resets formatting flags to defaults"
+    ],
+    correct: [2],
+    explanation: "flush forces any buffered output to be physically written to the underlying device or file."
+  },
+  {
+    id: 303,
+    type: "multiple",
+    module: 8,
+    question: "Which statements about std::getline are correct?",
+    options: [
+      "It reads characters up to a delimiter",
+      "By default, the delimiter is '\n'",
+      "The delimiter is extracted but not stored in the string",
+      "It sets failbit if it reads an empty line"
+    ],
+    correct: [0, 1, 2],
+    explanation: "getline stops at a delimiter (default newline), discarding it. It sets failbit only on I/O errors or if no characters are extracted when EOF is already set."
+  },
+  {
+    id: 304,
+    type: "single",
+    module: 8,
+    question: "Which open mode should you use to truncate an existing file when opening an ofstream?",
+    options: [
+      "std::ios::app",
+      "std::ios::out | std::ios::trunc",
+      "std::ios::in | std::ios::app",
+      "std::ios::binary"
+    ],
+    correct: [1],
+    explanation: "out|trunc opens the file for output and truncates it to length zero. Trunc is implied by out for ofstream in many implementations, but this combination is explicit."
+  },
+  {
+    id: 305,
+    type: "single",
+    module: 8,
+    question: "Which manipulator changes the base used for integer output to hexadecimal?",
+    options: [
+      "std::dec",
+      "std::hex",
+      "std::oct",
+      "std::fixed"
+    ],
+    correct: [1],
+    explanation: "hex switches the integer base to hexadecimal for subsequent outputs."
+  },
+  {
+    id: 306,
+    type: "single",
+    module: 8,
+    question: "Which function on an input file stream moves the get pointer to a specific position?",
+    options: [
+      "seekg",
+      "seekp",
+      "tellg",
+      "tellp"
+    ],
+    correct: [0],
+    explanation: "seekg sets the input (get) position; tellg reports it. seekp/tellp are for output (put) position."
+  },
+  {
+    id: 307,
+    type: "multiple",
+    module: 8,
+    question: "Which statements about binary vs text mode are correct?",
+    options: [
+      "Binary mode suppresses any newline translation",
+      "Text mode may translate '\n' to platform-specific sequences",
+      "Binary mode is required for reliably writing non-text data",
+      "Binary mode automatically compresses data"
+    ],
+    correct: [0, 1, 2],
+    explanation: "Binary mode prevents transformations (e.g., CRLF translation) which is essential for binary data; text mode may perform such translations."
+  },
+  {
+    id: 308,
+    type: "single",
+    module: 8,
+    question: "What happens if an extraction operation (operator>>) fails to read the expected type from a stream?",
+    options: [
+      "The stream closes automatically",
+      "The failbit is set on the stream",
+      "The program terminates",
+      "Nothing happens"
+    ],
+    correct: [1],
+    explanation: "Upon extraction failure (e.g., reading an int from non-numeric input), the stream sets failbit and stops further formatted extraction until the state is cleared."
+  },
+  {
+    id: 309,
+    type: "single",
+    module: 8,
+    question: "Which manipulator prints floating-point values in scientific notation?",
+    options: [
+      "std::fixed",
+      "std::scientific",
+      "std::hexfloat",
+      "std::showpos"
+    ],
+    correct: [1],
+    explanation: "scientific switches floating-point formatting to exponential notation like 1.23e+03."
+  },
+
+  // Additional MODULE 9 questions
+  {
+    id: 310,
+    type: "single",
+    module: 9,
+    question: "Which keyword is used to introduce a function template?",
+    options: [
+      "template",
+      "typename",
+      "class",
+      "concept"
+    ],
+    correct: [0],
+    explanation: "The template keyword introduces a template declaration; it is followed by a template parameter list."
+  },
+  {
+    id: 311,
+    type: "single",
+    module: 9,
+    question: "What does the 'typename' keyword indicate in a dependent name like T::value_type?",
+    options: [
+      "That value_type is a template",
+      "That value_type is a type",
+      "That value_type is a variable",
+      "That value_type is a namespace"
+    ],
+    correct: [1],
+    explanation: "When a name depends on a template parameter, typename tells the compiler that it should be treated as a type name."
+  },
+  {
+    id: 312,
+    type: "multiple",
+    module: 9,
+    question: "Which statements about class template partial specialization are correct?",
+    options: [
+      "It allows providing a specialized implementation for a subset of template arguments",
+      "It is not allowed for function templates",
+      "It must be declared after the primary template",
+      "It can be used to optimize behavior for certain types"
+    ],
+    correct: [0, 1, 3],
+    explanation: "Partial specialization refines behavior for certain patterns of template arguments; only class (and variable) templates support it, not function templates."
+  },
+  {
+    id: 313,
+    type: "single",
+    module: 9,
+    question: "Which C++ standard introduced variadic templates?",
+    options: [
+      "C++98",
+      "C++03",
+      "C++11",
+      "C++17"
+    ],
+    correct: [2],
+    explanation: "Variadic templates, using parameter packs, were introduced in C++11."
+  },
+  {
+    id: 314,
+    type: "single",
+    module: 9,
+    question: "Which feature allows template arguments for class templates to be deduced from constructor arguments?",
+    options: [
+      "SFINAE",
+      "Template template parameters",
+      "Class template argument deduction (CTAD)",
+      "Concepts"
+    ],
+    correct: [2],
+    explanation: "CTAD (since C++17) allows the compiler to deduce template arguments for class templates from constructor call syntax."
+  },
+  {
+    id: 315,
+    type: "multiple",
+    module: 9,
+    question: "Which statements about function template overloading are correct?",
+    options: [
+      "Function templates can be overloaded like regular functions",
+      "Non-template overloads can be preferred over template overloads",
+      "Template argument deduction participates in overload resolution",
+      "Function templates cannot be specialized"
+    ],
+    correct: [0, 1, 2],
+    explanation: "Function templates can both be overloaded and (fully) specialized; non-template overloads are often preferred by overload resolution."
+  },
+  {
+    id: 316,
+    type: "single",
+    module: 9,
+    question: "What is a template parameter pack?",
+    options: [
+      "A collection of template definitions",
+      "A parameter that represents zero or more template arguments",
+      "A runtime container of parameters",
+      "A C-style array of types"
+    ],
+    correct: [1],
+    explanation: "A parameter pack allows a template parameter to stand for zero or more arguments of a given kind (types, non-type values, etc.)."
+  },
+  {
+    id: 317,
+    type: "single",
+    module: 9,
+    question: "Which construct in C++20 allows you to restrict template parameters using named requirements?",
+    options: [
+      "constexpr",
+      "decltype",
+      "concepts",
+      "aliases"
+    ],
+    correct: [2],
+    explanation: "Concepts allow you to express constraints on template parameters in a readable and reusable way."
+  },
+  {
+    id: 318,
+    type: "multiple",
+    module: 9,
+    question: "Which statements about SFINAE (Substitution Failure Is Not An Error) are correct?",
+    options: [
+      "It applies during template argument substitution",
+      "It removes invalid overloads from consideration",
+      "It is a compile-time mechanism",
+      "It always results in a compilation error"
+    ],
+    correct: [0, 1, 2],
+    explanation: "SFINAE prevents invalid template substitutions from causing hard errors, instead removing them from the overload set."
+  },
+  {
+    id: 319,
+    type: "single",
+    module: 9,
+    question: "Which is a correct syntax for a variable template?",
+    options: [
+      "template<typename T> constexpr T value = T{};",
+      "constexpr template<typename T> T value = T{};",
+      "template<T> constexpr value = T{};",
+      "template<typename T> value = T{};"
+    ],
+    correct: [0],
+    explanation: "Variable templates use the template keyword followed by a declaration of a variable."
+  },
+  {
+    id: 320,
+    type: "single",
+    module: 9,
+    question: "What is the primary benefit of using templates in C++?",
+    options: [
+      "They reduce compile times",
+      "They enable generic programming and code reuse",
+      "They replace all macros",
+      "They eliminate the need for inheritance"
+    ],
+    correct: [1],
+    explanation: "Templates enable type-generic code, allowing a single implementation to work with many types without sacrificing performance."
   }
 ];
 

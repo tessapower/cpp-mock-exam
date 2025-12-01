@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { Question, ExamResult, SelectedAnswers, ExamState } from '../types/exam.types';
+import type { Question, ExamResult, SelectedAnswers, ExamState, ExamMode } from '../types/exam.types';
 import { EXAM_CONSTANTS } from '../types/exam.types';
 import { storageService } from '../services/storage.service';
-import { selectRandomQuestions, calculateResults } from '../utils/exam.utils';
+import { selectRandomQuestions, selectModuleQuestions, calculateResults } from '../utils/exam.utils';
 
 export const useExamState = (questionBank: Question[]) => {
   const [state, setState] = useState<ExamState>({
@@ -15,7 +15,9 @@ export const useExamState = (questionBank: Question[]) => {
     showHistory: false,
     examQuestions: [],
     results: null,
-    resultsHistory: []
+    resultsHistory: [],
+    examMode: 'full',
+    selectedModule: null
   });
 
   // Load results history on mount
@@ -65,24 +67,37 @@ export const useExamState = (questionBank: Question[]) => {
     });
   }, [state]);
 
-  const startNewExam = useCallback(() => {
+  const startNewExam = useCallback((examMode: ExamMode = 'full', moduleNumber: number | null = null) => {
     if (state.examStarted && !state.examSubmitted) {
       if (!confirm('Are you sure you want to start a new exam? Current progress will be lost.')) {
         return;
       }
     }
 
+    let questions: Question[];
+    let duration: number;
+
+    if (examMode === 'module' && moduleNumber !== null) {
+      questions = selectModuleQuestions(questionBank, moduleNumber, EXAM_CONSTANTS.MODULE_QUESTIONS);
+      duration = EXAM_CONSTANTS.MODULE_DURATION_MINUTES * 60;
+    } else {
+      questions = selectRandomQuestions(questionBank, EXAM_CONSTANTS.TOTAL_QUESTIONS);
+      duration = EXAM_CONSTANTS.DURATION_MINUTES * 60;
+    }
+
     setState(prev => ({
       ...prev,
-      examQuestions: selectRandomQuestions(questionBank, EXAM_CONSTANTS.TOTAL_QUESTIONS),
+      examQuestions: questions,
       currentQuestion: 0,
       selectedAnswers: {},
       markedForReview: new Set<number>(),
-      timeRemaining: EXAM_CONSTANTS.DURATION_MINUTES * 60,
+      timeRemaining: duration,
       examSubmitted: false,
       results: null,
       examStarted: true,
-      showHistory: false
+      showHistory: false,
+      examMode,
+      selectedModule: moduleNumber
     }));
   }, [questionBank, state.examStarted, state.examSubmitted]);
 

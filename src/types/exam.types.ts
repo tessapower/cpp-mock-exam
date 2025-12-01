@@ -39,6 +39,8 @@ export interface ExamResult {
   questions: QuestionResult[];
 }
 
+export type ExamMode = 'full' | 'module';
+
 export interface ExamState {
   examStarted: boolean;
   currentQuestion: number;
@@ -50,6 +52,8 @@ export interface ExamState {
   examQuestions: Question[];
   results: ExamResult | null;
   resultsHistory: ExamResult[];
+  examMode: ExamMode;
+  selectedModule: number | null;
 }
 
 export const MODULE_NAMES: Record<number, string> = {
@@ -67,6 +71,8 @@ export const MODULE_NAMES: Record<number, string> = {
 export const EXAM_CONSTANTS = {
   TOTAL_QUESTIONS: 40,
   DURATION_MINUTES: 65,
-  PASSING_PERCENTAGE: 70
+  PASSING_PERCENTAGE: 70,
+  MODULE_QUESTIONS: 10,
+  MODULE_DURATION_MINUTES: 15
 } as const;
 
