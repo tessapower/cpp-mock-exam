@@ -68,6 +68,18 @@ export const MODULE_NAMES: Record<number, string> = {
   9: "Templates"
 };
 
+export const MODULE_TOPICS: Record<number, string[]> = {
+  1: ["vector", "deque", "list", "forward_list", "array", "Container adapters (stack, queue, priority_queue)"],
+  2: ["set", "multiset", "map", "multimap", "unordered_set", "unordered_map", "Hash tables"],
+  3: ["find", "count", "search", "for_each", "equal", "mismatch", "all_of/any_of/none_of"],
+  4: ["copy", "transform", "replace", "remove", "unique", "reverse", "rotate", "partition"],
+  5: ["sort", "stable_sort", "partial_sort", "nth_element", "binary_search", "lower_bound", "upper_bound"],
+  6: ["merge", "inplace_merge", "set operations", "includes", "Heap operations", "min/max algorithms"],
+  7: ["Function objects", "std::function", "std::bind", "Lambdas", "std::reference_wrapper", "Deprecated adapters"],
+  8: ["Stream manipulators", "File I/O", "String streams", "Stream state", "Formatting", "Binary vs text mode"],
+  9: ["Function templates", "Class templates", "Template specialization", "Variadic templates", "SFINAE", "Concepts"]
+};
+
 export const EXAM_CONSTANTS = {
   TOTAL_QUESTIONS: 40,
   DURATION_MINUTES: 65,
@@ -75,4 +87,3 @@ export const EXAM_CONSTANTS = {
   MODULE_QUESTIONS: 10,
   MODULE_DURATION_MINUTES: 15
 } as const;
-

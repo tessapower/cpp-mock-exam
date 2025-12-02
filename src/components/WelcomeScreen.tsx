@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { History } from 'lucide-react';
-import { EXAM_CONSTANTS, MODULE_NAMES } from '../types/exam.types';
+import { EXAM_CONSTANTS, MODULE_NAMES, MODULE_TOPICS } from '../types/exam.types';
 import type { ExamMode } from '../types/exam.types';
 
 interface WelcomeScreenProps {
@@ -64,10 +64,9 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
             <h2 className="text-xl font-semibold mb-4">Exam Information</h2>
             {isModuleExam && selectedModuleNumber ? (
               <ul className="space-y-2 text-gray-700">
-                <li>• <strong>Module:</strong> Module {selectedModuleNumber} - {MODULE_NAMES[selectedModuleNumber]}</li>
+                <li>• <strong>Topics:</strong> {MODULE_TOPICS[selectedModuleNumber].join(', ')}</li>
                 <li>• <strong>Total Questions:</strong> {EXAM_CONSTANTS.MODULE_QUESTIONS} questions</li>
                 <li>• <strong>Question Types:</strong> Mix of single-choice and multiple-choice questions</li>
-                <li>• <strong>Format:</strong> Single-choice (radio buttons) or multiple-choice (checkboxes - count shown)</li>
                 <li>• <strong>Duration:</strong> {EXAM_CONSTANTS.MODULE_DURATION_MINUTES} minutes</li>
                 <li>• <strong>Passing Score:</strong> {EXAM_CONSTANTS.PASSING_PERCENTAGE}% ({Math.ceil(EXAM_CONSTANTS.MODULE_QUESTIONS * EXAM_CONSTANTS.PASSING_PERCENTAGE / 100)}/{EXAM_CONSTANTS.MODULE_QUESTIONS} correct)</li>
               </ul>
@@ -75,7 +74,6 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
               <ul className="space-y-2 text-gray-700">
                 <li>• <strong>Total Questions:</strong> {EXAM_CONSTANTS.TOTAL_QUESTIONS} questions (randomly selected from question bank)</li>
                 <li>• <strong>Question Types:</strong> Mix of single-choice and multiple-choice questions</li>
-                <li>• <strong>Format:</strong> Single-choice (radio buttons) or multiple-choice (checkboxes - count shown)</li>
                 <li>• <strong>Duration:</strong> {EXAM_CONSTANTS.DURATION_MINUTES} minutes</li>
                 <li>• <strong>Passing Score:</strong> {EXAM_CONSTANTS.PASSING_PERCENTAGE}% ({Math.ceil(EXAM_CONSTANTS.TOTAL_QUESTIONS * EXAM_CONSTANTS.PASSING_PERCENTAGE / 100)}/{EXAM_CONSTANTS.TOTAL_QUESTIONS} correct)</li>
                 <li>• <strong>Coverage:</strong> 9 modules covering STL containers, algorithms, I/O, and templates</li>
