@@ -1,5 +1,5 @@
-import React from 'react';
-import { ChevronLeft, ChevronRight, Flag } from 'lucide-react';
+import React, { useState } from 'react';
+import { ChevronLeft, ChevronRight, Flag, Copy, Check, Sun, Moon } from 'lucide-react';
 import type { Question } from '../types/exam.types';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -32,8 +32,32 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   codeTheme
 }) => {
   const isSingleChoice = question.type === 'single';
+  const [copiedBlocks, setCopiedBlocks] = useState<Set<number>>(new Set());
+  const [localCodeThemes, setLocalCodeThemes] = useState<Map<number, CodeTheme>>(new Map());
 
-  const codeStyle = codeTheme === 'dark' ? oneDark : oneLight;
+  const handleCopyCode = (code: string, blockIndex: number) => {
+    navigator.clipboard.writeText(code).then(() => {
+      setCopiedBlocks(prev => new Set(prev).add(blockIndex));
+      setTimeout(() => {
+        setCopiedBlocks(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(blockIndex);
+          return newSet;
+        });
+      }, 2000);
+    });
+  };
+
+  const toggleBlockTheme = (blockIndex: number) => {
+    setLocalCodeThemes(prev => {
+      const newMap = new Map(prev);
+      const currentTheme = newMap.get(blockIndex) || codeTheme;
+      newMap.set(blockIndex, currentTheme === 'dark' ? 'light' : 'dark');
+      return newMap;
+    });
+  };
+
+  let codeBlockIndex = 0;
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-8">
@@ -54,15 +78,37 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                 }
 
                 const language = languageMatch[1];
+                const codeContent = String(children).replace(/\n$/, '');
+                const currentBlockIndex = codeBlockIndex++;
+                const blockTheme = localCodeThemes.get(currentBlockIndex) || codeTheme;
+                const codeStyle = blockTheme === 'dark' ? oneDark : oneLight;
+                const isCopied = copiedBlocks.has(currentBlockIndex);
+
                 return (
-                  <div className="text-sm font-mono my-2">
+                  <div className="relative text-sm font-mono my-2">
+                    <div className="absolute top-2 right-2 flex gap-1 z-10 pointer-events-auto">
+                      <button
+                        onClick={() => toggleBlockTheme(currentBlockIndex)}
+                        className="p-1.5 rounded bg-gray-700 hover:bg-gray-600 text-white shadow-lg transition-colors"
+                        title={blockTheme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+                      >
+                        {blockTheme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+                      </button>
+                      <button
+                        onClick={() => handleCopyCode(codeContent, currentBlockIndex)}
+                        className="p-1.5 rounded bg-gray-700 hover:bg-gray-600 text-white shadow-lg transition-colors"
+                        title="Copy code"
+                      >
+                        {isCopied ? <Check size={14} /> : <Copy size={14} />}
+                      </button>
+                    </div>
                     <SyntaxHighlighter
                       style={codeStyle}
                       language={language}
                       PreTag="div"
                       customStyle={{ margin: 0 }}
                     >
-                      {String(children).replace(/\n$/, '')}
+                      {codeContent}
                     </SyntaxHighlighter>
                   </div>
                 );
