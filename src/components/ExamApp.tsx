@@ -16,6 +16,12 @@ const ExamApp: React.FC = () => {
     setCodeTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
   };
 
+  const handleExitExam = () => {
+    actions.setExamStarted(false);
+    actions.setExamSubmitted(false);
+    actions.setResults(null);
+  };
+
   // Welcome Screen
   if (!state.examStarted) {
     return (
@@ -44,11 +50,7 @@ const ExamApp: React.FC = () => {
       <ResultsScreen
         results={state.results}
         onNewExam={actions.startNewExam}
-        onBackToHome={() => {
-          actions.setExamStarted(false);
-          actions.setExamSubmitted(false);
-          actions.setResults(null);
-        }}
+        onBackToHome={handleExitExam}
       />
     );
   }
@@ -74,6 +76,7 @@ const ExamApp: React.FC = () => {
         onToggleAnswer={actions.toggleAnswer}
         onToggleMarkReview={actions.toggleMarkReview}
         onSubmit={actions.submitExam}
+        onExitExam={handleExitExam}
         codeTheme={codeTheme}
       />
     </div>

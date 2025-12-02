@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, CheckCircle } from 'lucide-react';
+import { Clock, CheckCircle, Home } from 'lucide-react';
 import { formatTime } from '../utils/exam.utils';
 import { MODULE_NAMES } from '../types/exam.types';
 
@@ -9,6 +9,7 @@ interface ExamHeaderProps {
   moduleNumber: number;
   timeRemaining: number;
   onSubmit: () => void;
+  onExitExam: () => void;
 }
 
 export const ExamHeader: React.FC<ExamHeaderProps> = ({
@@ -16,9 +17,16 @@ export const ExamHeader: React.FC<ExamHeaderProps> = ({
   totalQuestions,
   moduleNumber,
   timeRemaining,
-  onSubmit
+  onSubmit,
+  onExitExam
 }) => {
   const isLowTime = timeRemaining < 300; // Less than 5 minutes
+
+  const handleExitExam = () => {
+    if (confirm('Are you sure you want to exit the exam? Your progress will be lost.')) {
+      onExitExam();
+    }
+  };
 
   return (
     <div className="bg-white shadow-md border-b border-gray-200 sticky top-0 z-10">
@@ -50,6 +58,14 @@ export const ExamHeader: React.FC<ExamHeaderProps> = ({
             </div>
 
             <button
+              onClick={handleExitExam}
+              className="flex items-center gap-2 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-300 transition"
+            >
+              <Home size={18} />
+              Exit
+            </button>
+
+            <button
               onClick={onSubmit}
               className="flex items-center gap-2 bg-green-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-700 transition"
             >
@@ -64,4 +80,3 @@ export const ExamHeader: React.FC<ExamHeaderProps> = ({
 };
 
 export default ExamHeader;
-

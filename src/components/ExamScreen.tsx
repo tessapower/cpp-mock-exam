@@ -15,6 +15,7 @@ interface ExamScreenProps {
   onToggleAnswer: (index: number) => void;
   onToggleMarkReview: () => void;
   onSubmit: () => void;
+  onExitExam: () => void;
   codeTheme: CodeTheme;
 }
 
@@ -28,6 +29,7 @@ export const ExamScreen: React.FC<ExamScreenProps> = ({
   onToggleAnswer,
   onToggleMarkReview,
   onSubmit,
+  onExitExam,
   codeTheme
 }) => {
   if (!examQuestions || examQuestions.length === 0) {
@@ -51,6 +53,7 @@ export const ExamScreen: React.FC<ExamScreenProps> = ({
         moduleNumber={question.module}
         timeRemaining={timeRemaining}
         onSubmit={onSubmit}
+        onExitExam={onExitExam}
       />
 
       <div className="max-w-7xl mx-auto px-4 py-8">
