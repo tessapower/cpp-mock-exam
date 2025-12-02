@@ -3,6 +3,7 @@ import type { Question, SelectedAnswers } from '../types/exam.types';
 import { ExamHeader } from './ExamHeader';
 import { QuestionNavigator } from './QuestionNavigator';
 import { QuestionCard } from './QuestionCard';
+import type { CodeTheme } from './ExamApp';
 
 interface ExamScreenProps {
   examQuestions: Question[];
@@ -14,6 +15,7 @@ interface ExamScreenProps {
   onToggleAnswer: (index: number) => void;
   onToggleMarkReview: () => void;
   onSubmit: () => void;
+  codeTheme: CodeTheme;
 }
 
 export const ExamScreen: React.FC<ExamScreenProps> = ({
@@ -25,7 +27,8 @@ export const ExamScreen: React.FC<ExamScreenProps> = ({
   onSetCurrentQuestion,
   onToggleAnswer,
   onToggleMarkReview,
-  onSubmit
+  onSubmit,
+  codeTheme
 }) => {
   if (!examQuestions || examQuestions.length === 0) {
     return (
@@ -69,6 +72,7 @@ export const ExamScreen: React.FC<ExamScreenProps> = ({
           isMarked={markedForReview.has(currentQuestion)}
           canGoPrevious={currentQuestion > 0}
           canGoNext={currentQuestion < examQuestions.length - 1}
+          codeTheme={codeTheme}
         />
       </div>
     </div>
@@ -76,4 +80,3 @@ export const ExamScreen: React.FC<ExamScreenProps> = ({
 };
 
 export default ExamScreen;
-

@@ -3,7 +3,8 @@ import { ChevronLeft, ChevronRight, Flag } from 'lucide-react';
 import type { Question } from '../types/exam.types';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import type { CodeTheme } from './ExamApp';
 
 interface QuestionCardProps {
   question: Question;
@@ -15,6 +16,7 @@ interface QuestionCardProps {
   isMarked: boolean;
   canGoPrevious: boolean;
   canGoNext: boolean;
+  codeTheme: CodeTheme;
 }
 
 export const QuestionCard: React.FC<QuestionCardProps> = ({
@@ -26,9 +28,12 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   onMarkReview,
   isMarked,
   canGoPrevious,
-  canGoNext
+  canGoNext,
+  codeTheme
 }) => {
   const isSingleChoice = question.type === 'single';
+
+  const codeStyle = codeTheme === 'dark' ? oneDark : oneLight;
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-8">
@@ -42,7 +47,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
                 if (inline || !languageMatch) {
                   return (
-                    <code className="bg-gray-100 rounded px-1 py-0.5 text-sm">
+                    <code className="bg-gray-100 rounded px-1 py-0.5 text-sm font-mono">
                       {children}
                     </code>
                   );
@@ -50,14 +55,16 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
                 const language = languageMatch[1];
                 return (
-                  <SyntaxHighlighter
-                    style={oneDark}
-                    language={language}
-                    PreTag="div"
-                    className="rounded-md text-sm my-2"
-                  >
-                    {String(children).replace(/\n$/, '')}
-                  </SyntaxHighlighter>
+                  <div className="text-sm font-mono my-2">
+                    <SyntaxHighlighter
+                      style={codeStyle}
+                      language={language}
+                      PreTag="div"
+                      customStyle={{ margin: 0 }}
+                    >
+                      {String(children).replace(/\n$/, '')}
+                    </SyntaxHighlighter>
+                  </div>
                 );
               }
             }}
