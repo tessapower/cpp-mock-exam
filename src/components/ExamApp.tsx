@@ -22,6 +22,11 @@ const ExamApp: React.FC = () => {
     actions.setResults(null);
   };
 
+  const handleRetakeExam = () => {
+    // Retake the same exam type (full or module) with the same module if applicable
+    actions.startNewExam(state.examMode, state.selectedModule);
+  };
+
   // Welcome Screen
   if (!state.examStarted) {
     return (
@@ -49,7 +54,7 @@ const ExamApp: React.FC = () => {
     return (
       <ResultsScreen
         results={state.results}
-        onNewExam={actions.startNewExam}
+        onRetakeExam={handleRetakeExam}
         onBackToHome={handleExitExam}
       />
     );

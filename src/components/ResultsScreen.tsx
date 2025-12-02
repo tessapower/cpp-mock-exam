@@ -5,13 +5,13 @@ import { MODULE_NAMES } from '../types/exam.types';
 
 interface ResultsScreenProps {
   results: ExamResult;
-  onNewExam: () => void;
+  onRetakeExam: () => void;
   onBackToHome: () => void;
 }
 
 export const ResultsScreen: React.FC<ResultsScreenProps> = ({
   results,
-  onNewExam,
+  onRetakeExam,
   onBackToHome
 }) => {
   return (
@@ -66,11 +66,11 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({
 
           <div className="mt-8 flex gap-4">
             <button
-              onClick={onNewExam}
+              onClick={onRetakeExam}
               className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
             >
               <RotateCcw size={20} />
-              Take Another Exam
+              Retake Exam
             </button>
             <button
               onClick={onBackToHome}
@@ -142,4 +142,3 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({
 };
 
 export default ResultsScreen;
-
