@@ -21,37 +21,11 @@ export const QuestionNavigator: React.FC<QuestionNavigatorProps> = ({
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-4 mb-6">
-      <div className="flex items-center justify-between mb-3">
+      <div className="mb-3">
         <h3 className="font-semibold text-base">Questions:</h3>
-        <div className="flex items-center gap-4 text-xs">
-          <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 bg-blue-600 rounded"></div>
-            <span>Current</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 bg-green-500 rounded"></div>
-            <span>Answered</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 bg-yellow-500 rounded"></div>
-            <span>Marked</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 bg-gray-200 rounded"></div>
-            <span>Not Answered</span>
-          </div>
-          <div className="ml-4 font-semibold">
-            {answeredCount} / {examQuestions.length} answered
-            {markedForReview.size > 0 && (
-              <span className="text-yellow-600 ml-2">
-                ({markedForReview.size} marked)
-              </span>
-            )}
-          </div>
-        </div>
       </div>
 
-      <div className="grid gap-1.5" style={{ gridTemplateColumns: 'repeat(20, minmax(0, 1fr))' }}>
+      <div className="grid gap-1.5 mb-3" style={{ gridTemplateColumns: 'repeat(20, minmax(0, 1fr))' }}>
         {examQuestions.map((_, index) => {
           const isAnswered = selectedAnswers[examQuestions[index].id]?.length > 0;
           const isMarked = markedForReview.has(index);
@@ -75,6 +49,35 @@ export const QuestionNavigator: React.FC<QuestionNavigatorProps> = ({
             </button>
           );
         })}
+      </div>
+
+      <div className="flex items-center justify-between pt-3 border-t border-gray-200">
+        <div className="flex items-center gap-4 text-xs">
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 bg-blue-600 rounded"></div>
+            <span>Current</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 bg-green-500 rounded"></div>
+            <span>Answered</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 bg-yellow-500 rounded"></div>
+            <span>Marked</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 bg-gray-200 rounded"></div>
+            <span>Not Answered</span>
+          </div>
+        </div>
+        <div className="text-xs font-semibold">
+          {markedForReview.size > 0 && (
+            <span className="text-yellow-600 mr-2">
+              ({markedForReview.size} marked)
+            </span>
+          )}
+          {answeredCount} / {examQuestions.length} answered
+        </div>
       </div>
     </div>
   );
