@@ -1830,7 +1830,7 @@ export const QuestionBank: Question[] = [
     id: 130,
     type: "single",
     module: 1,
-    question: "What happens?\n```cpp\nstd::forward_list<int> fl = {1, 2, 3};\nstd::cout << fl.size();\n```",
+    question: "What is the output?\n```cpp\nstd::forward_list<int> fl = {1, 2, 3};\nstd::cout << fl.size();\n```",
     options: [
       "0",
       "3",
@@ -1916,7 +1916,7 @@ export const QuestionBank: Question[] = [
     id: 136,
     type: "single",
     module: 2,
-    question: "What happens?\n```cpp\nstd::multimap<int, std::string> mm;\nmm.insert({1, \"one\"});\nmm.insert({1, \"uno\"});\nstd::cout << mm[1];\n```",
+    question: "What is the output?\n```cpp\nstd::multimap<int, std::string> mm;\nmm.insert({1, \"one\"});\nmm.insert({1, \"uno\"});\nstd::cout << mm[1];\n```",
     options: [
       "one",
       "uno",
@@ -2016,7 +2016,7 @@ export const QuestionBank: Question[] = [
     id: 143,
     type: "single",
     module: 3,
-    question: "What happens?\n```cpp\nstd::vector<int> v = {1, 2, 3};\nauto it = std::find(v.begin(), v.end(), 5);\nstd::cout << *it;\n```",
+    question: "What is the output?\n```cpp\nstd::vector<int> v = {1, 2, 3};\nauto it = std::find(v.begin(), v.end(), 5);\nstd::cout << *it;\n```",
     options: [
       "0",
       "5",
@@ -2214,7 +2214,7 @@ export const QuestionBank: Question[] = [
     id: 157,
     type: "single",
     module: 4,
-    question: "What happens?\n```cpp\nstd::vector<int> v = {1, 2, 3};\nstd::vector<int> dest(5);\nstd::copy(v.begin(), v.end(), dest.begin());\nstd::cout << dest[4];\n```",
+    question: "What is the output?\n```cpp\nstd::vector<int> v = {1, 2, 3};\nstd::vector<int> dest(5);\nstd::copy(v.begin(), v.end(), dest.begin());\nstd::cout << dest[4];\n```",
     options: [
       "0",
       "3",
@@ -2342,7 +2342,7 @@ export const QuestionBank: Question[] = [
     id: 166,
     type: "single",
     module: 5,
-    question: "What happens?\n```cpp\nstd::vector<int> v = {5, 2, 8, 1, 9};\nstd::partial_sort(v.begin(), v.begin() + 3, v.end());\nstd::cout << v[0] << \" \" << v[1] << \" \" << v[2];\n```",
+    question: "What is the output?\n```cpp\nstd::vector<int> v = {5, 2, 8, 1, 9};\nstd::partial_sort(v.begin(), v.begin() + 3, v.end());\nstd::cout << v[0] << \" \" << v[1] << \" \" << v[2];\n```",
     options: [
       "1 2 5",
       "5 2 8",
@@ -2528,7 +2528,7 @@ export const QuestionBank: Question[] = [
     id: 179,
     type: "single",
     module: 7,
-    question: "What happens?\n```cpp\nstd::function<int(int)> f;\nstd::cout << (f == nullptr);\n```",
+    question: "What is the output?\n```cpp\nstd::function<int(int)> f;\nstd::cout << (f == nullptr);\n```",
     options: [
       "0",
       "1",
@@ -2600,7 +2600,7 @@ export const QuestionBank: Question[] = [
     id: 184,
     type: "single",
     module: 8,
-    question: "What happens?\n```cpp\nstd::ifstream file(\"nonexistent.txt\");\nif (file) std::cout << \"OK\";\nelse std::cout << \"FAIL\";\n```",
+    question: "What is the output?\n```cpp\nstd::ifstream file(\"nonexistent.txt\");\nif (file) std::cout << \"OK\";\nelse std::cout << \"FAIL\";\n```",
     options: [
       "OK",
       "FAIL",
@@ -2644,7 +2644,7 @@ export const QuestionBank: Question[] = [
     id: 187,
     type: "single",
     module: 9,
-    question: "What happens?\n```cpp\ntemplate<typename T>\nvoid print(T value) { std::cout << value; }\nprint(\"Hello\");\n```",
+    question: "What is the output?\n```cpp\ntemplate<typename T>\nvoid print(T value) { std::cout << value; }\nprint(\"Hello\");\n```",
     options: [
       "Hello",
       "Compilation fails",
@@ -2672,7 +2672,7 @@ export const QuestionBank: Question[] = [
     id: 189,
     type: "single",
     module: 9,
-    question: "What happens?\n```cpp\ntemplate<typename T>\nvoid func(T value) { std::cout << sizeof(value); }\nfunc(10);\nfunc(10.5);\n```",
+    question: "What is the output?\n```cpp\ntemplate<typename T>\nvoid func(T value) { std::cout << sizeof(value); }\nfunc(10);\nfunc(10.5);\n```",
     options: [
       "4 8",
       "4 4",
