@@ -1,7 +1,12 @@
-import React from 'react';
-import { CheckCircle, XCircle, RotateCcw } from 'lucide-react';
+import React, { useState } from 'react';
+import { CheckCircle, XCircle, RotateCcw, Copy, Check, Sun, Moon } from 'lucide-react';
 import type { ExamResult } from '../types/exam.types';
 import { MODULE_NAMES } from '../types/exam.types';
+import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
+type CodeTheme = 'light' | 'dark';
 
 interface ResultsScreenProps {
   results: ExamResult;
@@ -14,6 +19,85 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({
   onRetakeExam,
   onBackToHome
 }) => {
+  const [copiedBlocks, setCopiedBlocks] = useState<Set<string>>(new Set());
+  const [localCodeThemes, setLocalCodeThemes] = useState<Map<string, CodeTheme>>(new Map());
+  const codeTheme: CodeTheme = 'dark';
+
+  const handleCopyCode = (code: string, blockId: string) => {
+    navigator.clipboard.writeText(code).then(() => {
+      setCopiedBlocks(prev => new Set(prev).add(blockId));
+      setTimeout(() => {
+        setCopiedBlocks(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(blockId);
+          return newSet;
+        });
+      }, 2000);
+    });
+  };
+
+  const toggleBlockTheme = (blockId: string) => {
+    setLocalCodeThemes(prev => {
+      const newMap = new Map(prev);
+      const currentTheme = newMap.get(blockId) || codeTheme;
+      newMap.set(blockId, currentTheme === 'dark' ? 'light' : 'dark');
+      return newMap;
+    });
+  };
+
+  const createCodeRenderer = (questionId: number) => {
+    let codeBlockIndex = 0;
+
+    return (codeProps: any) => {
+      const { inline, children, className } = codeProps;
+      const languageMatch = /language-(\w+)/.exec(className || '');
+
+      if (inline || !languageMatch) {
+        return (
+          <code className="bg-gray-100 rounded px-1 py-0.5 text-sm font-mono">
+            {children}
+          </code>
+        );
+      }
+
+      const language = languageMatch[1];
+      const codeContent = String(children).replace(/\n$/, '');
+      const blockId = `q${questionId}-b${codeBlockIndex++}`;
+      const blockTheme = localCodeThemes.get(blockId) || codeTheme;
+      const codeStyle = blockTheme === 'dark' ? oneDark : oneLight;
+      const isCopied = copiedBlocks.has(blockId);
+
+      return (
+        <div className="relative text-sm font-mono my-2">
+          <div className="absolute top-2 right-2 flex gap-1 z-10 pointer-events-auto">
+            <button
+              onClick={() => toggleBlockTheme(blockId)}
+              className="p-1.5 rounded bg-gray-700 hover:bg-gray-600 text-white shadow-lg transition-colors"
+              title={blockTheme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+            >
+              {blockTheme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+            </button>
+            <button
+              onClick={() => handleCopyCode(codeContent, blockId)}
+              className="p-1.5 rounded bg-gray-700 hover:bg-gray-600 text-white shadow-lg transition-colors"
+              title="Copy code"
+            >
+              {isCopied ? <Check size={14} /> : <Copy size={14} />}
+            </button>
+          </div>
+          <SyntaxHighlighter
+            style={codeStyle}
+            language={language}
+            PreTag="div"
+            customStyle={{ margin: 0 }}
+          >
+            {codeContent}
+          </SyntaxHighlighter>
+        </div>
+      );
+    };
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-6xl mx-auto">
@@ -97,7 +181,15 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({
                   )}
                   <div className="flex-1">
                     <div className="font-semibold text-lg mb-2">
-                      {index + 1}. {result.question}
+                      {index + 1}.{' '}
+                      <ReactMarkdown
+                        components={{
+                          code: createCodeRenderer(result.id),
+                          p: ({ children }) => <span>{children}</span>
+                        }}
+                      >
+                        {result.question}
+                      </ReactMarkdown>
                     </div>
 
                     <div className="space-y-2 mb-3">
@@ -128,7 +220,16 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({
 
                     <div className="bg-blue-50 p-3 rounded">
                       <div className="text-sm font-semibold text-blue-900 mb-1">Explanation:</div>
-                      <div className="text-sm text-blue-800">{result.explanation}</div>
+                      <div className="text-sm text-blue-800">
+                        <ReactMarkdown
+                          components={{
+                            code: createCodeRenderer(result.id + 1000),
+                            p: ({ children }) => <span>{children}</span>
+                          }}
+                        >
+                          {result.explanation}
+                        </ReactMarkdown>
+                      </div>
                     </div>
                   </div>
                 </div>
