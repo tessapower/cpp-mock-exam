@@ -6,7 +6,7 @@ export const QuestionBank: Question[] = [
     id: 1,
     type: "single",
     module: 1,
-    question: "What is the time complexity of random access in std::vector?",
+    question: "What is the time complexity of random access in `std::vector`?",
     options: [
       "O(1)",
       "O(log n)",
@@ -14,13 +14,13 @@ export const QuestionBank: Question[] = [
       "O(n log n)"
     ],
     correct: [0],
-    explanation: "std::vector provides O(1) random access because elements are stored contiguously in memory, allowing direct index-based access."
+    explanation: "`std::vector` provides O(1) random access because elements are stored contiguously in memory, allowing direct index-based access."
   },
   {
     id: 2,
     type: "single",
     module: 1,
-    question: "What is the primary advantage of std::deque over std::vector?",
+    question: "What is the primary advantage of `std::deque` over `std::vector`?",
     options: [
       "Better cache locality",
       "Efficient insertion/deletion at both ends",
@@ -28,13 +28,14 @@ export const QuestionBank: Question[] = [
       "Guaranteed contiguous storage"
     ],
     correct: [1],
-    explanation: "std::deque's key advantage is O(1) insertion/deletion at both ends, while vector only offers this at the back."
+    explanation: "`std::deque`'s key advantage is O(1) insertion/deletion at" +
+      " both ends, while `std::vector` only offers this at the back."
   },
   {
     id: 3,
     type: "multiple",
     module: 1,
-    question: "Which operations are O(1) for std::list?",
+    question: "Which operations are O(1) for `std::list`?",
     options: [
       "Insert at any position given an iterator",
       "Random access by index",
@@ -42,7 +43,7 @@ export const QuestionBank: Question[] = [
       "Finding an element by value"
     ],
     correct: [0, 2],
-    explanation: "std::list provides O(1) insertion and deletion given an iterator, but random access and finding are O(n) due to its linked list structure."
+    explanation: "`std::list` provides O(1) insertion and deletion given an iterator, but random access and finding are O(n) due to its linked list structure."
   },
   {
     id: 4,
@@ -50,19 +51,19 @@ export const QuestionBank: Question[] = [
     module: 1,
     question: "Which container type NEVER invalidates iterators on insertion (except for erased elements)?",
     options: [
-      "std::vector",
-      "std::list",
-      "std::deque",
-      "std::array"
+      "`std::vector`",
+      "`std::list`",
+      "`std::deque`",
+      "`std::array`"
     ],
     correct: [1],
-    explanation: "std::list never invalidates iterators on insertion because elements are not relocated in memory."
+    explanation: "`std::list` never invalidates iterators on insertion because elements are not relocated in memory."
   },
   {
     id: 5,
     type: "single",
     module: 1,
-    question: "What is a defining characteristic of std::array?",
+    question: "What is a defining characteristic of `std::array`?",
     options: [
       "Size known at runtime",
       "Size must be known at compile time",
@@ -70,13 +71,13 @@ export const QuestionBank: Question[] = [
       "Uses heap allocation"
     ],
     correct: [1],
-    explanation: "std::array requires its size to be known at compile time, making it a fixed-size container."
+    explanation: "`std::array` requires its size to be known at compile time, making it a fixed-size container."
   },
   {
     id: 6,
     type: "multiple",
     module: 1,
-    question: "Which statements about std::forward_list are correct?",
+    question: "Which statements about `std::forward_list` are correct?",
     options: [
       "It's a singly-linked list",
       "It provides bidirectional iteration",
@@ -84,13 +85,13 @@ export const QuestionBank: Question[] = [
       "It provides a size() method"
     ],
     correct: [0, 2],
-    explanation: "std::forward_list is singly-linked (forward-only iteration), has lower overhead than std::list, and doesn't provide size() for performance reasons."
+    explanation: "`std::forward_list` is singly-linked (forward-only iteration), has lower overhead than `std::list`, and doesn't provide `size()` for performance reasons."
   },
   {
     id: 7,
     type: "single",
     module: 1,
-    question: "What is the primary reason to prefer std::vector over std::list?",
+    question: "What is the primary reason to prefer `std::vector` over `std::list`?",
     options: [
       "Need O(1) middle insertion",
       "Need frequent random access",
@@ -98,27 +99,27 @@ export const QuestionBank: Question[] = [
       "Need bidirectional iteration"
     ],
     correct: [1],
-    explanation: "std::vector excels at random access with O(1) complexity, while list requires O(n) traversal."
+    explanation: "`std::vector` excels at random access with O(1) complexity, while list requires O(n) traversal."
   },
   {
     id: 8,
     type: "single",
     module: 1,
-    question: "Which container provides both reserve() and capacity() methods?",
+    question: "Which container provides both `reserve()` and `capacity()` methods?",
     options: [
-      "std::list",
-      "std::vector",
-      "std::array",
-      "std::forward_list"
+      "`std::list`",
+      "`std::vector`",
+      "`std::array`",
+      "`std::forward_list`"
     ],
     correct: [1],
-    explanation: "Only std::vector provides both reserve() and capacity() for managing memory allocation."
+    explanation: "Only `std::vector` provides both `reserve()` and `capacity()` for managing memory allocation."
   },
   {
     id: 9,
     type: "single",
     module: 1,
-    question: "What triggers reallocation in std::vector during push_back()?",
+    question: "What triggers reallocation in `std::vector` during `push_back()`?",
     options: [
       "Container is empty",
       "Container size exceeds limit",
@@ -134,33 +135,33 @@ export const QuestionBank: Question[] = [
     module: 1,
     question: "Which container does NOT support emplace operations?",
     options: [
-      "std::vector",
-      "std::list",
-      "std::deque",
-      "std::array"
+      "`std::vector`",
+      "`std::list`",
+      "`std::deque`",
+      "`std::array`"
     ],
     correct: [3],
-    explanation: "std::array is fixed-size and doesn't support insertion operations like emplace."
+    explanation: "`std::array` is fixed-size and doesn't support insertion operations like `emplace`."
   },
   {
     id: 11,
     type: "multiple",
     module: 1,
-    question: "Which statements about std::deque are true?",
+    question: "Which statements about `std::deque` are true?",
     options: [
-      "Provides O(1) push_front()",
+      "Provides O(1) `push_front()`",
       "Elements are guaranteed contiguous",
       "Provides O(1) random access",
-      "Better cache locality than std::vector"
+      "Better cache locality than `std::vector`"
     ],
     correct: [0, 2],
-    explanation: "std::deque provides O(1) operations at both ends and O(1) random access. Elements are in chunks, not contiguous, resulting in worse cache locality than vector."
+    explanation: "`std::deque` provides O(1) operations at both ends and O(1) random access. Elements are in chunks, not contiguous, resulting in worse cache locality than vector."
   },
   {
     id: 12,
     type: "single",
     module: 1,
-    question: "What is the complexity of std::list::splice() for a single element?",
+    question: "What is the complexity of `std::list::splice()` for a single element?",
     options: [
       "O(1)",
       "O(log n)",
@@ -168,21 +169,22 @@ export const QuestionBank: Question[] = [
       "O(n²)"
     ],
     correct: [0],
-    explanation: "splice() is O(1) for single elements because it only adjusts pointers, not copying data."
+    explanation: "`splice()` is O(1) for single elements because it only adjusts pointers, not copying data."
   },
   {
     id: 13,
     type: "multiple",
     module: 1,
-    question: "Which containers can be used with std::stack adapter?",
+    question: "Which containers can be used with `std::stack` adapter?",
     options: [
-      "std::vector",
-      "std::deque",
-      "std::list",
-      "std::forward_list"
+      "`std::vector`",
+      "`std::deque`",
+      "`std::list`",
+      "`std::forward_list`"
     ],
     correct: [0, 1, 2],
-    explanation: "std::stack can adapt vector, deque, or list. forward_list doesn't provide the required back() operation."
+    explanation: "`std::stack` can adapt `std::vector`, `std::deque`, or" +
+      " `std::list`. `std::forward_list` doesn't provide the required `back()` operation."
   },
 
   // MODULE 2: Associative STL containers (14 questions)
@@ -192,19 +194,20 @@ export const QuestionBank: Question[] = [
     module: 2,
     question: "Which containers are typically implemented as red-black trees?",
     options: [
-      "std::set",
-      "std::map",
-      "std::unordered_map",
-      "std::multiset"
+      "`std::set`",
+      "`std::map`",
+      "`std::unordered_map`",
+      "`std::multiset`"
     ],
     correct: [0, 1, 3],
-    explanation: "std::set, map, multiset, and multimap are typically red-black trees. unordered_map uses hash tables."
+    explanation: "`std::set`, `std::map`, `std::multiset`, and" +
+      " `std::multimap` are typically red-black trees. `std::unordered_map` uses hash tables."
   },
   {
     id: 15,
     type: "single",
     module: 2,
-    question: "What is the average lookup complexity of std::unordered_map?",
+    question: "What is the average lookup complexity of `std::unordered_map`?",
     options: [
       "O(1)",
       "O(log n)",
@@ -212,21 +215,22 @@ export const QuestionBank: Question[] = [
       "O(n²)"
     ],
     correct: [0],
-    explanation: "unordered_map provides O(1) average lookup using hashing, requires hashable keys, and doesn't maintain order."
+    explanation: "`std::unordered_map` provides O(1) average lookup using" +
+      " hashing, requires hashable keys, and doesn't maintain order."
   },
   {
     id: 16,
     type: "multiple",
     module: 2,
-    question: "Which std::map operations have O(log n) complexity?",
+    question: "Which `std::map` operations have O(log n) complexity?",
     options: [
-      "find()",
-      "insert()",
-      "erase() by key",
-      "size()"
+      "`find()`",
+      "`insert()`",
+      "`erase()` by key",
+      "`size()`"
     ],
     correct: [0, 1, 2],
-    explanation: "std::map has O(log n) for find, insert, and erase operations. size() is O(1)."
+    explanation: "`std::map` has O(log n) for `find`, `insert`, and `erase` operations. `size()` is O(1)."
   },
   {
     id: 17,
@@ -650,41 +654,45 @@ export const QuestionBank: Question[] = [
       "Both return iterators"
     ],
     correct: [0, 1, 2],
-    explanation: "fill and fill_n assign values and modify in-place. fill returns void, fill_n returns an iterator."
+    explanation: "`std::fill` and `std::fill_n` assign values and modify" +
+      " in-place. `std::fill` returns `void`, `std::fill_n` returns an iterator."
   },
   {
     id: 47,
     type: "multiple",
     module: 4,
-    question: "Which statements are true about std::replace?",
+    question: "Which statements are true about `std::replace`?",
     options: [
       "Replaces old value with new value",
       "Modifies sequence in-place",
       "Returns number of replacements",
-      "Has an _if variant with predicate"
+      "Has an `_if` variant with predicate"
     ],
     correct: [0, 1, 3],
-    explanation: "replace changes values in-place and has replace_if variant. It returns void, not a count."
+    explanation: "`std::replace` changes values in-place and has a" +
+      " `replace_if` variant. It returns `void`, not a count."
   },
   {
     id: 48,
     type: "single",
     module: 4,
-    question: "Which algorithm does NOT have a _copy variant?",
+    question: "Which algorithm does NOT have a `_copy` variant?",
     options: [
-      "std::remove",
-      "std::replace",
-      "std::reverse",
-      "std::sort"
+      "`std::remove`",
+      "`std::replace`",
+      "`std::reverse`",
+      "`std::sort`"
     ],
     correct: [3],
-    explanation: "Many algorithms have _copy variants that write to output: remove_copy, replace_copy, reverse_copy. There's no sort_copy."
+    explanation: "Many algorithms have `_copy` variants that write to" +
+      " output: `std::remove_copy`, `std::replace_copy`, `std::reverse_copy`." +
+      " There's no std::sort_copy."
   },
   {
     id: 49,
     type: "multiple",
     module: 4,
-    question: "Which statements about std::unique are correct?",
+    question: "Which statements about `std::unique` are correct?",
     options: [
       "Removes consecutive duplicate elements",
       "Returns iterator to new logical end",
@@ -692,13 +700,15 @@ export const QuestionBank: Question[] = [
       "Actually deletes elements from container"
     ],
     correct: [0, 1, 2],
-    explanation: "unique removes consecutive duplicates, returns new end, works best after sorting. It doesn't actually delete - use erase for that."
+    explanation: "`std::unique` removes consecutive duplicates, returns new" +
+      " end, works best after sorting. It doesn't actually delete - use" +
+      " `std::erase` for that."
   },
   {
     id: 50,
     type: "multiple",
     module: 4,
-    question: "Which statements are true about std::generate?",
+    question: "Which statements are true about `std::generate`?",
     options: [
       "Assigns values by repeatedly calling a function",
       "The function must take no arguments",
@@ -2166,7 +2176,8 @@ export const QuestionBank: Question[] = [
       "Compilation fails"
     ],
     correct: [1],
-    explanation: "replace changes all 3s to 30. Output: \"1 2 30 4 5 \"."
+    explanation: "`std::replace` changes all `3` to `30`. Output: \"1 2 30 4 5" +
+      " \"."
   },
   {
     id: 154,
@@ -3506,7 +3517,7 @@ export const QuestionBank: Question[] = [
     module: 4,
     question: "Which algorithm would you use to generate a sequence of increasing integers starting from 1 into an existing vector?",
     options: [
-      "std::generate",
+      "`std::generate`",
       "std::iota",
       "std::fill_n",
       "std::accumulate"
@@ -3576,10 +3587,10 @@ export const QuestionBank: Question[] = [
     module: 4,
     question: "Which algorithm can be used to fill a range with increasing values produced by repeatedly calling a stateful generator function?",
     options: [
-      "std::fill",
-      "std::generate",
-      "std::copy_if",
-      "std::minmax_element"
+      "`std::fill`",
+      "`std::generate`",
+      "`std::copy_if`",
+      "`std::minmax_element`"
     ],
     correct: [1],
     explanation: "generate invokes a supplied callable for each position, allowing custom or stateful value generation."
