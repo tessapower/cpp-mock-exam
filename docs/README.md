@@ -65,7 +65,6 @@ Need a quick refresher? Check the [Quick Reference Cheat Sheet](./quick-referenc
 
 - **Total Questions**: 40 questions (randomly selected from question bank)
 - **Question Types**: Mix of single-choice and multiple-choice questions
-- **Format**: Single-choice (radio buttons) or multiple-choice (checkboxes - count shown)
 - **Duration**: 65 minutes
 - **Passing Score**: 70% (28/40 correct)
 - **Coverage**: 9 modules covering STL containers, algorithms, I/O, and templates
