@@ -160,9 +160,20 @@ export class StorageService {
    */
   private saveToLocalStorage(results: ExamResult[]): void {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(results));
+      const data = JSON.stringify(results);
+      localStorage.setItem(STORAGE_KEY, data);
+
+      // Verify the save was successful by reading it back
+      const verification = localStorage.getItem(STORAGE_KEY);
+      if (verification !== data) {
+        console.warn('localStorage save verification failed - data may not persist');
+      }
     } catch (error) {
       console.error('localStorage save failed:', error);
+      // Check if it's a quota exceeded error
+      if (error instanceof DOMException && error.name === 'QuotaExceededError') {
+        console.error('localStorage quota exceeded - consider clearing old history');
+      }
     }
   }
 
@@ -172,13 +183,78 @@ export class StorageService {
   private loadFromLocalStorage(): ExamResult[] {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? JSON.parse(saved) : [];
+      if (!saved) {
+        return [];
+      }
+
+      const parsed = JSON.parse(saved);
+
+      // Validate the data structure
+      if (!Array.isArray(parsed)) {
+        console.error('Invalid history data format - expected array');
+        return [];
+      }
+
+      // Validate each result has required fields
+      const validResults = parsed.filter(result => {
+        return result &&
+               typeof result.score === 'number' &&
+               typeof result.total === 'number' &&
+               typeof result.percentage === 'number' &&
+               typeof result.timestamp === 'string';
+      });
+
+      if (validResults.length !== parsed.length) {
+        console.warn(`Filtered out ${parsed.length - validResults.length} invalid results`);
+      }
+
+      return validResults;
     } catch (error) {
       console.error('localStorage load failed:', error);
       return [];
     }
   }
+
+  /**
+   * Test if localStorage is available and working
+   */
+  isStorageAvailable(): boolean {
+    try {
+      const testKey = '__storage_test__';
+      const testValue = 'test';
+      localStorage.setItem(testKey, testValue);
+      const retrieved = localStorage.getItem(testKey);
+      localStorage.removeItem(testKey);
+      return retrieved === testValue;
+    } catch (error) {
+      console.error('localStorage is not available:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Get storage statistics
+   */
+  getStorageInfo(): { itemCount: number; estimatedSize: number; available: boolean } {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) {
+        return { itemCount: 0, estimatedSize: 0, available: this.isStorageAvailable() };
+      }
+
+      const parsed = JSON.parse(saved);
+      const itemCount = Array.isArray(parsed) ? parsed.length : 0;
+      const estimatedSize = new Blob([saved]).size;
+
+      return {
+        itemCount,
+        estimatedSize,
+        available: this.isStorageAvailable()
+      };
+    } catch (error) {
+      return { itemCount: 0, estimatedSize: 0, available: false };
+    }
+  }
 }
 
 export const storageService = StorageService.getInstance();
-

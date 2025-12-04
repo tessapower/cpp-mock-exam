@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CheckCircle, XCircle, RotateCcw, Copy, Check, Sun, Moon } from 'lucide-react';
+import { CheckCircle, XCircle, RotateCcw, Copy, Check, Sun, Moon, History } from 'lucide-react';
 import type { ExamResult } from '../types/exam.types';
 import { MODULE_NAMES } from '../types/exam.types';
 import ReactMarkdown from 'react-markdown';
@@ -10,18 +10,43 @@ type CodeTheme = 'light' | 'dark';
 
 interface ResultsScreenProps {
   results: ExamResult;
+  resultsHistory: ExamResult[];
   onRetakeExam: () => void;
   onBackToHome: () => void;
+  onShowHistory: () => void;
 }
 
 export const ResultsScreen: React.FC<ResultsScreenProps> = ({
   results,
+  resultsHistory,
   onRetakeExam,
-  onBackToHome
+  onBackToHome,
+  onShowHistory
 }) => {
   const [copiedBlocks, setCopiedBlocks] = useState<Set<string>>(new Set());
   const [localCodeThemes, setLocalCodeThemes] = useState<Map<string, CodeTheme>>(new Map());
   const codeTheme: CodeTheme = 'dark';
+
+  // Filter history for this specific exam type
+  // Note: Only properly submitted exams are saved to history (via submitExam()),
+  // so exited exams are automatically excluded from this list
+  const examSpecificHistory = resultsHistory.filter(r => {
+    // Additional safety check: ensure the result has valid data
+    if (!r || typeof r.score !== 'number' || typeof r.total !== 'number') {
+      return false; // Skip invalid/incomplete results
+    }
+
+    // Match by exam mode and module
+    if (results.examMode === 'module' && results.selectedModule !== null) {
+      // Module exam - match by module number
+      return r.examMode === 'module' && r.selectedModule === results.selectedModule;
+    } else {
+      // Full exam - match by exam mode being 'full' or undefined (for backwards compatibility)
+      return r.examMode === 'full' || r.examMode === undefined;
+    }
+  });
+
+  const hasExamHistory = examSpecificHistory.length > 1; // More than just current result
 
   const handleCopyCode = (code: string, blockId: string) => {
     navigator.clipboard.writeText(code).then(() => {
@@ -161,6 +186,19 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({
               className="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700"
             >
               Back to Home
+            </button>
+            <button
+              onClick={onShowHistory}
+              disabled={!hasExamHistory}
+              className={`flex items-center gap-2 px-6 py-3 rounded-lg transition ${
+                hasExamHistory
+                  ? 'bg-purple-600 text-white hover:bg-purple-700'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              }`}
+              title={hasExamHistory ? 'View history for this exam' : 'No previous attempts for this exam'}
+            >
+              <History size={20} />
+              View Exam History ({examSpecificHistory.length})
             </button>
           </div>
         </div>

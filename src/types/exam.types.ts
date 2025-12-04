@@ -37,6 +37,8 @@ export interface ExamResult {
   moduleScores: ModuleScores;
   timestamp: string;
   questions: QuestionResult[];
+  examMode?: ExamMode;
+  selectedModule?: number | null;
 }
 
 export type ExamMode = 'full' | 'module';

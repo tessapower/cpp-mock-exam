@@ -48,7 +48,12 @@ export const useExamState = (questionBank: Question[]) => {
   }, [state.examStarted, state.examSubmitted, state.timeRemaining]);
 
   const submitExam = useCallback((currentState: ExamState = state) => {
-    const newResults = calculateResults(currentState.examQuestions, currentState.selectedAnswers);
+    const newResults = calculateResults(
+      currentState.examQuestions,
+      currentState.selectedAnswers,
+      currentState.examMode,
+      currentState.selectedModule
+    );
 
     setState(prev => {
       const newHistory = [...prev.resultsHistory, newResults];

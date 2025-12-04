@@ -23,6 +23,17 @@ const ExamApp: React.FC = () => {
     actions.startNewExam(state.examMode, state.selectedModule);
   };
 
+  // History Screen (check this first - can be shown from welcome or results)
+  if (state.showHistory) {
+    return (
+      <HistoryScreen
+        resultsHistory={state.resultsHistory}
+        onBack={() => actions.setShowHistory(false)}
+        onClearHistory={actions.clearHistory}
+      />
+    );
+  }
+
   // Welcome Screen
   if (!state.examStarted) {
     return (
@@ -34,24 +45,16 @@ const ExamApp: React.FC = () => {
     );
   }
 
-  // History Screen
-  if (state.showHistory) {
-    return (
-      <HistoryScreen
-        resultsHistory={state.resultsHistory}
-        onBack={() => actions.setShowHistory(false)}
-        onClearHistory={actions.clearHistory}
-      />
-    );
-  }
 
   // Results Screen
   if (state.examSubmitted && state.results) {
     return (
       <ResultsScreen
         results={state.results}
+        resultsHistory={state.resultsHistory}
         onRetakeExam={handleRetakeExam}
         onBackToHome={handleExitExam}
+        onShowHistory={() => actions.setShowHistory(true)}
       />
     );
   }

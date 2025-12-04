@@ -39,7 +39,9 @@ export const isAnswerCorrect = (userAnswer: number[], correctAnswer: number[]): 
  */
 export const calculateResults = (
   examQuestions: Question[],
-  selectedAnswers: SelectedAnswers
+  selectedAnswers: SelectedAnswers,
+  examMode?: 'full' | 'module',
+  selectedModule?: number | null
 ): ExamResult => {
   let correct = 0;
   const moduleScores: ModuleScores = {};
@@ -72,7 +74,9 @@ export const calculateResults = (
       correctAnswer: q.correct,
       explanation: q.explanation,
       options: q.options
-    }))
+    })),
+    examMode,
+    selectedModule
   };
 };
 
