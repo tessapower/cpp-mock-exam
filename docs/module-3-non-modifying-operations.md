@@ -2,18 +2,21 @@
 
 ## Overview
 
-**What are Non-Modifying Algorithms?**
+### What are Non-Modifying Algorithms?
 
-Non-modifying algorithms are your "read-only" toolkit - they examine, search, count, and compare elements without changing the container's contents. Think of them as scouts that gather information but never alter what they find.
+Non-modifying algorithms are your "read-only" toolkit - they examine, search,
+count, and compare elements without changing the container's contents. Think
+of them as scouts that gather information but never alter what they find.
 
-**Why Separate "Non-Modifying" Algorithms?**
+### Why Separate "Non-Modifying" Algorithms?
 
 Understanding that an algorithm won't modify your data is crucial for:
+
 1. **Const-correctness**: Can be used on const containers
 2. **Thread safety**: Safe to use concurrently (reading doesn't cause data races)
 3. **Reasoning about code**: Know your data won't change unexpectedly
 
-**The Four Categories:**
+### The Four Categories
 
 1. **Search Algorithms** (`find`, `search`, `find_first_of`)
    - "Where is this element?"
@@ -31,7 +34,7 @@ Understanding that an algorithm won't modify your data is crucial for:
    - "Do elements satisfy a condition?"
    - Return boolean results
 
-**Key Insight: Predicates**
+### Key Insight: Predicates
 
 Many algorithms accept a **predicate** - a function that returns true/false:
 
@@ -75,6 +78,7 @@ if (it != vec.end()) {  // ⚠️ Essential check!
 ```
 
 #### std::find
+
 **Find first occurrence of a value - your basic linear search**
 
 ```cpp
@@ -114,6 +118,7 @@ int main() {
 - 📖 [cppreference: std::find](https://en.cppreference.com/w/cpp/algorithm/find)
 
 #### std::find_if / std::find_if_not
+
 **Find element matching predicate - the flexible searcher**
 
 ```cpp
@@ -147,6 +152,7 @@ int main() {
 ```
 
 **Real-World Example:**
+
 ```cpp
 struct Person {
     std::string name;
@@ -168,9 +174,12 @@ if (it != people.end()) {
 ```
 
 **When to Use:**
+
 - ✅ Search based on complex conditions
 - ✅ Find elements with specific properties
 - ✅ When `find` isn't flexible enough
+
+```cpp
     if (it != vec.end()) {
         std::cout << "First even: " << *it << '\n';  // 6
     }
@@ -184,9 +193,12 @@ if (it != people.end()) {
 }
 ```
 
+**Complexity:** O(n) - linear.
+
 - 📖 [cppreference: std::find_if](https://en.cppreference.com/w/cpp/algorithm/find)
 
 #### std::find_first_of
+
 **Find any element from a set**
 
 ```cpp
@@ -209,9 +221,14 @@ int main() {
 }
 ```
 
+**Complexity:** O(n × m), where n = size of container to search, m = size of 
+container of accepted candidates.
+
+
 - 📖 [cppreference: std::find_first_of](https://en.cppreference.com/w/cpp/algorithm/find_first_of)
 
 #### std::adjacent_find
+
 **Find consecutive equal elements**
 
 ```cpp

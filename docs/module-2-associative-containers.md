@@ -4,17 +4,22 @@
 
 **What are Associative Containers?**
 
-Unlike sequence containers that store elements by position, associative containers organize elements by **keys**. This enables lightning-fast lookups - instead of searching through every element, these containers use sophisticated data structures to find elements in logarithmic time.
+Unlike sequence containers that store elements by position, associative
+containers organize elements by **keys**. This enables lightning-fast
+lookups - instead of searching through every element, these containers use
+sophisticated data structures to find elements in logarithmic time.
 
 **The Two Families:**
 
 1. **Ordered Containers** (set, map, multiset, multimap)
+
    - Implemented as **red-black trees** (balanced binary search trees)
    - Elements always stay sorted by key
    - Guaranteed O(log n) operations
    - Predictable iteration order
 
 2. **Unordered Containers** (unordered_set, unordered_map, etc.)
+
    - Implemented as **hash tables**
    - Elements stored by hash value (no sorting)
    - Average O(1) operations, worst case O(n)
@@ -59,23 +64,26 @@ auto it = s.find(7);  // Checks only ~log₂(6) ≈ 2-3 nodes
 
 **How Do They Work?**
 
-Ordered containers use **red-black trees** - a type of self-balancing binary search tree. Here's the intuition:
+Ordered containers use **red-black trees** - a type of self-balancing binary
+search tree. Here's the intuition:
 
 ```
-Binary Search Tree Example (set with values {1, 3, 4, 5, 7}):
+Binary Search Tree Example (set with values `{1, 3, 4, 5, 7}`):
        4
       / \
      3   5
     /     \
    1       7
 
-To find 7:
-1. Start at 4: 7 > 4, go right
-2. At 5: 7 > 5, go right  
-3. At 7: Found! (Only 3 comparisons instead of 5)
+To find `7`:
+
+1. Start at `4`: `7 > 4`, go right.
+2. At `5`: `7 > 5`, go right.
+3. At `7`: Found! (Only 3 comparisons instead of 5).
 ```
 
-The tree stays balanced, ensuring height is always O(log n), which guarantees efficient operations.
+The tree stays balanced, ensuring height is always O(log n), which guarantees
+efficient operations.
 
 ### std::set
 
@@ -85,79 +93,89 @@ The tree stays balanced, ensuring height is always O(log n), which guarantees ef
 
 #### What is std::set?
 
-`std::set` maintains a sorted collection of **unique** elements. Think of it as a mathematical set - no duplicates, automatic sorting, and fast membership testing.
+`std::set` maintains a sorted collection of **unique** elements. Think of it as
+a mathematical set — no duplicates, automatic sorting, and fast membership
+testing.
 
 **Internal Structure:**
 
 Each element in the tree contains:
-- The value itself
-- Pointers to left child, right child, and parent
-- A color (red or black for balancing)
 
-**Key Insight:** When you insert into a set, it doesn't go at the "end" like a vector. Instead, it finds its sorted position in the tree. This is why iteration always gives you elements in order!
+- The value itself.
+- Pointers to left child, right child, and parent.
+- A color (red or black for balancing).
+
+**Key Insight:** When you insert into a set, it doesn't go at the "end" like
+a vector. Instead, it finds its sorted position in the tree. This is why
+iteration always gives you elements in order!
 
 #### Characteristics
-- **Lookup**: O(log n) - Binary search in tree
-- **Insert/Delete**: O(log n) - Find position + rebalance tree
-- **Sorted**: Yes - always in order (using `operator<` or custom comparator)
-- **Duplicates**: No - attempting to insert duplicate fails
-- **Memory**: Higher overhead than vector (tree pointers per element)
+
+- **Lookup**: O(log n) - Binary search in tree.
+- **Insert/Delete**: O(log n) - Find position + rebalance tree.
+- **Sorted**: Yes - always in order (using `operator<` or custom comparator).
+- **Duplicates**: No - attempting to insert duplicate fails.
+- **Memory**: Higher overhead than vector (tree pointers per element).
 
 #### When to Use
-✅ Need **sorted unique elements** automatically  
-✅ Frequent **"does this exist?"** queries  
-✅ Need to maintain **sorted order** while inserting/removing  
+
+✅ Need **sorted unique elements** automatically
+✅ Frequent **"does this exist?"** queries
+✅ Need to maintain **sorted order** while inserting/removing
 ✅ Want **no duplicates** enforced automatically
 
 #### When NOT to Use
-❌ Need duplicates (use `multiset` instead)  
-❌ Don't need sorting (use `unordered_set` for faster operations)  
-❌ Need index-based access (use `vector` instead)  
+
+❌ Need duplicates (use `multiset` instead)
+❌ Don't need sorting (use `unordered_set` for faster operations)
+❌ Need index-based access (use `vector` instead)
 ❌ Memory overhead matters (tree pointers add ~24 bytes per element)
 
 #### Example
+
 ```cpp
 #include <set>
 #include <iostream>
 
 int main() {
-    std::set<int> s = {3, 1, 4, 1, 5};
-    
-    // Duplicates automatically removed
-    // Elements sorted: {1, 3, 4, 5}
-    
-    // Insert - O(log n)
-    auto [it, inserted] = s.insert(2);
-    std::cout << "Inserted: " << std::boolalpha << inserted << '\n';  // true
-    
-    // Try to insert duplicate
-    auto [it2, inserted2] = s.insert(3);
-    std::cout << "Inserted: " << inserted2 << '\n';  // false
-    std::cout << "Iterator points to: " << *it2 << '\n';  // 3
-    
-    // Find - O(log n)
-    if (s.find(4) != s.end()) {
-        std::cout << "Found 4\n";
-    }
-    
-    // Count - O(log n), returns 0 or 1 for set
-    std::cout << "Count of 3: " << s.count(3) << '\n';  // 1
-    std::cout << "Count of 10: " << s.count(10) << '\n';  // 0
-    
-    // Iteration is in sorted order
-    for (const auto& val : s) {
-        std::cout << val << ' ';  // 1 2 3 4 5
-    }
-    std::cout << '\n';
-    
-    // Erase - O(log n)
-    s.erase(3);
-    
-    return 0;
+  std::set<int> s = {3, 1, 4, 1, 5};
+
+  // Duplicates automatically removed
+  // Elements sorted: {1, 3, 4, 5}
+
+  // Insert - O(log n)
+  auto [it, inserted] = s.insert(2);
+  std::cout << "Inserted: " << std::boolalpha << inserted << '\n';  // true
+
+  // Try to insert duplicate
+  auto [it2, inserted2] = s.insert(3);
+  std::cout << "Inserted: " << inserted2 << '\n';  // false
+  std::cout << "Iterator points to: " << *it2 << '\n';  // 3
+
+  // Find - O(log n)
+  if (s.find(4) != s.end()) {
+    std::cout << "Found 4\n";
+  }
+
+  // Count - O(log n), returns 0 or 1 for set
+  std::cout << "Count of 3: " << s.count(3) << '\n';  // 1
+  std::cout << "Count of 10: " << s.count(10) << '\n';  // 0
+
+  // Iteration is in sorted order
+  for (const auto& val : s) {
+    std::cout << val << ' ';  // 1 2 3 4 5
+  }
+  std::cout << '\n';
+
+  // Erase - O(log n)
+  s.erase(3);
+
+  return 0;
 }
 ```
 
 #### Custom Comparator
+
 ```cpp
 #include <set>
 #include <string>
@@ -175,14 +193,14 @@ struct CaseInsensitive {
 };
 
 int main() {
-    std::set<std::string, CaseInsensitive> s = {"Apple", "banana", "CHERRY"};
-    
-    for (const auto& fruit : s) {
-        std::cout << fruit << ' ';  // Apple banana CHERRY (sorted case-insensitively)
-    }
-    std::cout << '\n';
-    
-    return 0;
+  std::set<std::string, CaseInsensitive> s = {"Apple", "banana", "CHERRY"};
+
+  for (const auto& fruit : s) {
+    std::cout << fruit << ' ';  // Apple banana CHERRY (sorted case-insensitively)
+  }
+  std::cout << '\n';
+
+  return 0;
 }
 ```
 
@@ -195,10 +213,12 @@ int main() {
 - 📖 [cppreference: std::multiset](https://en.cppreference.com/w/cpp/container/multiset)
 
 #### Characteristics
+
 - Same as `set` but **allows duplicates**
 - **count()** can return > 1
 
 #### Example
+
 ```cpp
 #include <set>
 #include <iostream>
@@ -236,12 +256,14 @@ int main() {
 - 📖 [cppreference: std::map](https://en.cppreference.com/w/cpp/container/map)
 
 #### Characteristics
+
 - **Lookup by key**: O(log n)
 - **Insert/Delete**: O(log n)
 - **Sorted by key**: Yes
 - **Unique keys**: Yes
 
 #### When to Use
+
 ✅ Need key-value associations  
 ✅ Keys must be unique  
 ✅ Need sorted order  
@@ -500,15 +522,15 @@ int main() {
 
 ## Comparison: Ordered vs Unordered
 
-| Feature | Ordered (set/map) | Unordered (unordered_set/map) |
-|---------|-------------------|-------------------------------|
-| **Implementation** | Red-black tree | Hash table |
-| **Lookup** | O(log n) | O(1) average |
-| **Insert** | O(log n) | O(1) average |
-| **Iteration Order** | Sorted ✓ | Unpredictable |
-| **Requirements** | `operator<` | Hash + `operator==` |
-| **Memory** | Lower | Higher (buckets) |
-| **Worst Case** | O(log n) ✓ | O(n) |
+| Feature             | Ordered (set/map) | Unordered (unordered_set/map) |
+|---------------------|-------------------|-------------------------------|
+| **Implementation**  | Red-black tree    | Hash table                    |
+| **Lookup**          | O(log n)          | O(1) average                  |
+| **Insert**          | O(log n)          | O(1) average                  |
+| **Iteration Order** | Sorted ✓          | Unpredictable                 |
+| **Requirements**    | `operator<`       | Hash + `operator==`           |
+| **Memory**          | Lower             | Higher (buckets)              |
+| **Worst Case**      | O(log n) ✓        | O(n)                          |
 
 **When to choose ordered:**
 - Need sorted iteration
@@ -827,14 +849,14 @@ std::unordered_set<Point, PointHash, PointEqual> points;
 
 ### Performance Characteristics Summary
 
-| Operation | set/map | unordered_set/map | multiset/map |
-|-----------|---------|-------------------|--------------|
-| Insert | O(log n) | O(1) avg, O(n) worst | O(log n) |
-| Find | O(log n) | O(1) avg, O(n) worst | O(log n) |
-| Erase | O(log n) | O(1) avg, O(n) worst | O(log n) |
-| Iteration | Sorted order | No order | Sorted (within duplicates) |
-| Memory | Higher (tree nodes) | Higher (hash buckets) | Highest (tree + duplicates) |
-| Predictability | Guaranteed | Average case | Guaranteed |
+| Operation      | set/map             | unordered_set/map     | multiset/map                |
+|----------------|---------------------|-----------------------|-----------------------------|
+| Insert         | O(log n)            | O(1) avg, O(n) worst  | O(log n)                    |
+| Find           | O(log n)            | O(1) avg, O(n) worst  | O(log n)                    |
+| Erase          | O(log n)            | O(1) avg, O(n) worst  | O(log n)                    |
+| Iteration      | Sorted order        | No order              | Sorted (within duplicates)  |
+| Memory         | Higher (tree nodes) | Higher (hash buckets) | Highest (tree + duplicates) |
+| Predictability | Guaranteed          | Average case          | Guaranteed                  |
 
 ### Iterator Invalidation Rules
 

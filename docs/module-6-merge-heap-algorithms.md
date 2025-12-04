@@ -4,7 +4,8 @@
 
 **What This Module Covers:**
 
-This module combines several algorithm families that work with sorted or partially sorted data:
+This module combines several algorithm families that work with sorted or
+partially sorted data:
 
 1. **Merge Operations**: Combine sorted sequences efficiently
 2. **Heap Operations**: Priority queue implementations
@@ -13,18 +14,21 @@ This module combines several algorithm families that work with sorted or partial
 
 **Why These Are Grouped Together:**
 
-They all operate on ordered data and are fundamental building blocks for more complex algorithms. Understanding these enables efficient data processing patterns.
+They all operate on ordered data and are fundamental building blocks for
+more complex algorithms. Understanding these enables efficient data
+processing patterns.
 
 **Key Insight: Sorted Data Enables Efficiency**
 
-Many of these algorithms exploit the fact that data is sorted to achieve better-than-brute-force performance:
+Many of these algorithms exploit the fact that data is sorted to achieve
+better-than-brute-force performance:
 
 ```cpp
 // Finding common elements in unsorted data: O(n²)
 for (auto& x : vec1) {
-    for (auto& y : vec2) {
-        if (x == y) common.push_back(x);
-    }
+  for (auto& y : vec2) {
+    if (x == y) common.push_back(x);
+  }
 }
 
 // Finding common elements in sorted data: O(n + m)
@@ -36,9 +40,10 @@ std::set_intersection(vec1.begin(), vec1.end(),
 
 **Understanding Heaps:**
 
-A heap is a complete binary tree where each parent is greater than (max-heap) or less than (min-heap) its children:
+A heap is a complete binary tree where each parent is greater than (max-heap)
+or less than (min-heap) its children:
 
-```
+```markdown
 Max-Heap Example:
         9
        / \
@@ -47,12 +52,13 @@ Max-Heap Example:
     3  5 6  2
 
 Properties:
+
 - Parent >= children (max-heap)
 - Root is maximum element
 - Can be stored in array: [9,7,8,3,5,6,2]
-- Parent of i: (i-1)/2
-- Left child of i: 2*i+1
-- Right child of i: 2*i+2
+- Parent of i:      (i - 1) / 2
+- Left child of i:  2 * i + 1
+- Right child of i: 2 * i + 2
 ```
 
 📖 [cppreference: Sorting operations](https://en.cppreference.com/w/cpp/algorithm)
@@ -63,11 +69,12 @@ Properties:
 
 **Why Merging Matters:**
 
-Merging is the heart of merge sort and is crucial for combining separately sorted datasets. It's O(n+m) - linear time!
+Merging is the heart of merge sort and is crucial for combining separately
+sorted datasets. It's O(n+m) - linear time!
 
 **The Merge Process:**
 
-```
+```markdown
 v1: [1, 3, 5, 7]     v2: [2, 4, 6, 8]
      ↑                    ↑
    Compare: 1 vs 2 → take 1
@@ -86,6 +93,7 @@ result: [1, 2, 3, 4, 5, 6, 7, 8]
 ```
 
 ### std::merge
+
 **Merge two sorted ranges into one sorted output**
 
 ```cpp
@@ -116,12 +124,14 @@ int main() {
 ```
 
 **Key Points:**
+
 - Both input ranges MUST be sorted
 - Output range must have sufficient space (or use back_inserter)
 - O(n + m) complexity - linear!
 - Stable - preserves relative order from input ranges
 
 **Real-World Use:**
+
 ```cpp
 // Merging sorted log files from different servers
 std::vector<LogEntry> server1_logs;  // Sorted by timestamp
@@ -140,6 +150,7 @@ std::merge(server1_logs.begin(), server1_logs.end(),
 📖 [cppreference: std::merge](https://en.cppreference.com/w/cpp/algorithm/merge)
 
 ### std::inplace_merge
+
 **Merge two consecutive sorted ranges in-place**
 
 ```cpp
@@ -161,17 +172,15 @@ int main() {
 ```
 
 **When to Use:**
+
 - Ranges are in same container
 - Want to save memory (no extra array)
 - Commonly used in merge sort implementation
 
-**Vs. std::merge:**
-- `merge`: Two separate inputs → separate output
-- `inplace_merge`: One input with two sorted parts → same container
-    
-    return 0;
-}
-```
+**Compared to std::merge:**
+
+- `std::merge`: Two separate inputs → separate output
+- `std::inplace_merge`: One input with two sorted parts → same container
 
 📖 [cppreference: std::inplace_merge](https://en.cppreference.com/w/cpp/algorithm/inplace_merge)
 
@@ -442,13 +451,13 @@ int main() {
 
 ## Complexity Summary
 
-| Operation | Time Complexity |
-|-----------|----------------|
-| `merge` | O(n + m) |
-| `inplace_merge` | O(n) with extra memory, O(n log n) without |
-| Set operations | O(n + m) |
-| Heap operations | O(log n) |
-| `min_element/max_element` | O(n) |
+| Operation                 | Time Complexity                            |
+|---------------------------|--------------------------------------------|
+| `merge`                   | O(n + m)                                   |
+| `inplace_merge`           | O(n) with extra memory, O(n log n) without |
+| Set operations            | O(n + m)                                   |
+| Heap operations           | O(log n)                                   |
+| `min_element/max_element` | O(n)                                       |
 
 ---
 
