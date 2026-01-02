@@ -1,66 +1,169 @@
-# Module 8: Advanced I/O
+# Module 8: Advanced I/O Operations
 
 ## Overview
 
-**What is Stream-Based I/O?**
+Welcome to C++ I/O! This module covers one of the most practical aspects of C++: reading and writing data. Whether you're working with files, building strings, or formatting output, you'll use these techniques constantly.
 
-C++ uses streams as a universal interface for input/output. A stream is a sequence of bytes flowing between your program and an external source/destination (file, string, console, network, etc.).
+**What you'll learn:**
 
-**The Stream Hierarchy:**
+- How streams work and why they're powerful
+- File operations (reading, writing, binary data)
+- String streams (building and parsing strings efficiently)
+- Stream manipulators (formatting output beautifully)
+- Error handling (detecting and recovering from failures)
+- Performance optimization (buffering strategies)
+
+### What is Stream-Based I/O?
+
+**The Core Concept:**  
+A **stream** is like a pipe where data flows between your program and the outside world. Think of it as a conveyor belt carrying bytes.
 
 ```
-ios_base (base class - format state, error flags)
-    ↓
-ios (adds basic_streambuf)
-    ↓
-    ├─→ istream (input: >>, get, getline)
-    ├─→ ostream (output: <<, put, write)
-    └─→ iostream (both input and output)
+Your Program  →→→  [Stream Buffer]  →→→  Destination
+              data flowing out              (file, screen, string)
+
+Source        →→→  [Stream Buffer]  →→→  Your Program
+(file, user,       data flowing in
+ string)
+```
+
+**Why Streams?**
+
+1. **Universal Interface** - Same code for files, strings, console, network
+2. **Type-Safe** - `<<` and `>>` know how to handle different types
+3. **Buffered** - Efficient by collecting data before actual I/O
+4. **Composable** - Chain operations together naturally
+
+### The Stream Family Tree
+
+Understanding the hierarchy helps you pick the right tool:
+
+```
+ios_base (base class)
+    ├─ Format state (precision, width, flags)
+    └─ Error flags (good, eof, fail, bad)
          ↓
-         ├─→ ifstream (file input)
-         ├─→ ofstream (file output)
-         ├─→ fstream (file both)
-         ├─→ istringstream (string input)
-         ├─→ ostringstream (string output)
-         └─→ stringstream (string both)
+    ios (adds stream buffer)
+         ↓
+    ┌────┴────┐
+    ↓         ↓
+istream    ostream
+(input)    (output)
+  ↓           ↓
+  ├─ cin (console input)      ├─ cout (console output)
+  ├─ ifstream (file input)    ├─ ofstream (file output)
+  └─ istringstream (string)   └─ ostringstream (string)
+         ↓
+    iostream (both directions)
+         ↓
+    ├─ fstream (file read+write)
+    └─ stringstream (string read+write)
 ```
 
-**Key Concepts:**
+**Quick Reference:**
 
-1. **Stream State**: Every stream has error flags (good, eof, fail, bad)
-2. **Buffering**: Data is buffered for efficiency, flushed periodically
-3. **Manipulators**: Special objects that change stream behavior
-4. **Persistence**: Some manipulators persist ("sticky"), others are one-shot
+| Need to... | Use | Example |
+|------------|-----|---------|
+| Read from file | `ifstream` | `ifstream file("data.txt");` |
+| Write to file | `ofstream` | `ofstream file("output.txt");` |
+| Read & write file | `fstream` | `fstream file("data.txt", ios::in \| ios::out);` |
+| Build a string | `ostringstream` | `ostringstream oss; oss << "Value: " << 42;` |
+| Parse a string | `istringstream` | `istringstream iss("42"); iss >> value;` |
+| Console input | `cin` | `cin >> value;` |
+| Console output | `cout` | `cout << value;` |
+| Error output | `cerr` (unbuffered) | `cerr << "Error!";` |
 
-**The Big Picture:**
+### The Power of Uniform Interface
+
+**This is what makes streams beautiful:**
 
 ```cpp
-// All streams use same interface
-std::cout << "Hello";        // Console output
-std::ofstream("file.txt") << "Hello";  // File output
-std::ostringstream() << "Hello";       // String output
+// Write to different destinations using SAME CODE
+template<typename Stream>
+void writeData(Stream& stream, int value) {
+    stream << "Value: " << value << '\n';
+}
 
-// Same interface for input
-std::cin >> value;           // Console input
-std::ifstream("file.txt") >> value;    // File input
-std::istringstream("42") >> value;     // String input
+// Works with files
+std::ofstream file("output.txt");
+writeData(file, 42);
+
+// Works with strings
+std::ostringstream str;
+writeData(str, 42);
+
+// Works with console
+writeData(std::cout, 42);
 ```
 
-**Why Understanding I/O Matters:**
+### Key Concepts (We'll Deep-Dive Into Each)
 
-- **File operations**: Reading/writing data
-- **Data serialization**: Converting objects to/from text
-- **String manipulation**: Building and parsing strings
-- **Error handling**: Detecting and recovering from I/O errors
-- **Performance**: Buffering and flushing strategies
+**1. Stream State** - Every stream tracks its health
+```cpp
+if (file)           // Is stream ready?
+if (file.eof())     // Reached end?
+if (file.fail())    // Did operation fail?
+```
+
+**2. Buffering** - Data accumulates before actual I/O
+```cpp
+file << "data";     // Goes to buffer
+file << std::flush; // NOW writes to disk
+```
+
+**3. Manipulators** - Objects that change stream behavior
+```cpp
+cout << std::hex << 255;        // Prints: ff
+cout << std::setw(10) << 42;    // Prints:         42
+```
+
+**4. Persistence** - Some settings stick, others don't
+```cpp
+cout << std::setw(10) << 42;    // Width for THIS item only
+cout << std::hex << 255;        // Hex for ALL subsequent items
+```
+
+### Why Understanding I/O Matters
+
+**Real-World Applications:**
+- 📁 **File Processing** - Config files, logs, data persistence
+- 📊 **Data Serialization** - Save/load program state
+- 🔤 **String Manipulation** - Build complex strings efficiently
+- 📝 **Formatted Output** - Tables, reports, aligned data
+- 🐛 **Error Handling** - Detect file not found, parse errors
+- ⚡ **Performance** - Buffering strategies for speed
+
+**A Motivating Example:**
+
+```cpp
+// Without understanding I/O (clunky, error-prone)
+FILE* f = fopen("data.txt", "w");
+if (f == NULL) { /* error */ }
+fprintf(f, "Value: %d\n", 42);
+fclose(f);
+
+// With C++ streams (clean, type-safe)
+std::ofstream file("data.txt");
+if (!file) { /* error */ }
+file << "Value: " << 42 << '\n';
+// Automatically closes when file goes out of scope!
+```
 
 📖 [cppreference: Input/output library](https://en.cppreference.com/w/cpp/io)
 
 ---
 
-## Stream Types
+## Part 1: Stream Types - Choosing Your Tool
 
-### File Streams
+### File Streams - Working with Files
+
+**The Three File Stream Types:**
+
+1. **`ifstream`** - Input File Stream (reading)
+2. **`ofstream`** - Output File Stream (writing)
+3. **`fstream`** - File Stream (both reading and writing)
+
+**When to Use Which:**
 
 ```cpp
 #include <fstream>
@@ -68,94 +171,319 @@ std::istringstream("42") >> value;     // String input
 #include <string>
 
 int main() {
-    // Output file stream
-    std::ofstream out("output.txt");
-    out << "Hello, file!" << '\n';
-    out.close();
+    // ✅ ifstream - Reading from file
+    // Use when: Loading config, reading data, parsing logs
+    std::ifstream in("config.txt");
+    if (!in) {
+        std::cerr << "Failed to open file\n";
+        return 1;
+    }
     
-    // Input file stream
-    std::ifstream in("output.txt");
     std::string line;
-    std::getline(in, line);
-    std::cout << line << '\n';
-    in.close();
+    while (std::getline(in, line)) {
+        std::cout << "Read: " << line << '\n';
+    }
+    // No need to close - automatically closed when 'in' goes out of scope
     
-    // Bidirectional file stream
+    // ✅ ofstream - Writing to file
+    // Use when: Saving data, writing logs, generating output
+    std::ofstream out("output.txt");
+    if (!out) {
+        std::cerr << "Failed to create file\n";
+        return 1;
+    }
+    
+    out << "Hello, file!" << '\n';
+    out << "Value: " << 42 << '\n';
+    // Automatically closed and flushed here
+    
+    // ✅ fstream - Both reading and writing
+    // Use when: Need to read AND write, random access, updating files
     std::fstream file("data.txt", std::ios::in | std::ios::out);
+    if (!file) {
+        std::cerr << "Failed to open file\n";
+        return 1;
+    }
     
-    // Binary mode
-    std::ofstream binary("data.bin", std::ios::binary);
-    int value = 42;
-    binary.write(reinterpret_cast<char*>(&value), sizeof(value));
+    // Can both read...
+    std::string data;
+    std::getline(file, data);
+    
+    // ...and write
+    file << "New data\n";
     
     return 0;
 }
 ```
 
+**Text vs Binary Mode:**
+
+```cpp
+// TEXT MODE (default) - Human-readable
+// ✅ Use for: Config files, logs, CSV, JSON, XML
+std::ofstream text("data.txt");
+text << 42 << " " << 3.14 << " hello";
+// File contains: "42 3.14 hello" (readable in notepad)
+
+// BINARY MODE - Raw bytes
+// ✅ Use for: Images, serialized structs, databases, compressed data
+std::ofstream binary("data.bin", std::ios::binary);
+int value = 42;
+binary.write(reinterpret_cast<char*>(&value), sizeof(value));
+// File contains: 4 bytes representing integer 42 (not readable as text)
+
+// Why binary mode matters:
+// 1. Faster (no formatting/parsing)
+// 2. Smaller (raw bytes vs text representation)
+// 3. Exact (no precision loss for floats)
+// 4. Prevents newline translation on Windows (\n ↔ \r\n)
+```
+
+**RAII (Resource Acquisition Is Initialization) - Automatic Cleanup:**
+
+```cpp
+{
+    std::ofstream file("data.txt");
+    file << "Some data";
+    // No need to call file.close()!
+    // File is automatically closed and flushed when 'file' goes out of scope
+}
+// File is now safely closed, even if an exception occurred
+
+// Manual close only needed for:
+void processFile() {
+    std::ofstream file("data.txt");
+    file << "data";
+    file.close();  // Close NOW to release file handle
+    
+    // Can continue doing other work...
+    someOtherFunction();
+}
+```
+
 📖 [cppreference: std::fstream](https://en.cppreference.com/w/cpp/io/basic_fstream)
 
-### String Streams
+### String Streams - In-Memory I/O
+
+**The Concept:**  
+String streams let you use stream operations (`<<` and `>>`) with strings in memory, just like you would with files or console. They're perfect for building formatted strings and parsing text.
+
+**The Three String Stream Types:**
+
+1. **`ostringstream`** - Build strings (like writing to a file, but to memory)
+2. **`istringstream`** - Parse strings (like reading from a file, but from memory)
+3. **`stringstream`** - Both (read and write)
 
 ```cpp
 #include <sstream>
 #include <iostream>
 #include <string>
+#include <iomanip>
 
 int main() {
-    // Output string stream (build strings)
+    // ✅ ostringstream - Building formatted strings
+    // Use when: Creating complex strings, avoiding string concatenation
     std::ostringstream oss;
-    oss << "Value: " << 42 << ", Pi: " << 3.14;
-    std::string result = oss.str();
+    oss << "Value: " << 42 << ", Pi: " << std::fixed << std::setprecision(2) << 3.14159;
+    std::string result = oss.str();  // Extract the built string
     std::cout << result << '\n';  // "Value: 42, Pi: 3.14"
     
-    // Input string stream (parse strings)
+    // Why better than string concatenation:
+    // ❌ Slow: result = "Value: " + std::to_string(42) + ", Pi: " + std::to_string(3.14);
+    // ✅ Fast: Uses ostringstream (better buffering, fewer allocations)
+    
+    // ✅ istringstream - Parsing strings
+    // Use when: Splitting strings, parsing user input, reading structured text
     std::istringstream iss("100 200 300");
     int a, b, c;
-    iss >> a >> b >> c;
-    std::cout << a + b + c << '\n';  // 600
+    iss >> a >> b >> c;  // Extracts three integers
+    std::cout << "Sum: " << (a + b + c) << '\n';  // 600
     
-    // Bidirectional
+    // Real example: Parsing CSV line
+    std::string csv_line = "John,25,Engineer";
+    std::istringstream csv(csv_line);
+    std::string name, job;
+    int age;
+    
+    std::getline(csv, name, ',');    // Read until comma
+    csv >> age;                       // Read number
+    csv.ignore(1);                    // Skip comma
+    std::getline(csv, job);          // Read rest
+    
+    std::cout << name << " is " << age << " years old, works as " << job << '\n';
+    
+    // ✅ stringstream - Both reading and writing
+    // Use when: Need to both build and parse (less common)
     std::stringstream ss;
-    ss << "42";
+    ss << "42";           // Write
     int value;
-    ss >> value;
+    ss >> value;          // Read
     std::cout << value * 2 << '\n';  // 84
     
     return 0;
 }
 ```
 
+**Real-World Use Cases:**
+
+**1. Building Complex Strings:**
+```cpp
+// Building error message with context
+std::ostringstream error;
+error << "Error at line " << lineNum 
+      << ", column " << colNum 
+      << ": " << errorMessage;
+std::string fullError = error.str();
+```
+
+**2. Parsing User Input:**
+```cpp
+std::string input = "move 10 20";
+std::istringstream iss(input);
+std::string command;
+int x, y;
+
+iss >> command >> x >> y;
+if (command == "move") {
+    movePlayer(x, y);
+}
+```
+
+**3. Number-to-String with Formatting:**
+```cpp
+double price = 19.99;
+std::ostringstream oss;
+oss << "$" << std::fixed << std::setprecision(2) << price;
+std::string priceStr = oss.str();  // "$19.99"
+```
+
+**4. String-to-Number Conversion (Safer than atoi):**
+```cpp
+std::string userInput = "42";
+std::istringstream iss(userInput);
+int number;
+
+if (iss >> number) {
+    std::cout << "Valid number: " << number << '\n';
+} else {
+    std::cout << "Invalid input!\n";
+}
+```
+
+**Performance Tip:**
+
+```cpp
+// ❌ SLOW - creates many temporary strings
+std::string result;
+for (int i = 0; i < 1000; ++i) {
+    result += std::to_string(i) + " ";  // Many allocations!
+}
+
+// ✅ FAST - efficient buffering
+std::ostringstream oss;
+for (int i = 0; i < 1000; ++i) {
+    oss << i << " ";  // Minimal allocations
+}
+std::string result = oss.str();
+```
+
+**Reusing String Streams:**
+
+```cpp
+std::ostringstream oss;
+
+// Build first string
+oss << "First: " << 42;
+std::string first = oss.str();
+
+// Clear for reuse (both content AND state)
+oss.str("");        // Clear content
+oss.clear();        // Clear error flags
+
+// Build second string
+oss << "Second: " << 100;
+std::string second = oss.str();
+```
+
 📖 [cppreference: std::stringstream](https://en.cppreference.com/w/cpp/io/basic_stringstream)
 
 ---
 
-## Stream Manipulators
+## Part 2: Stream Manipulators - Formatting Output
 
-### Basic Manipulators
+**What Are Manipulators?**  
+Manipulators are special objects you insert into streams to change their behavior. Think of them as "commands" that tell the stream how to format data.
+
+```cpp
+std::cout << std::hex << 255;  // Changes number base to hexadecimal
+// Output: ff
+```
+
+**Critical Concept: Sticky vs. Non-Sticky**
+
+Some manipulators apply to ALL subsequent output (sticky), others only to the NEXT item (non-sticky).
+
+```cpp
+// ❌ GOTCHA - setw is NOT sticky
+std::cout << std::setw(10) << 42 << 100;
+// Output: "        42100"  (only 42 is padded!)
+
+// ✅ STICKY - hex applies to all numbers
+std::cout << std::hex << 42 << " " << 100;
+// Output: "2a 64"  (both in hexadecimal)
+```
+
+### Basic Manipulators (In `<iostream>`)
 
 ```cpp
 #include <iostream>
-#include <iomanip>
 
 int main() {
-    // std::endl - newline + flush
-    std::cout << "Line 1" << std::endl;
-    std::cout << "Line 2" << '\n';  // Faster (no flush)
+    // endl - newline + flush (SLOW)
+    // Use when: Need immediate output (errors, progress)
+    std::cout << "Important!" << std::endl;  // Writes to screen NOW
     
-    // std::ends - null terminator
-    // std::flush - flush buffer
-    std::cout << "Buffered" << std::flush;
+    // '\n' - newline only (FAST)
+    // Use when: Normal output (let buffer decide when to flush)
+    std::cout << "Line 1" << '\n';
+    std::cout << "Line 2" << '\n';
     
-    // Booleans
+    // flush - flush buffer without newline
+    std::cout << "Progress: " << percent << "%" << std::flush;
+    
+    // ends - null terminator (rarely used)
+    std::cout << "Text" << std::ends;
+    
+    // Booleans - ✅ STICKY
     bool flag = true;
-    std::cout << std::boolalpha << flag << '\n';  // "true"
-    std::cout << std::noboolalpha << flag << '\n';  // "1"
+    std::cout << std::boolalpha << flag << '\n';     // "true"
+    std::cout << flag << '\n';                       // "true" (still sticky!)
+    std::cout << std::noboolalpha << flag << '\n';   // "1" (back to numeric)
+    
+    // Show positive sign - ✅ STICKY
+    std::cout << std::showpos << 42 << '\n';         // "+42"
+    std::cout << std::noshowpos << 42 << '\n';       // "42"
     
     return 0;
 }
 ```
 
-### Numeric Manipulators (require `<iomanip>`)
+**When to Use endl vs '\\n':**
+
+```cpp
+// ✅ Use endl when:
+std::cerr << "Error occurred!" << std::endl;  // Error messages (immediate)
+std::cout << "Progress: " << i << std::endl;  // Progress updates (want to see now)
+
+// ✅ Use '\n' when:
+for (int i = 0; i < 1000; ++i) {
+    file << i << '\n';  // Fast bulk output (buffer handles flushing)
+}
+```
+
+### Numeric Manipulators (Require `<iomanip>`)
+
+**Floating-Point Formatting:**
 
 ```cpp
 #include <iostream>
@@ -163,58 +491,189 @@ int main() {
 
 int main() {
     double pi = 3.14159265359;
+    double big = 12345.6789;
     
-    // Precision (number of digits)
-    std::cout << std::setprecision(3) << pi << '\n';  // 3.14
-    std::cout << std::setprecision(6) << pi << '\n';  // 3.14159
+    // setprecision - ✅ STICKY
+    // Meaning depends on whether fixed/scientific is set!
     
-    // Fixed notation
-    std::cout << std::fixed << std::setprecision(2) << pi << '\n';  // 3.14
+    // Default: precision = total significant digits
+    std::cout << std::setprecision(3) << pi << '\n';     // "3.14" (3 significant digits)
+    std::cout << big << '\n';                             // "1.23e+04" (still 3 sig digits)
     
-    // Scientific notation
-    std::cout << std::scientific << pi << '\n';  // 3.141593e+00
+    // fixed - ✅ STICKY - digits after decimal point
+    std::cout << std::fixed << std::setprecision(2) << pi << '\n';    // "3.14"
+    std::cout << big << '\n';                                          // "12345.68"
     
-    // Reset to default
+    // scientific - ✅ STICKY - scientific notation
+    std::cout << std::scientific << std::setprecision(4) << pi << '\n';  // "3.1416e+00"
+    
+    // defaultfloat - reset to default behavior
     std::cout << std::defaultfloat;
     
-    // Hexadecimal/Octal/Decimal
-    int num = 255;
-    std::cout << std::hex << num << '\n';  // ff
-    std::cout << std::oct << num << '\n';  // 377
-    std::cout << std::dec << num << '\n';  // 255
-    
-    // Show base
-    std::cout << std::showbase << std::hex << num << '\n';  // 0xff
+    // Real use case: Formatting prices
+    double price = 19.99;
+    std::cout << "$" << std::fixed << std::setprecision(2) << price << '\n';  // "$19.99"
     
     return 0;
 }
+```
+
+**Integer Base Formatting:**
+
+```cpp
+int num = 255;
+
+// dec, hex, oct - ✅ STICKY - apply to all subsequent integers
+std::cout << std::dec << num << '\n';  // "255" (decimal)
+std::cout << std::hex << num << '\n';  // "ff" (hexadecimal)
+std::cout << std::oct << num << '\n';  // "377" (octal)
+
+// Back to decimal for normal output
+std::cout << std::dec;
+
+// showbase - ✅ STICKY - show 0x, 0 prefix
+std::cout << std::showbase;
+std::cout << std::hex << num << '\n';  // "0xff"
+std::cout << std::oct << num << '\n';  // "0377"
+std::cout << std::dec << num << '\n';  // "255" (no prefix for decimal)
+std::cout << std::noshowbase;
+
+// uppercase - ✅ STICKY - uppercase hex digits and 'E' in scientific
+std::cout << std::uppercase << std::hex << num << '\n';  // "FF" (not "ff")
+std::cout << std::nouppercase;
+```
+
+**Practical Example - Hex Dump:**
+
+```cpp
+void hexDump(const unsigned char* data, size_t length) {
+    std::cout << std::hex << std::uppercase << std::setfill('0');
+    
+    for (size_t i = 0; i < length; ++i) {
+        std::cout << std::setw(2) << static_cast<int>(data[i]) << " ";
+        if ((i + 1) % 16 == 0) std::cout << '\n';
+    }
+    
+    std::cout << std::dec << std::nouppercase;  // Reset
+}
+// Output: "48 65 6C 6C 6F 20 57 6F 72 6C 64"
 ```
 
 📖 [cppreference: std::setprecision](https://en.cppreference.com/w/cpp/io/manip/setprecision)
 
 ### Field Width and Alignment
 
+**setw - The Most Important Non-Sticky Manipulator:**
+
 ```cpp
 #include <iostream>
 #include <iomanip>
 
 int main() {
-    // setw - field width (applies to NEXT output only!)
+    // setw - ❌ NON-STICKY - applies to NEXT output only!
     std::cout << std::setw(10) << 42 << '\n';  // "        42"
-    std::cout << 123 << '\n';  // "123" (no padding)
+    std::cout << 123 << '\n';                   // "123" (no padding!)
     
-    // Alignment
-    std::cout << std::left << std::setw(10) << 42 << "|\n";  // "42        |"
-    std::cout << std::right << std::setw(10) << 42 << "|\n";  // "        42|"
-    
-    // Fill character
-    std::cout << std::setfill('*') << std::setw(10) << 42 << '\n';  // "********42"
-    
-    // Internal (sign on left, number on right)
-    std::cout << std::internal << std::setw(10) << -42 << '\n';  // "-*******42"
+    // Must apply to each item
+    std::cout << std::setw(10) << 42 
+              << std::setw(10) << 100 
+              << std::setw(10) << 200 << '\n';
+    // Output: "        42       100       200"
     
     return 0;
 }
+```
+
+**Alignment Options:**
+
+```cpp
+// left - ✅ STICKY - left-align within field
+std::cout << std::left << std::setw(10) << 42 << "|\n";
+// Output: "42        |"
+
+// right - ✅ STICKY - right-align (default)
+std::cout << std::right << std::setw(10) << 42 << "|\n";
+// Output: "        42|"
+
+// internal - ✅ STICKY - sign/0x on left, number on right
+std::cout << std::internal << std::setw(10) << -42 << "|\n";
+// Output: "-       42|"
+
+std::cout << std::internal << std::showbase << std::hex 
+          << std::setw(10) << 255 << "|\n";
+// Output: "0x      ff|"
+```
+
+**Fill Character:**
+
+```cpp
+// setfill - ✅ STICKY - character used for padding
+std::cout << std::setfill('*') << std::setw(10) << 42 << '\n';
+// Output: "********42"
+
+std::cout << std::setfill('0') << std::setw(6) << 42 << '\n';
+// Output: "000042" (useful for IDs, timestamps)
+
+// Reset to space
+std::cout << std::setfill(' ');
+```
+
+**Practical Example - Formatted Table:**
+
+```cpp
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <vector>
+
+struct Product {
+    std::string name;
+    double price;
+    int quantity;
+};
+
+void printTable(const std::vector<Product>& products) {
+    // Set up formatting
+    std::cout << std::fixed << std::setprecision(2) << std::left;
+    
+    // Print header
+    std::cout << std::setw(20) << "Product" 
+              << std::setw(10) << "Price" 
+              << std::setw(10) << "Qty" << '\n';
+    std::cout << std::string(40, '-') << '\n';
+    
+    // Print rows
+    for (const auto& p : products) {
+        std::cout << std::setw(20) << p.name
+                  << std::setw(10) << p.price
+                  << std::setw(10) << p.quantity << '\n';
+    }
+}
+
+// Output:
+// Product             Price     Qty       
+// ----------------------------------------
+// Widget              10.50     100       
+// Gadget              25.99     50        
+// Thingamajig         99.99     10        
+```
+
+**Common Patterns:**
+
+```cpp
+// Pattern 1: Fixed-width columns
+std::cout << std::setw(10) << "Name" 
+          << std::setw(10) << "Value" << '\n';
+
+// Pattern 2: Zero-padded numbers (IDs, dates)
+std::cout << std::setfill('0') << std::setw(4) << id << '\n';  // "0042"
+
+// Pattern 3: Right-aligned numbers in table
+std::cout << std::right << std::setw(10) << amount << '\n';
+
+// Pattern 4: Currency with alignment
+std::cout << "$" << std::fixed << std::setprecision(2) 
+          << std::setw(8) << price << '\n';
 ```
 
 📖 [cppreference: std::setw](https://en.cppreference.com/w/cpp/io/manip/setw)

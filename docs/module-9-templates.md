@@ -498,11 +498,14 @@ int main() {
 
 ## Non-Type Template Parameters
 
-So far we've seen **type parameters** (`typename T`), but templates can also take **value parameters** - actual compile-time constant values!
+So far we've seen **type parameters** (`typename T`), but templates can also
+take **value parameters** - actual compile-time constant values!
 
 **What Are Non-Type Parameters?**
 
-Non-type template parameters are **compile-time constants** that become part of the template:
+Non-type template parameters are **compile-time constants** that become part
+of the template:
+
 - Integers (int, size_t, etc.)
 - Pointers
 - References
@@ -513,6 +516,7 @@ Non-type template parameters are **compile-time constants** that become part of 
 **Why Use Them?**
 
 Non-type parameters let you:
+
 1. Create fixed-size arrays that know their size
 2. Configure behavior at compile time
 3. Optimize code (compiler knows values)
@@ -737,18 +741,23 @@ void func() {
 
 ## Template Specialization
 
-Template specialization allows you to provide **custom implementations** for specific types while keeping the generic template for everything else. Think of it as "special cases" or "exceptions to the rule."
+Template specialization allows you to provide **custom implementations** for
+specific types while keeping the generic template for everything else. Think of
+it as "special cases" or "exceptions to the rule."
 
 **Why Specialize?**
 
-Sometimes the generic template isn't optimal or doesn't work correctly for certain types:
-- Performance optimization (e.g., `std::vector<bool>` uses bit packing)
+Sometimes the generic template isn't optimal or does not work correctly for
+certain types:
+
+- Performance optimization (e.g., `std::vector<bool>` uses bit-packing)
 - Different behavior needed (e.g., comparing C-strings with `strcmp` instead of `>`)
 - Type-specific features (e.g., special printing for pointers)
 
 ### Full Specialization
 
-Full (or explicit) specialization provides a completely custom implementation for a **specific type**.
+Full (or explicit) specialization provides a completely custom implementation
+for a **specific type**.
 
 **Basic Example:**
 
@@ -882,7 +891,9 @@ int main() {
 
 ### Partial Specialization (Classes Only)
 
-Partial specialization lets you specialize for a **pattern of types** rather than a single specific type. **Important:** This only works for class templates, not function templates!
+Partial specialization lets you specialize for a **pattern of types** rather 
+than a single specific type. **Important:** This only works for class 
+templates, not function templates!
 
 **What's the Difference?**
 
