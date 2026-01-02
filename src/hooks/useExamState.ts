@@ -112,8 +112,9 @@ export const useExamState = (questionBank: Question[]) => {
 
   const toggleAnswer = useCallback((optionIndex: number) => {
     setState(prev => {
-      const questionId = prev.examQuestions[prev.currentQuestion].id;
-      const questionType = prev.examQuestions[prev.currentQuestion].type;
+      const currentQuestion = prev.examQuestions[prev.currentQuestion];
+      const questionId = currentQuestion.id;
+      const questionType = currentQuestion.type;
       const current = prev.selectedAnswers[questionId] || [];
 
       let newAnswers: SelectedAnswers;
@@ -123,16 +124,26 @@ export const useExamState = (questionBank: Question[]) => {
           [questionId]: [optionIndex]
         };
       } else {
+        // For multiple choice questions, limit selections to the number of correct answers
+        const maxSelections = currentQuestion.correct.length;
+
         if (current.includes(optionIndex)) {
+          // Deselect the option
           newAnswers = {
             ...prev.selectedAnswers,
             [questionId]: current.filter(i => i !== optionIndex)
           };
         } else {
-          newAnswers = {
-            ...prev.selectedAnswers,
-            [questionId]: [...current, optionIndex]
-          };
+          // Only allow selection if we haven't reached the limit
+          if (current.length < maxSelections) {
+            newAnswers = {
+              ...prev.selectedAnswers,
+              [questionId]: [...current, optionIndex]
+            };
+          } else {
+            // Already at max selections, don't change anything
+            return prev;
+          }
         }
       }
 

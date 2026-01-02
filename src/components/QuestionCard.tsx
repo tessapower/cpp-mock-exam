@@ -133,14 +133,19 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       <div className="space-y-3">
         {question.options.map((option, index) => {
           const isSelected = userAnswers.includes(index);
+          const maxSelections = question.correct.length;
+          const isLimitReached = !isSingleChoice && userAnswers.length >= maxSelections && !isSelected;
 
           return (
             <button
               key={index}
               onClick={() => onAnswerToggle(index)}
+              disabled={isLimitReached}
               className={`w-full text-left p-4 rounded-lg border-2 transition ${
                 isSelected
                   ? 'border-blue-500 bg-blue-50'
+                  : isLimitReached
+                  ? 'border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed'
                   : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
               }`}
             >
@@ -148,6 +153,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                 <div className={`flex-shrink-0 w-6 h-6 rounded-${isSingleChoice ? 'full' : 'md'} border-2 flex items-center justify-center ${
                   isSelected
                     ? 'border-blue-500 bg-blue-500'
+                    : isLimitReached
+                    ? 'border-gray-300 bg-gray-100'
                     : 'border-gray-300'
                 }`}>
                   {isSelected && (
