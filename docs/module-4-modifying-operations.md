@@ -1,12 +1,19 @@
 # Module 4: Modifying Sequence Operations
 
-## Overview
+- [Overview](#overview)
+  - [What are Modifying Algorithms?](#what-are-modifying-algorithms)
+  - [The Critical Distinction](#the-critical-distinction)
+  - [The Five Categories](#the-five-categories)
 
-**What are Modifying Algorithms?**
+## [Overview](#overview)
 
-Modifying algorithms are your "edit toolkit" - they change elements, rearrange order, or restructure container contents. Unlike non-modifying algorithms that just look, these algorithms actually alter your data.
+### [What are Modifying Algorithms?](#what-are-modifying-algorithms)
 
-**The Critical Distinction:**
+Modifying algorithms are your "edit toolkit" - they change elements, 
+rearrange order, or restructure container contents. Unlike non-modifying 
+algorithms that just look, these algorithms actually alter your data.
+
+### [The Critical Distinction](#the-critical-distinction)
 
 ```cpp
 // Non-modifying: Just looks
@@ -16,7 +23,7 @@ auto it = std::find(vec.begin(), vec.end(), 5);  // Doesn't change vec
 std::replace(vec.begin(), vec.end(), 5, 10);  // Changes all 5s to 10s
 ```
 
-**The Five Categories:**
+### [The Five Categories](#the-five-categories)
 
 1. **Copy/Move Operations** (`copy`, `move`, `swap`)
    - "Duplicate or transfer data"
@@ -33,13 +40,13 @@ std::replace(vec.begin(), vec.end(), 5, 10);  // Changes all 5s to 10s
 4. **Remove Operations** (`remove`, `unique`)
    - ⚠️ **Don't actually delete!** (The famous gotcha)
    - Move unwanted elements to end
-   - Need erase() to actually remove
+   - Need `erase()` to actually remove
 
 5. **Reorder Operations** (`reverse`, `rotate`, `shuffle`)
    - "Rearrange element positions"
    - Same elements, different order
 
-**The Most Important Concept: The Remove-Erase Idiom**
+#### [The Most Important Concept: The Remove-Erase Idiom](#the-most-important-concept-the-remove--erase-idiom)
 
 This is crucial to understand:
 
@@ -59,17 +66,20 @@ std::cout << vec.size();  // Now 4: {1, 3, 4, 5}
 vec.erase(std::remove(vec.begin(), vec.end(), 2), vec.end());
 ```
 
-**Why This Design?**
+#### Why This Design?
 
-Algorithms work on iterator ranges, not containers. They can't change container size because:
+Algorithms work on iterator ranges, not containers. They can't change 
+container size because:
+
 1. They don't know what container type they're working with
-2. Not all containers support erase() the same way
+2. Not all containers support `erase()` the same way
 3. You might not want to erase (maybe just count removed items first)
 
 Visual representation of remove():
-```
+
+```text
 Before: [1][2][3][2][4][2][5]
-                               
+
 After remove(2):
         [1][3][4][5][?][?][?]  ← "removed" elements moved to end
                      ↑
@@ -77,19 +87,29 @@ After remove(2):
 Size is still 7! Need erase() to actually shrink.
 ```
 
+Deep dive can be found below: [The Remove-Erase Idiom: Deep Dive](#the-remove-erase-idiom--deep-dive)
+
 📖 [cppreference: Modifying sequence operations](https://en.cppreference.com/w/cpp/algorithm)
 
 ---
 
 ## Copy and Move
 
-**When to Copy vs Move:**
+When to Copy vs Move:
 
 - **Copy**: Need data in both places (source stays valid)
 - **Move**: Transfer ownership (source becomes empty/invalid)
 - **Move is faster** for expensive-to-copy objects (strings, vectors)
 
-### std::copy / std::copy_if / std::copy_backward
+### `std::copy` vs. `std::copy_if` vs. `std::copy_backward`
+
+When using `std::copy` or its variations, it's important to know that copy 
+requires the destination container to have space for the copied elements. 
+The range to copy is `[first, last)`, to another range beginning at `dest_first`.
+Trying to copy overlapping ranges from the same container will result in 
+undefined behavior. Use `std::copy_backward` to be able to copy overlapping 
+ranges within the same container. `std::copy` returns an **output iterator** to 
+the element in the destination range that is one past the last element copied.
 
 ```cpp
 #include <algorithm>
@@ -99,34 +119,40 @@ Size is still 7! Need erase() to actually shrink.
 
 int main() {
     std::vector<int> src = {1, 2, 3, 4, 5};
-    
+
     // Method 1: Pre-sized destination
     std::vector<int> dest(5);  // Must have space!
     std::copy(src.begin(), src.end(), dest.begin());
     // dest: {1, 2, 3, 4, 5}
-    
+
     // Method 2: Using back_inserter (safer - auto-resizes)
     std::vector<int> dest2;
     std::copy(src.begin(), src.end(), std::back_inserter(dest2));
     // dest2: {1, 2, 3, 4, 5}
-    
+
     // Copy only even numbers (conditional copy)
     std::vector<int> evens;
     std::copy_if(src.begin(), src.end(), std::back_inserter(evens),
                  [](int x) { return x % 2 == 0; });
     // evens: {2, 4}
-    
+
     // Copy backward - for overlapping ranges
     std::vector<int> vec = {1, 2, 3, 4, 5};
     // Shift right by 2 positions
     std::copy_backward(vec.begin(), vec.begin() + 3, vec.end());
     // vec: {1, 2, 1, 2, 3} - last 3 elements became first 3
-    
+
     return 0;
 }
 ```
 
-**Critical Safety Rule:**
+#### Critical Safety Rule
+
+Trying to copy to a destination container that does not have enough space 
+will result in undefined behavior, due to writing past `container.end()`. To 
+ensure the container has enough space by growing automatically, use 
+`std::back_inserter()`.
+
 ```cpp
 std::vector<int> dest(3);  // Only 3 elements!
 
@@ -143,11 +169,12 @@ std::copy(src.begin(), src.end(), std::back_inserter(dest));
 
 ## Transform
 
-**The Power of Transform:**
+`transform` is like `map()` in functional languages - apply a function to 
+each element and store the results in a destination container, which can be 
+the source container. Returns an output iterator to the element one past the 
+last element transformed.
 
-`transform` is like `map()` in functional languages - apply a function to each element and store results.
-
-### std::transform
+```cpp
 #include <algorithm>
 #include <vector>
 #include <iostream>
@@ -155,18 +182,18 @@ std::copy(src.begin(), src.end(), std::back_inserter(dest));
 int main() {
     std::vector<int> src = {1, 2, 3, 4};
     std::vector<int> dest(4);
-    
+
     // Unary transformation
     std::transform(src.begin(), src.end(), dest.begin(),
                    [](int x) { return x * 2; });
     // dest: {2, 4, 6, 8}
-    
+
     // Binary transformation (combine two ranges)
     std::vector<int> src2 = {10, 20, 30, 40};
     std::transform(src.begin(), src.end(), src2.begin(), dest.begin(),
                    [](int a, int b) { return a + b; });
     // dest: {11, 22, 33, 44}
-    
+
     return 0;
 }
 ```
@@ -177,7 +204,13 @@ int main() {
 
 ## Fill and Generate
 
-### std::fill / std::fill_n / std::generate / std::generate_n
+The `fill` and `generate` algorithms can be used to populate containers with 
+the same value or generated from a repeatedly-called function that returns the 
+expected values. `fill` does not return anything, while `fill_n` returns an 
+iterator one past the last element assigned if `count` > 0, otherwise 
+returns `first` (i.e. beginning of range). If `count` is <= 0, does nothing.
+
+### `std::fill` vs. `std::fill_n` vs. `std::generate` vs. `std::generate_n`
 
 ```cpp
 #include <algorithm>
@@ -186,23 +219,25 @@ int main() {
 
 int main() {
     std::vector<int> vec(5);
-    
+
     // Fill with value
     std::fill(vec.begin(), vec.end(), 42);
     // vec: {42, 42, 42, 42, 42}
-    
+
     // Fill first n elements
     std::fill_n(vec.begin(), 3, 10);
     // vec: {10, 10, 10, 42, 42}
-    
+
     // Generate using function
     int counter = 0;
     std::generate(vec.begin(), vec.end(), [&counter]() { return counter++; });
     // vec: {0, 1, 2, 3, 4}
-    
+    // N.B.: Overwrites preexisting values.
+
     // Generate first n elements
     std::generate_n(vec.begin(), 3, []() { return rand() % 100; });
-    
+    // vec: {rand_1, rand_2, rand_3, 3, 4}
+
     return 0;
 }
 ```
@@ -213,8 +248,16 @@ int main() {
 
 ## Remove and Replace
 
-### std::remove / std::remove_if
-**⚠️ Important: Remove doesn't actually erase! Use remove-erase idiom.**
+**⚠️ Important:** `remove` doesn't actually erase elements! It only moves the 
+elements to be removed to the end of the container, and adjusts the container's 
+end iterator to one past the new last element, i.e. the first of the moved 
+"to-remove" elements. Because `remove` doesn't remove the elements, the 
+container size remains unchanged.
+
+**Use the "remove-erase" idiom (below) to ensure elements are properly removed 
+from the container.**
+
+### [`std::remove` vs. `std::remove_if`](#stdremove-vs-stdremove_if)
 
 ```cpp
 #include <algorithm>
@@ -223,33 +266,39 @@ int main() {
 
 int main() {
     std::vector<int> vec = {1, 2, 3, 2, 4, 2, 5};
-    
+
     // Remove moves elements, returns new logical end
     auto new_end = std::remove(vec.begin(), vec.end(), 2);
     // vec: {1, 3, 4, 5, ?, ?, ?} - size unchanged!
-    
+
     // Actually erase: remove-erase idiom
     vec.erase(new_end, vec.end());
     // vec: {1, 3, 4, 5}
-    
+
     // One-liner version
     vec = {1, 2, 3, 2, 4, 2, 5};
     vec.erase(std::remove(vec.begin(), vec.end(), 2), vec.end());
-    
+
     // Remove with predicate
     vec = {1, 2, 3, 4, 5, 6};
     vec.erase(std::remove_if(vec.begin(), vec.end(),
                              [](int x) { return x % 2 == 0; }),
               vec.end());
     // vec: {1, 3, 5}
-    
+
     return 0;
 }
 ```
 
 📖 [cppreference: std::remove](https://en.cppreference.com/w/cpp/algorithm/remove)
 
-### std::replace / std::replace_if
+### [`std::replace` vs. `std::replace_if`](#stdreplace-vs-stdreplace_if)
+
+`std::replace` replaces every instance of the given value in a range with 
+another specified value, modifying the container in place. The `_if` variant 
+uses a predicate to determine whether to replace a value in the container, 
+only replacing those for which the predicate returns true. Neither `replace` 
+nor `replace_if` return a value.
 
 ```cpp
 #include <algorithm>
@@ -258,16 +307,16 @@ int main() {
 
 int main() {
     std::vector<int> vec = {1, 2, 3, 2, 4};
-    
+
     // Replace all 2's with 99
     std::replace(vec.begin(), vec.end(), 2, 99);
     // vec: {1, 99, 3, 99, 4}
-    
+
     // Replace with predicate
     std::replace_if(vec.begin(), vec.end(),
                     [](int x) { return x > 10; }, 0);
     // vec: {1, 0, 3, 0, 4}
-    
+
     return 0;
 }
 ```
@@ -276,10 +325,10 @@ int main() {
 
 ---
 
-## Unique
+## [Unique](#unique)
 
-### std::unique
-**⚠️ Removes consecutive duplicates only! Sort first for full deduplication.**
+**⚠️ `unique` removes consecutive duplicates only! Sort first for full 
+deduplication.**
 
 ```cpp
 #include <algorithm>
@@ -288,18 +337,18 @@ int main() {
 
 int main() {
     std::vector<int> vec = {1, 1, 2, 2, 2, 3, 1, 1};
-    
+
     // Remove consecutive duplicates
     auto new_end = std::unique(vec.begin(), vec.end());
     vec.erase(new_end, vec.end());
     // vec: {1, 2, 3, 1} - not fully deduplicated!
-    
+
     // For full deduplication: sort first
     vec = {1, 3, 1, 2, 3, 2, 1};
     std::sort(vec.begin(), vec.end());  // {1, 1, 1, 2, 2, 3, 3}
     vec.erase(std::unique(vec.begin(), vec.end()), vec.end());
     // vec: {1, 2, 3}
-    
+
     return 0;
 }
 ```
@@ -308,9 +357,15 @@ int main() {
 
 ---
 
-## Reverse and Rotate
+## [Reverse and Rotate](reverse-and-rotate)
 
-### std::reverse / std::rotate
+`reverse` reverses the elements in a container in place, and can be used on 
+a sub-range of the container `[first, last)`. `rotate` performs a left 
+rotation, moving elements such that the element at `middle` becomes the new 
+first element (`rotate(first, middle, last)`). Elements in `[first, middle)` 
+move to the end, elements in `[middle, last)` move to the beginning. Giving 
+a sub-range of the container will result in only those elements being rotated,
+the rest of the container will remain the same.
 
 ```cpp
 #include <algorithm>
@@ -319,29 +374,32 @@ int main() {
 
 int main() {
     std::vector<int> vec = {1, 2, 3, 4, 5};
-    
+
     // Reverse in-place
     std::reverse(vec.begin(), vec.end());
     // vec: {5, 4, 3, 2, 1}
-    
+
     // Rotate: move elements circularly
     vec = {1, 2, 3, 4, 5};
     std::rotate(vec.begin(), vec.begin() + 2, vec.end());
     // vec: {3, 4, 5, 1, 2}
     // Elements before middle move to end
-    
+
     return 0;
 }
 ```
 
-📖 [cppreference: std::reverse](https://en.cppreference.com/w/cpp/algorithm/reverse)  
+📖 [cppreference: std::reverse](https://en.cppreference.com/w/cpp/algorithm/reverse)
 📖 [cppreference: std::rotate](https://en.cppreference.com/w/cpp/algorithm/rotate)
 
 ---
 
-## Shuffle and Partition
+## [Shuffle and Partition](#shuffle-and-partition)
 
-### std::shuffle
+### [`std::shuffle`](stdshuffle)
+
+Randomly reorders elements in a range using a specified RNG, replacing 
+`std::random_shuffle` which was deprecated in C++11.
 
 ```cpp
 #include <algorithm>
@@ -351,20 +409,32 @@ int main() {
 
 int main() {
     std::vector<int> vec = {1, 2, 3, 4, 5};
-    
+
     std::random_device rd;
-    std::mt19937 g(rd());
-    
+    std::mt19937 g(rd()); // Mersenne Twister engine
+
     std::shuffle(vec.begin(), vec.end(), g);
     // vec: random permutation
-    
+
     return 0;
 }
 ```
 
 📖 [cppreference: std::shuffle](https://en.cppreference.com/w/cpp/algorithm/random_shuffle)
 
-### std::partition / std::stable_partition
+### `std::partition` vs. `std::stable_partition`
+
+`std::partition` reorders elements so that all elements satisfying the 
+predicate come first, but **doesn't preserve relative ordering** within each 
+group. The complexity is `O(n)`, with n/2 swaps on average. Returns an 
+iterator to the partition point, i.e. the first element of the second group.
+
+`std::stable_partition` does the same thing but preserves relative order 
+within each partition. Complexity is `O(n × log(n))` without extra memory 
+(alloc failed) and `O(n)` with extra memory. In practice, on modern 
+desktop/server systems with gigabytes of RAM, allocation almost never fails 
+for reasonable dataset sizes. But on embedded systems or when dealing with 
+truly massive datasets, the fallback is essential.
 
 ```cpp
 #include <algorithm>
@@ -373,18 +443,18 @@ int main() {
 
 int main() {
     std::vector<int> vec = {1, 5, 2, 6, 3, 7, 4};
-    
+
     // Partition: reorder so predicate-true come first
     auto partition_point = std::partition(vec.begin(), vec.end(),
                                           [](int x) { return x % 2 == 0; });
     // vec: {2, 6, 4, 1, 5, 3, 7} (evens first, order not preserved)
-    
+
     // stable_partition preserves relative order
     vec = {1, 5, 2, 6, 3, 7, 4};
     auto sp = std::stable_partition(vec.begin(), vec.end(),
                                     [](int x) { return x % 2 == 0; });
     // vec: {2, 6, 4, 1, 5, 3, 7} (evens first, order preserved)
-    
+
     return 0;
 }
 ```
@@ -395,7 +465,22 @@ int main() {
 
 ## Swap
 
-### std::swap / std::swap_ranges / std::iter_swap
+### `std::swap` vs. `std::swap_ranges` vs. `std::iter_swap`
+
+`std::swap` exchanges the values of two objects. It works with any 
+movable/copyable type, uses move semantics when available, and is 
+specialized for containers (e.g. swapping vectors just swaps internal 
+pointers, which is `O(1)` instead of `O(n)`).
+
+`std::swap_ranges` swaps the elements between two ranges. Returns iterator 
+to one-past-the-last swapped element in the **second** range. The algorithm 
+only requires the beginning of the second range and assumes it's large 
+enough. If the second range is too small, the behavior is undefined.
+
+`std::iter_swap` swaps the **dereferenced values** pointed to by 
+two iterators, not the iterators themselves. Works with any two iterators 
+that point to swappable types, and can be from different containers or even 
+different types.
 
 ```cpp
 #include <algorithm>
@@ -405,18 +490,24 @@ int main() {
 int main() {
     int a = 5, b = 10;
     std::swap(a, b);  // a=10, b=5
-    
+
     std::vector<int> v1 = {1, 2, 3};
     std::vector<int> v2 = {7, 8, 9};
-    
+
     // Swap ranges
     std::swap_ranges(v1.begin(), v1.end(), v2.begin());
     // v1: {7, 8, 9}, v2: {1, 2, 3}
-    
+
     // Swap using iterators
     std::iter_swap(v1.begin(), v1.begin() + 2);
     // v1: {9, 8, 7}
-    
+
+    std::vector<int> v1 = {1, 2, 3, 4, 5};
+    std::vector<int> v2 = {10, 20};  // Too small!
+
+    std::swap_ranges(v1.begin(), v1.end(), v2.begin());
+    // ⚠️ Undefined behavior - v2 doesn't have enough elements
+
     return 0;
 }
 ```
@@ -425,13 +516,12 @@ int main() {
 
 ---
 
----
-
-## The Remove-Erase Idiom: Deep Dive
+## [The Remove-Erase Idiom: Deep Dive](#the-remove-erase-idiom--deep-dive)
 
 **Why This Matters:**
 
-This is one of the most commonly misunderstood aspects of C++ STL. Understanding it is crucial.
+This is one of the most commonly misunderstood aspects of C++ STL. 
+Understanding it is crucial.
 
 ### How Remove Actually Works
 
@@ -460,41 +550,42 @@ std::cout << vec.size();  // Now 4
 ```
 
 **Visual Walkthrough:**
-```
+
+```text
 Original: [1][2][3][2][4][2][5]
-          
+
 Reading: [1][2][3][2][4][2][5]
          ↑  ↑
         write read
-         
+ 
 Keep 1:  [1][2][3][2][4][2][5]
             ↑  ↑
            write read
-           
+
 Skip 2:  [1][2][3][2][4][2][5]
             ↑     ↑
            write  read
-           
+
 Keep 3:  [1][3][3][2][4][2][5]
                ↑     ↑
               write  read
-              
+
 Skip 2:  [1][3][3][2][4][2][5]
                ↑        ↑
               write     read
-              
+
 Keep 4:  [1][3][4][2][4][2][5]
                   ↑        ↑
                  write     read
-                 
+ 
 Skip 2:  [1][3][4][2][4][2][5]
                   ↑           ↑
                  write        read
-                 
+ 
 Keep 5:  [1][3][4][5][4][2][5]
                      ↑
                    new_end
-                   
+
 Result:  [1][3][4][5][?][?][?]
 ```
 
@@ -509,7 +600,7 @@ vec.erase(std::remove_if(vec.begin(), vec.end(),
           [](int x) { return x % 2 == 0; }), 
           vec.end());
 
-// Pattern 3: Remove duplicates (only works on sorted!)
+// Pattern 3: Remove duplicates (only works on sorted ranges!)
 std::sort(vec.begin(), vec.end());
 vec.erase(std::unique(vec.begin(), vec.end()), vec.end());
 ```
@@ -551,7 +642,7 @@ What do you want to do?
 
 COPY data
 ├─ Copy all? → std::copy
-├─ Copy conditionally? → std::copy_if  
+├─ Copy conditionally? → std::copy_if
 ├─ Copy with transformation? → std::transform
 └─ Move instead? → std::move
 
@@ -563,7 +654,7 @@ CHANGE values
 REMOVE elements
 ├─ Remove specific value? → remove + erase
 ├─ Remove by condition? → remove_if + erase
-└─ Remove consecutive duplicates? → unique + erase (sort first!)
+└─ Remove consecutive duplicates? → unique + erase (sort container first!)
 
 REARRANGE order
 ├─ Reverse? → std::reverse
@@ -573,12 +664,13 @@ REARRANGE order
 
 FILL/GENERATE
 ├─ Fill with value? → std::fill
-└─ Generate from function? → std::generate
+└─ Generate values from function? → std::generate
 ```
 
 ### Real-World Scenarios
 
 #### Scenario 1: Data Cleansing
+
 **Problem:** Remove invalid entries from dataset
 
 ```cpp
@@ -605,6 +697,7 @@ records.erase(
 ```
 
 #### Scenario 2: Data Transformation
+
 **Problem:** Convert temperatures from Celsius to Fahrenheit
 
 ```cpp
@@ -622,6 +715,7 @@ std::transform(celsius.begin(), celsius.end(), celsius.begin(),
 ```
 
 #### Scenario 3: Combining Multiple Operations
+
 **Problem:** Get unique positive numbers, doubled
 
 ```cpp
@@ -650,6 +744,7 @@ std::transform(numbers.begin(), numbers.end(), numbers.begin(),
 ```
 
 #### Scenario 4: Rotating Elements
+
 **Problem:** Move oldest elements to end of queue
 
 ```cpp
@@ -671,20 +766,25 @@ void processNextTask(std::vector<Task>& tasks) {
 
 ### Performance Characteristics
 
-| Algorithm | Complexity | In-Place? | Notes |
-|-----------|------------|-----------|-------|
-| copy | O(n) | No | Requires dest space |
-| transform | O(n) | Can be | Flexible |
-| replace | O(n) | Yes | Simple value swap |
-| remove | O(n) | Yes* | Doesn't shrink! |
-| unique | O(n) | Yes* | Only consecutive |
-| reverse | O(n) | Yes | Swaps elements |
-| rotate | O(n) | Yes | Complex but efficient |
-| partition | O(n) | Yes | Reorders |
+| Algorithm   | Complexity | In-Place? | Notes                 |
+|-------------|------------|-----------|-----------------------|
+| `copy`      | `O(n)`     | No        | Requires dest space   |
+| `transform` | `O(n)`     | Can be    | Flexible              |
+| `replace`   | `O(n)`     | Yes       | Simple value swap     |
+| `remove`    | `O(n)`     | Yes*      | Doesn't shrink!       |
+| `unique`    | `O(n)`     | Yes*      | Only consecutive      |
+| `reverse`   | `O(n)`     | Yes       | Swaps elements        |
+| `rotate`    | `O(n)`     | Yes       | Complex but efficient |
+| `partition` | `O(n)`     | Yes       | Reorders              |
 
-*"Yes" means operates on same range, but doesn't actually delete
+_*"Yes" = operates on same range, but doesn't actually delete._
 
 ### Iterator Invalidation Rules
+
+Invalidation occurs when containers perform operations or have operations 
+performed on them that mean the container structure needs to change. 
+Changing element values generally doesn't cause iterator invalidation. Using 
+invalidated iterators is undefined behavior.
 
 **Critical for Safety:**
 
@@ -706,9 +806,12 @@ vec.erase(std::remove(vec.begin(), vec.end(), 2), vec.end());
 ```
 
 **Rules by Algorithm:**
-- **copy, transform, replace**: Don't invalidate
-- **remove, unique**: Don't invalidate (but change element order)
-- **rotate, reverse, partition**: Don't invalidate
+
+- **copy, transform, replace**: Don't invalidate, just modify the values.
+- **remove, unique**: Don't invalidate (but change element order) and 
+  elements after returned iterator (`new_end`) are unspecified.
+- **rotate, reverse, partition**: Don't invalidate, but point to different 
+  logical elements.
 - **erase (container method)**: Invalidates at and after erased position
 
 ### Common Patterns
@@ -766,10 +869,10 @@ std::replace_if(vec.begin(), vec.end(),
 
 ## Key Takeaways
 
-✅ **remove/unique** don't actually erase - use **remove-erase idiom**  
-✅ **_if variants** use predicates  
-✅ **_copy variants** write to output range without modifying source  
-✅ **stable_ variants** preserve relative order  
+✅ **remove/unique** don't actually erase - use **remove-erase idiom**
+✅ **_if variants** use predicates
+✅ **_copy variants** write to output range without modifying source
+✅ **stable_ variants** preserve relative order
 ✅ **unique** only removes **consecutive** duplicates - sort first for full dedup
 
 ---
