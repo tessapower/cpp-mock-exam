@@ -2,41 +2,44 @@
 
 ## Overview
 
-**What Makes Sorting Special?**
+### What Makes Sorting Special?
 
-Sorting is one of the most fundamental operations in computer science. Once data is sorted, many other operations become dramatically faster - searching changes from O(n) to O(log n), finding duplicates becomes trivial, and range queries are possible.
+Sorting is one of the most fundamental operations in computer science. Once 
+data is sorted, many other operations become dramatically faster - searching 
+changes from O(n) to O(log n), finding duplicates becomes trivial, and range 
+queries are possible.
 
-**The Big Picture:**
+### The Big Picture
 
-```
+```text
 Unsorted data: [3, 1, 4, 1, 5, 9, 2, 6]
-- Finding 5: Must check each element (O(n))
-- Finding duplicates: Must compare all pairs (O(n²))
-- Range queries: Must scan everything (O(n))
+- Finding 5: Must check each element (`O(n)``)
+- Finding duplicates: Must compare all pairs (`O(n²)`)
+- Range queries: Must scan everything (`O(n)`)
 
 Sorted data: [1, 1, 2, 3, 4, 5, 6, 9]
-- Finding 5: Binary search (O(log n))
-- Finding duplicates: Check adjacent elements (O(n))
-- Range queries: Find start and end (O(log n))
+- Finding 5: Binary search (`O(log n)`)
+- Finding duplicates: Check adjacent elements (`O(n)`)
+- Range queries: Find start and end (`O(log n)`)
 ```
 
-**Critical Concept: Strict Weak Ordering**
+### Critical Concept: Strict Weak Ordering
 
-This is THE most important concept for sorting. Your comparator MUST satisfy these rules or you get undefined behavior:
+This is THE most important concept for sorting. Your comparator MUST satisfy 
+these rules, or you get undefined behavior:
 
-1. **Irreflexivity**: `comp(a, a)` must be false
-   - Nothing is less than itself
+1. **Irreflexivity**: `comp(a, a)` must be false, nothing is less than itself
 
-2. **Asymmetry**: If `comp(a, b)` is true, then `comp(b, a)` must be false
-   - If a < b, then b is not < a
+2. **Asymmetry**: If `comp(a, b)` is true, then `comp(b, a)` must be false, 
+   i.e. if a < b, then b is not < a
 
-3. **Transitivity**: If `comp(a, b)` and `comp(b, c)`, then `comp(a, c)`
-   - If a < b and b < c, then a < c
+3. **Transitivity**: If `comp(a, b)` and `comp(b, c)`, then `comp(a, c)`, i.e.
+   if a < b and b < c, then a < c
 
-4. **Equivalence Transitivity**: If a==b and b==c, then a==c
-   - Equality is transitive
+4. **Equivalence Transitivity**: If a == b and b == c, then a == c, i.e. 
+   equality is transitive
 
-**Common Violations (Bugs!):**
+### Common Violations (Bugs!)
 
 ```cpp
 // ❌ WRONG - violates irreflexivity
@@ -52,14 +55,14 @@ This is THE most important concept for sorting. Your comparator MUST satisfy the
 [](int a, int b) { return a < b; }
 ```
 
-**The Sorting Family:**
+### The Sorting Family
 
-| Algorithm | Stable? | Complexity | Use When |
-|-----------|---------|------------|----------|
-| `sort` | No | O(n log n) | Default choice - fastest |
-| `stable_sort` | Yes | O(n log n) | Need to preserve order of equal elements |
-| `partial_sort` | No | O(n log k) | Only need top k elements |
-| `nth_element` | No | O(n) avg | Only need element at position n |
+| Algorithm      | Stable? | Complexity | Use When                                 |
+|----------------|---------|------------|------------------------------------------|
+| `sort`         | No      | O(n log n) | Default choice - fastest                 |
+| `stable_sort`  | Yes     | O(n log n) | Need to preserve order of equal elements |
+| `partial_sort` | No      | O(n log k) | Only need top k elements                 |
+| `nth_element`  | No      | O(n) avg   | Only need element at position n          |
 
 📖 [cppreference: Sorting operations](https://en.cppreference.com/w/cpp/algorithm)
 
@@ -67,10 +70,18 @@ This is THE most important concept for sorting. Your comparator MUST satisfy the
 
 ## Sorting Algorithms
 
-### std::sort
-**Unstable sort - O(n log n) average - Your default choice**
+### `std::sort`
 
-**What "Unstable" Means:**
+- Unstable sort (uses introsort, hybrid of quicksort, heapsort, and 
+  insertion sort).
+- O(n log n) average
+- Default choice, typically 2-3x faster than `std::stable_sort`
+
+#### What "Unstable" Means
+
+There is no guarantee that comparing elements as equal will maintain their 
+original relative order. An algorithm is stable if equal elements keep their 
+relative ordering.
 
 ```cpp
 struct Person {
@@ -92,6 +103,9 @@ std::sort(people.begin(), people.end(),
 // Result could be: {Bob, Alice, Charlie} or {Alice, Bob, Charlie}
 // No guarantee which comes first
 ```
+
+The best way to make sort behave is to create a custom comparator that adds 
+a tie-breaker, e.g. by age then by name.
 
 ```cpp
 #include <algorithm>
@@ -146,21 +160,26 @@ int main() {
 ```
 
 **When to Use:**
-- ✅ General-purpose sorting (default choice)
+
+- ✅ General-purpose sorting
 - ✅ Don't need stable order
 - ✅ Want fastest possible sort
 
 **When NOT to Use:**
+
 - ❌ Need to preserve relative order of equal elements (use `stable_sort`)
 - ❌ Only need partial results (use `partial_sort`)
 - ❌ Only need nth element (use `nth_element`)
 
 📖 [cppreference: std::sort](https://en.cppreference.com/w/cpp/algorithm/sort)
 
-### std::stable_sort
-**Stable sort - preserves relative order of equal elements**
+### `std::stable_sort`
 
-**Why Stability Matters:**
+`std::stable_sort` sorts the date and preserves relative order of equal 
+elements. It typically uses merge sort, performing from the bottom up. When 
+extra memory can be allocated (`O(n)` temp buffer), complexity is `O(n × log
+(n))`. Without extra memory, it uses in-place merge sort variant, and takes 
+`O(n × log²(n))` time.
 
 ```cpp
 struct Email {
@@ -186,37 +205,18 @@ std::stable_sort(inbox.begin(), inbox.end(),
 //  ↑ Earlier           ↑ Later
 ```
 
-### std::stable_sort
-#include <algorithm>
-#include <vector>
-#include <iostream>
-
-struct Person {
-    std::string name;
-    int age;
-};
-
-int main() {
-    std::vector<Person> people = {
-        {"Alice", 30}, {"Bob", 25}, {"Charlie", 30}, {"David", 25}
-    };
-    
-    // Stable sort by age - relative order preserved for same age
-    std::stable_sort(people.begin(), people.end(),
-                     [](const Person& a, const Person& b) {
-                         return a.age < b.age;
-                     });
-    // Result: Bob(25), David(25), Alice(30), Charlie(30)
-    // Bob before David, Alice before Charlie (original order preserved)
-    
-    return 0;
-}
-```
-
 📖 [cppreference: std::stable_sort](https://en.cppreference.com/w/cpp/algorithm/stable_sort)
 
-### std::partial_sort
-**Sort first n elements**
+### `std::partial_sort`
+
+Sort only the first n elements of a range, leaving the rest in an 
+unspecified order, i.e. elements in `[first, middle)` are sorted, and `[middle, 
+last)` are in an unspecified order. `std::partial_sort` (without custom 
+comparator) guarantees that the first n elements are the smallest elements 
+from **the entire original range**, and every element in `[middle, end)` is >= 
+every element in `[first, middle)`. The complexity is `O(n × log(k))`, where 
+k is the number of elements to sort. Typically uses a heap-based algorithm, 
+e.g. max-heap,  
 
 ```cpp
 #include <algorithm>
@@ -240,8 +240,16 @@ int main() {
 
 📖 [cppreference: std::partial_sort](https://en.cppreference.com/w/cpp/algorithm/partial_sort)
 
-### std::nth_element
-**Partition around nth element - O(n) average**
+### `std::nth_element`
+
+Rearranges elements so that the element at position n is the element 
+that would be there if the range were fully sorted and partitions the 
+range around it. Faster than partial sorting when you only need partitioning,
+not full sorting. Complexity is `O(n)` on average. Typically uses 
+Introselect, which is based on Quickselect and falls back to 
+median-of-medians if recursion gets too deep. `std::nth_element` is unstable,
+so equal elements may not maintain their relative order. It is a **selection 
+algorithm**, not a sorting algorithm.
 
 ```cpp
 #include <algorithm>
@@ -249,27 +257,40 @@ int main() {
 #include <iostream>
 
 int main() {
-    std::vector<int> vec = {3, 1, 4, 1, 5, 9, 2, 6, 5, 3};
+    std::vector<int> v = {7, 2, 9, 1, 5, 3, 8, 4, 6};
     
-    // Place 5th element (median) in correct position
-    std::nth_element(vec.begin(), vec.begin() + 5, vec.end());
+    std::nth_element(v.begin(), v.begin() + 4, v.end());
+    // v might be: {2, 1, 3, 4, 5, 9, 8, 7, 6}
+    //              ^  <= 5  ^  5  ^  >= 5  ^
     
-    std::cout << "Median: " << vec[5] << '\n';  // Element that would be at index 5 if sorted
-    // Elements before index 5 are <= vec[5]
-    // Elements after index 5 are >= vec[5]
+    std::cout << v[4] << std::endl; // 5
+    // Guarantees:
+    // 1. v[4] == 5 (the 5th smallest element, 0-indexed)
+    // 2. All elements before v[4] are <= 5
+    // 3. All elements after v[4] are >= 5
+    // 4. No sorting within the partitions
     
     return 0;
 }
 ```
 
+**When to use:**
+
+- ✅ Finding median, percentiles, quartiles.
+- ✅ Need to partition around a specific position.
+- ✅ Only care about partitioning, not sorting.
+
 📖 [cppreference: std::nth_element](https://en.cppreference.com/w/cpp/algorithm/nth_element)
 
 ---
 
-## Binary Search (Requires Sorted Range)
+## `std::binary_search`
 
-### std::binary_search
-**Check if element exists - returns bool**
+Binary search checks whether a value exists within a given **sorted** range, 
+and returns a bool. It doesn't tell you where the element is, just that it 
+exists. The range must be sorted or at least partitioned with respect to the 
+sought value. When using a custom comparator, the comparator must match the 
+sorting order. Complexity is `O(log(n))`.
 
 ```cpp
 #include <algorithm>
@@ -289,10 +310,27 @@ int main() {
 }
 ```
 
+Use `std::binary_search` when:
+
+- ✅ You only need to know if an element exists (yes/no).
+- ✅ Data is already sorted.
+- ✅ You're doing many lookups on the same sorted data.
+
+Don't use `std::binary_search` when:
+
+- ❌ You need the position of the element (use lower_bound).
+- ❌ You need to count occurrences (use equal_range).
+- ❌ Data is unsorted and you'll only search once (just use find).
+- ❌ You need frequent insertions/deletions (use std::set instead).
+
 📖 [cppreference: std::binary_search](https://en.cppreference.com/w/cpp/algorithm/binary_search)
 
-### std::lower_bound
-**First element >= value**
+### `std::lower_bound`
+
+Returns an iterator to the first position in a **sorted range** where a value
+greater than or equal to the target could be inserted while maintaining sorted 
+order. The iterator points to the first element **greater than or equal to** 
+the target value, so will handle duplicates. Complexity is `O(log(n))` random access iterators.
 
 ```cpp
 #include <algorithm>
@@ -313,10 +351,40 @@ int main() {
 }
 ```
 
+If the value is not in the range, will return an iterator based on where the 
+value would go:
+
+```cpp
+std::vector<int> v = {1, 2, 3, 5, 8, 13};
+
+auto it = std::lower_bound(v.begin(), v.end(), 7);
+// it points to 8 (first element >= 7)
+// 7 is NOT in the vector, but this is where it would go
+
+auto it2 = std::lower_bound(v.begin(), v.end(), 0);
+// it2 == v.begin() (would insert at beginning)
+
+auto it3 = std::lower_bound(v.begin(), v.end(), 20);
+// it3 == v.end() (would insert at end)
+```
+
+Use `std::lower_bound` when:
+
+- ✅ Checking if an element exists.
+- ✅ Finding the first occurrence in a sorted range.
+- ✅ Inserting before duplicates.
+- ✅ Finding where to insert to maintain sorted order.
+- ✅ Need the position of an element.
+
 📖 [cppreference: std::lower_bound](https://en.cppreference.com/w/cpp/algorithm/lower_bound)
 
 ### std::upper_bound
-**First element > value**
+
+Returns an iterator to the first position in a **sorted range** where a value
+greater than the target could be inserted while maintaining sorted order. 
+The iterator points to the first element **greater than** the target value, 
+so will skip duplicates. Returns `end()` when the value is not in the range. 
+Complexity is `O(log(n))` for random access iterators.
 
 ```cpp
 #include <algorithm>
@@ -334,10 +402,24 @@ int main() {
 }
 ```
 
+When an element doesn't exist in the range, both `std::lower_bound` and 
+`std::upper_bound` will point to the same position.
+
+Use `std::upper_bound` when:
+
+- ✅ Finding the position after all duplicates.
+- ✅ Inserting after duplicates.
+- ✅ Need the end of a range of equal elements.
+
 📖 [cppreference: std::upper_bound](https://en.cppreference.com/w/cpp/algorithm/upper_bound)
 
-### std::equal_range
-**Returns pair [lower_bound, upper_bound]**
+### `std::equal_range`
+
+Returns `std::pair<Iterator, Iterator>` with [`std::lower_bound`, 
+`std::upper_bound`] representing the range of all elements equal to a given 
+value in a **sorted range**. More efficient than using `std::lower_bound` + 
+`std::upper_bound` because it can optimize the search to avoid redundant 
+work. Complexity is `O(log(n)` time.
 
 ```cpp
 #include <algorithm>
@@ -358,13 +440,20 @@ int main() {
 }
 ```
 
+Use equal_range when:
+
+- ✅ You need to count occurrences efficiently.
+- ✅ You want to process all elements equal to a value.
+- ✅ You need both lower and upper bounds.
+- ✅ You're removing/replacing all occurrences.
+
 📖 [cppreference: std::equal_range](https://en.cppreference.com/w/cpp/algorithm/equal_range)
 
 ---
 
 ## Checking Sorted Order
 
-### std::is_sorted / std::is_sorted_until
+### `std::is_sorted` vs. `std::is_sorted_until`
 
 ```cpp
 #include <algorithm>
