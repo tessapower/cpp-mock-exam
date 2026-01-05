@@ -249,7 +249,14 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({
                             <div className="flex items-center gap-2">
                               {isCorrectAnswer && <CheckCircle size={16} className="text-green-600" />}
                               {isUserAnswer && !isCorrectAnswer && <XCircle size={16} className="text-red-600" />}
-                              <span>{option}</span>
+                              <ReactMarkdown
+                                components={{
+                                  code: createCodeRenderer(result.id + 2000 + i),
+                                  p: ({ children }) => <span>{children}</span>
+                                }}
+                              >
+                                {option}
+                              </ReactMarkdown>
                             </div>
                           </div>
                         );

@@ -167,7 +167,69 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                     )
                   )}
                 </div>
-                <span className="flex-1">{option}</span>
+                <div className="flex-1">
+                  <ReactMarkdown
+                    components={{
+                      p: ({ children }) => <span>{children}</span>,
+                      code(codeProps: any) {
+                        const { inline, children, className } = codeProps;
+                        const languageMatch = /language-(\w+)/.exec(className || '');
+
+                        if (inline || !languageMatch) {
+                          return (
+                            <code className="bg-gray-100 rounded px-1 py-0.5 text-sm font-mono">
+                              {children}
+                            </code>
+                          );
+                        }
+
+                        const language = languageMatch[1];
+                        const codeContent = String(children).replace(/\n$/, '');
+                        const currentBlockIndex = codeBlockIndex++;
+                        const blockTheme = localCodeThemes.get(currentBlockIndex) || codeTheme;
+                        const codeStyle = blockTheme === 'dark' ? oneDark : oneLight;
+                        const isCopied = copiedBlocks.has(currentBlockIndex);
+
+                        return (
+                          <div className="relative text-sm font-mono my-2">
+                            <div className="absolute top-2 right-2 flex gap-1 z-10 pointer-events-auto">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleBlockTheme(currentBlockIndex);
+                                }}
+                                className="p-1.5 rounded bg-gray-700 hover:bg-gray-600 text-white shadow-lg transition-colors"
+                                title={blockTheme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+                              >
+                                {blockTheme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleCopyCode(codeContent, currentBlockIndex);
+                                }}
+                                className="p-1.5 rounded bg-gray-700 hover:bg-gray-600 text-white shadow-lg transition-colors"
+                                title="Copy code"
+                              >
+                                {isCopied ? <Check size={14} /> : <Copy size={14} />}
+                              </button>
+                            </div>
+                            <SyntaxHighlighter
+                              style={codeStyle}
+                              language={language}
+                              PreTag="div"
+                              customStyle={{ margin: 0 }}
+                            >
+                              {codeContent}
+                            </SyntaxHighlighter>
+                          </div>
+                        );
+                      }
+                    }}
+                  >
+                    {option}
+                  </ReactMarkdown>
+                </div>
               </div>
             </button>
           );
