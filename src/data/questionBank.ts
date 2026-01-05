@@ -236,35 +236,35 @@ export const QuestionBank: Question[] = [
     id: 17,
     type: "multiple",
     module: 2,
-    question: "How does std::multimap differ from std::map?",
+    question: "How does `std::multimap` differ from `std::map`?",
     options: [
       "Allows duplicate keys",
-      "operator[] is not provided",
+      "`operator[]` is not provided",
       "Uses hash table implementation",
       "equal_range() is particularly useful"
     ],
     correct: [0, 1, 3],
-    explanation: "multimap allows duplicate keys, doesn't provide operator[] (which key would it return?), uses trees not hash tables, and equal_range() finds all values for a key."
+    explanation: "multimap allows duplicate keys, doesn't provide `operator[]` (which key would it return?), uses trees not hash tables, and equal_range() finds all values for a key."
   },
   {
     id: 18,
     type: "single",
     module: 2,
-    question: "Why doesn't std::multimap provide operator[]?",
+    question: "Why doesn't `std::multimap` provide `operator[]`?",
     options: [
       "It would be ambiguous which value to return for duplicate keys",
       "It's a performance optimization",
-      "Hash tables don't support operator[]",
+      "Hash tables don't support `operator[]`",
       "It's deprecated in modern C++"
     ],
     correct: [0],
-    explanation: "multimap allows duplicate keys, so operator[] would be ambiguous - which of multiple values should it return? Use find() or equal_range() instead."
+    explanation: "multimap allows duplicate keys, so `operator[]` would be ambiguous - which of multiple values should it return? Use find() or equal_range() instead."
   },
   {
     id: 19,
     type: "multiple",
     module: 2,
-    question: "What happens when you insert into std::set with an existing key?",
+    question: "What happens when you insert into `std::set` with an existing key?",
     options: [
       "The insertion fails",
       "A pair with .second = false is returned",
@@ -272,13 +272,13 @@ export const QuestionBank: Question[] = [
       "An iterator to the existing element is returned"
     ],
     correct: [0, 1, 3],
-    explanation: "Inserting a duplicate into std::set fails, returns a pair where second=false and first is an iterator to the existing element."
+    explanation: "Inserting a duplicate into `std::set` fails, returns a pair where second=false and first is an iterator to the existing element."
   },
   {
     id: 20,
     type: "multiple",
     module: 2,
-    question: "Which statements about std::map::operator[] are correct?",
+    question: "Which statements about std::map::`operator[]` are correct?",
     options: [
       "Creates a default-constructed value if key doesn't exist",
       "Returns a reference to the value",
@@ -286,7 +286,7 @@ export const QuestionBank: Question[] = [
       "Requires the value type to be default-constructible"
     ],
     correct: [0, 1, 3],
-    explanation: "operator[] creates an entry with default value if missing, returns a reference, and requires default construction. Use find() to check existence without modification."
+    explanation: "`operator[]` creates an entry with default value if missing, returns a reference, and requires default construction. Use find() to check existence without modification."
   },
   {
     id: 21,
@@ -294,19 +294,19 @@ export const QuestionBank: Question[] = [
     module: 2,
     question: "Which containers provide a count() member function?",
     options: [
-      "std::set",
-      "std::map",
-      "std::multiset",
-      "std::vector"
+      "`std::set`",
+      "`std::map`",
+      "`std::multiset`",
+      "`std::vector`"
     ],
     correct: [0, 1, 2],
-    explanation: "Associative containers (set, map, multiset, multimap) provide count(). Sequential containers like vector use std::count algorithm."
+    explanation: "Associative containers (set, map, multiset, multimap) provide count(). Sequential containers like vector use `std::count` algorithm."
   },
   {
     id: 22,
     type: "multiple",
     module: 2,
-    question: "What are the benefits of std::unordered_set over std::set?",
+    question: "What are the benefits of `std::unordered_set` over `std::set`?",
     options: [
       "Faster average lookup time",
       "Maintains sorted order",
@@ -334,7 +334,7 @@ export const QuestionBank: Question[] = [
     id: 24,
     type: "single",
     module: 2,
-    question: "When does iterator invalidation occur in std::map?",
+    question: "When does iterator invalidation occur in `std::map`?",
     options: [
       "When inserting new elements",
       "When erasing the element pointed to",
@@ -348,7 +348,7 @@ export const QuestionBank: Question[] = [
     id: 25,
     type: "single",
     module: 2,
-    question: "Which is NOT a valid way to iterate over std::map?",
+    question: "Which is NOT a valid way to iterate over `std::map`?",
     options: [
       "for (auto& [key, value] : myMap) // structured binding",
       "for (auto& p : myMap) // p.first, p.second",
@@ -362,15 +362,15 @@ export const QuestionBank: Question[] = [
     id: 26,
     type: "multiple",
     module: 2,
-    question: "What must you provide for custom types in std::unordered_set?",
+    question: "What must you provide for custom types in `std::unordered_set`?",
     options: [
       "Hash function",
-      "operator==",
-      "operator<",
+      "`operator==`",
+      "`operator<`",
       "Copy constructor"
     ],
     correct: [0, 1],
-    explanation: "unordered_set requires a hash function and operator== for equality comparison. operator< is for ordered containers. Copy constructor is generally needed but not specific to unordered_set."
+    explanation: "unordered_set requires a hash function and `operator==` for equality comparison. `operator<` is for ordered containers. Copy constructor is generally needed but not specific to unordered_set."
   },
   {
     id: 27,
@@ -378,10 +378,10 @@ export const QuestionBank: Question[] = [
     module: 2,
     question: "Which container does NOT allow duplicate keys?",
     options: [
-      "std::multiset",
-      "std::set",
-      "std::multimap",
-      "std::unordered_multiset"
+      "`std::multiset`",
+      "`std::set`",
+      "`std::multimap`",
+      "`std::unordered_multiset`"
     ],
     correct: [1],
     explanation: "multiset, multimap, and unordered_multiset allow duplicates. set, map, and their unordered variants allow only unique keys."
@@ -394,9 +394,9 @@ export const QuestionBank: Question[] = [
     module: 3,
     question: "Which algorithms are guaranteed to be non-modifying?",
     options: [
-      "std::find",
-      "std::sort",
-      "std::count",
+      "`std::find`",
+      "`std::sort`",
+      "`std::count`",
       "std::for_each (with non-modifying function)"
     ],
     correct: [0, 2, 3],
@@ -406,7 +406,7 @@ export const QuestionBank: Question[] = [
     id: 29,
     type: "multiple",
     module: 3,
-    question: "What does std::find return?",
+    question: "What does `std::find` return?",
     options: [
       "An iterator to the found element",
       "An iterator to end() if not found",
@@ -422,19 +422,19 @@ export const QuestionBank: Question[] = [
     module: 3,
     question: "Which algorithms require a predicate function?",
     options: [
-      "std::find_if",
-      "std::count_if",
-      "std::all_of",
-      "std::find"
+      "`std::find_if`",
+      "`std::count_if`",
+      "`std::all_of`",
+      "`std::find`"
     ],
     correct: [0, 1, 2],
-    explanation: "find_if, count_if, and all_of use predicates (functions returning bool). std::find searches for a specific value."
+    explanation: "find_if, count_if, and all_of use predicates (functions returning bool). `std::find` searches for a specific value."
   },
   {
     id: 31,
     type: "multiple",
     module: 3,
-    question: "Which statements are true about std::equal?",
+    question: "Which statements are true about `std::equal`?",
     options: [
       "Compares two ranges element by element",
       "Returns true if all elements match",
@@ -450,10 +450,10 @@ export const QuestionBank: Question[] = [
     module: 3,
     question: "Which algorithm checks if all elements satisfy a condition?",
     options: [
-      "std::all_of",
-      "std::any_of",
-      "std::none_of",
-      "std::some_of"
+      "`std::all_of`",
+      "`std::any_of`",
+      "`std::none_of`",
+      "`std::some_of`"
     ],
     correct: [0],
     explanation: "all_of, any_of, and none_of check predicates on ranges. There is no some_of in the standard."
@@ -462,7 +462,7 @@ export const QuestionBank: Question[] = [
     id: 33,
     type: "multiple",
     module: 3,
-    question: "What does std::search find?",
+    question: "What does `std::search` find?",
     options: [
       "Finds a subsequence within a sequence",
       "Returns iterator to first occurrence",
@@ -476,7 +476,7 @@ export const QuestionBank: Question[] = [
     id: 34,
     type: "multiple",
     module: 3,
-    question: "What does std::mismatch return?",
+    question: "What does `std::mismatch` return?",
     options: [
       "A pair of iterators",
       "Iterators pointing to first differing elements",
@@ -492,10 +492,10 @@ export const QuestionBank: Question[] = [
     module: 3,
     question: "Which algorithms return the count of matching elements?",
     options: [
-      "std::count",
-      "std::count_if",
-      "std::accumulate",
-      "std::for_each"
+      "`std::count`",
+      "`std::count_if`",
+      "`std::accumulate`",
+      "`std::for_each`"
     ],
     correct: [0, 1],
     explanation: "count and count_if return the number of matching elements. accumulate performs reduction, and for_each applies a function."
@@ -518,7 +518,7 @@ export const QuestionBank: Question[] = [
     id: 37,
     type: "multiple",
     module: 3,
-    question: "Which statements are true about std::adjacent_find?",
+    question: "Which statements are true about `std::adjacent_find`?",
     options: [
       "Finds first pair of equal adjacent elements",
       "Can use custom equality predicate",
@@ -534,10 +534,10 @@ export const QuestionBank: Question[] = [
     module: 3,
     question: "Which algorithm finds a subsequence in a sequence?",
     options: [
-      "std::search",
-      "std::find_first_of",
-      "std::find_end",
-      "std::find"
+      "`std::search`",
+      "`std::find_first_of`",
+      "`std::find_end`",
+      "`std::find`"
     ],
     correct: [0],
     explanation: "search finds subsequences, find_first_of finds any of several elements, find_end finds last occurrence of a subsequence, and find searches for single values."
@@ -546,7 +546,7 @@ export const QuestionBank: Question[] = [
     id: 39,
     type: "single",
     module: 3,
-    question: "What does std::for_each return?",
+    question: "What does `std::for_each` return?",
     options: [
       "The function object passed to it",
       "void (nothing)",
@@ -560,7 +560,7 @@ export const QuestionBank: Question[] = [
     id: 40,
     type: "multiple",
     module: 3,
-    question: "Which statements about std::lexicographical_compare are true?",
+    question: "Which statements about `std::lexicographical_compare` are true?",
     options: [
       "Compares ranges element-wise",
       "Uses dictionary-style ordering",
@@ -578,19 +578,19 @@ export const QuestionBank: Question[] = [
     module: 4,
     question: "Which algorithms modify a sequence in-place?",
     options: [
-      "std::reverse",
-      "std::rotate",
-      "std::shuffle",
-      "std::copy"
+      "`std::reverse`",
+      "`std::rotate`",
+      "`std::shuffle`",
+      "`std::copy`"
     ],
     correct: [0, 1, 2],
-    explanation: "reverse, rotate, and shuffle modify the input range. copy creates a new sequence without modifying the source."
+    explanation: "`reverse`, `rotate`, and `shuffle` modify the input range. `copy` creates a new sequence without modifying the source."
   },
   {
     id: 42,
     type: "multiple",
     module: 4,
-    question: "Which statements are true about std::transform?",
+    question: "Which statements are true about `std::transform`?",
     options: [
       "Applies a function to each element",
       "Writes results to an output range",
@@ -620,10 +620,10 @@ export const QuestionBank: Question[] = [
     module: 4,
     question: "Which are STL algorithms (not container members)?",
     options: [
-      "std::remove",
-      "std::remove_if",
-      "std::unique",
-      "std::erase"
+      "`std::remove`",
+      "`std::remove_if`",
+      "`std::unique`",
+      "`std::erase`"
     ],
     correct: [0, 1, 2],
     explanation: "remove, remove_if, and unique shift elements and return new logical end. erase is a container member function, not an algorithm."
@@ -634,7 +634,7 @@ export const QuestionBank: Question[] = [
     module: 4,
     question: "What is the remove-erase idiom?",
     options: [
-      "Calls std::remove followed by container.erase()",
+      "Calls `std::remove` followed by container.erase()",
       "Actually removes elements from container",
       "std::remove alone doesn't change container size",
       "Returns a new container"
@@ -646,7 +646,7 @@ export const QuestionBank: Question[] = [
     id: 46,
     type: "multiple",
     module: 4,
-    question: "For std::fill and std::fill_n, what's true?",
+    question: "For `std::fill` and std::fill_n, what's true?",
     options: [
       "fill assigns a value to all elements in range",
       "fill_n assigns to first n elements",
@@ -722,7 +722,7 @@ export const QuestionBank: Question[] = [
     id: 51,
     type: "multiple",
     module: 4,
-    question: "Which statements are true about std::swap_ranges?",
+    question: "Which statements are true about `std::swap_ranges`?",
     options: [
       "Exchanges elements between two ranges",
       "Ranges must be same size",
@@ -736,7 +736,7 @@ export const QuestionBank: Question[] = [
     id: 52,
     type: "multiple",
     module: 4,
-    question: "Which statements are true about std::rotate?",
+    question: "Which statements are true about `std::rotate`?",
     options: [
       "Shifts elements circularly",
       "Takes three iterators: first, middle, last",
@@ -750,7 +750,7 @@ export const QuestionBank: Question[] = [
     id: 53,
     type: "multiple",
     module: 4,
-    question: "Which statements about std::partition are correct?",
+    question: "Which statements about `std::partition` are correct?",
     options: [
       "Reorders elements based on predicate",
       "Elements satisfying predicate come first",
@@ -766,7 +766,7 @@ export const QuestionBank: Question[] = [
     id: 54,
     type: "single",
     module: 5,
-    question: "What is the average complexity of std::sort?",
+    question: "What is the average complexity of `std::sort`?",
     options: [
       "O(n log n)",
       "O(log n)",
@@ -780,7 +780,7 @@ export const QuestionBank: Question[] = [
     id: 55,
     type: "single",
     module: 5,
-    question: "What distinguishes std::stable_sort from std::sort?",
+    question: "What distinguishes `std::stable_sort` from `std::sort`?",
     options: [
       "Preserves relative order of equal elements",
       "Always faster than std::sort",
@@ -794,7 +794,7 @@ export const QuestionBank: Question[] = [
     id: 56,
     type: "multiple",
     module: 5,
-    question: "Which statements about std::lower_bound are correct?",
+    question: "Which statements about `std::lower_bound` are correct?",
     options: [
       "Range must be sorted or partitioned",
       "Returns iterator to first element >= value",
@@ -808,7 +808,7 @@ export const QuestionBank: Question[] = [
     id: 57,
     type: "multiple",
     module: 5,
-    question: "Which statements about std::upper_bound are correct?",
+    question: "Which statements about `std::upper_bound` are correct?",
     options: [
       "Returns iterator to first element > value",
       "Returns iterator to last element <= value",
@@ -836,7 +836,7 @@ export const QuestionBank: Question[] = [
     id: 59,
     type: "single",
     module: 5,
-    question: "What does std::binary_search return?",
+    question: "What does `std::binary_search` return?",
     options: [
       "A boolean",
       "An iterator to found element",
@@ -852,10 +852,10 @@ export const QuestionBank: Question[] = [
     module: 5,
     question: "Which sorting operations are stable?",
     options: [
-      "std::stable_sort",
-      "std::sort",
-      "std::stable_partition",
-      "std::partial_sort"
+      "`std::stable_sort`",
+      "`std::sort`",
+      "`std::stable_partition`",
+      "`std::partial_sort`"
     ],
     correct: [0, 2],
     explanation: "stable_sort and stable_partition preserve relative order. sort and partial_sort don't guarantee stability."
@@ -864,7 +864,7 @@ export const QuestionBank: Question[] = [
     id: 61,
     type: "multiple",
     module: 5,
-    question: "Which statements about std::partial_sort are correct?",
+    question: "Which statements about `std::partial_sort` are correct?",
     options: [
       "Sorts first n elements",
       "Remaining elements are in unspecified order",
@@ -878,7 +878,7 @@ export const QuestionBank: Question[] = [
     id: 62,
     type: "multiple",
     module: 5,
-    question: "Which statements are true about std::nth_element?",
+    question: "Which statements are true about `std::nth_element`?",
     options: [
       "Places nth element in its sorted position",
       "Elements before nth are <= nth",
@@ -894,10 +894,10 @@ export const QuestionBank: Question[] = [
     module: 5,
     question: "Which algorithms require sorted input to work correctly?",
     options: [
-      "std::binary_search",
-      "std::lower_bound",
-      "std::includes",
-      "std::sort"
+      "`std::binary_search`",
+      "`std::lower_bound`",
+      "`std::includes`",
+      "`std::sort`"
     ],
     correct: [0, 1, 2],
     explanation: "binary_search, lower_bound, upper_bound, equal_range, and includes require sorted input. sort produces sorted output."
@@ -906,7 +906,7 @@ export const QuestionBank: Question[] = [
     id: 64,
     type: "multiple",
     module: 5,
-    question: "Which statements about std::is_sorted are correct?",
+    question: "Which statements about `std::is_sorted` are correct?",
     options: [
       "Checks if range is sorted",
       "Returns boolean",
@@ -920,7 +920,7 @@ export const QuestionBank: Question[] = [
     id: 65,
     type: "multiple",
     module: 5,
-    question: "What does std::is_sorted_until return?",
+    question: "What does `std::is_sorted_until` return?",
     options: [
       "Iterator to first unsorted element",
       "end() if fully sorted",
@@ -948,7 +948,7 @@ export const QuestionBank: Question[] = [
     id: 67,
     type: "multiple",
     module: 5,
-    question: "Which statements about std::partial_sort_copy are correct?",
+    question: "Which statements about `std::partial_sort_copy` are correct?",
     options: [
       "Copies partial sort to destination",
       "Modifies the source range",
@@ -964,7 +964,7 @@ export const QuestionBank: Question[] = [
     id: 68,
     type: "multiple",
     module: 6,
-    question: "Which statements about std::merge are correct?",
+    question: "Which statements about `std::merge` are correct?",
     options: [
       "Both input ranges must be sorted",
       "Output range must be pre-allocated",
@@ -978,7 +978,7 @@ export const QuestionBank: Question[] = [
     id: 69,
     type: "multiple",
     module: 6,
-    question: "Which statements about std::inplace_merge are correct?",
+    question: "Which statements about `std::inplace_merge` are correct?",
     options: [
       "Merges two consecutive sorted ranges",
       "Operates in-place",
@@ -994,19 +994,19 @@ export const QuestionBank: Question[] = [
     module: 6,
     question: "Which algorithms require sorted input ranges?",
     options: [
-      "std::set_union",
-      "std::set_intersection",
-      "std::remove",
-      "std::merge"
+      "`std::set_union`",
+      "`std::set_intersection`",
+      "`std::remove`",
+      "`std::merge`"
     ],
     correct: [0, 3],
-    explanation: "Set algorithms (set_union, set_intersection, etc.) and merge require sorted input ranges. std::remove works on unsorted ranges."
+    explanation: "Set algorithms (set_union, set_intersection, etc.) and merge require sorted input ranges. `std::remove` works on unsorted ranges."
   },
   {
     id: 71,
     type: "multiple",
     module: 6,
-    question: "Which statements about std::set_union are correct?",
+    question: "Which statements about `std::set_union` are correct?",
     options: [
       "Returns elements in either range",
       "Removes all duplicate occurrences",
@@ -1020,7 +1020,7 @@ export const QuestionBank: Question[] = [
     id: 72,
     type: "multiple",
     module: 6,
-    question: "Which statements about std::set_intersection are correct?",
+    question: "Which statements about `std::set_intersection` are correct?",
     options: [
       "Returns elements present in both ranges",
       "Returns iterator to end of output",
@@ -1034,7 +1034,7 @@ export const QuestionBank: Question[] = [
     id: 73,
     type: "multiple",
     module: 6,
-    question: "Which statements about std::set_difference are correct?",
+    question: "Which statements about `std::set_difference` are correct?",
     options: [
       "Returns elements in first but not second range",
       "Returns elements in second but not first range",
@@ -1048,7 +1048,7 @@ export const QuestionBank: Question[] = [
     id: 74,
     type: "multiple",
     module: 6,
-    question: "Which statements about std::set_symmetric_difference are correct?",
+    question: "Which statements about `std::set_symmetric_difference` are correct?",
     options: [
       "Returns elements in either range but not both",
       "Equivalent to (A - B) ∪ (B - A)",
@@ -1062,7 +1062,7 @@ export const QuestionBank: Question[] = [
     id: 75,
     type: "multiple",
     module: 6,
-    question: "Which statements about std::includes are correct?",
+    question: "Which statements about `std::includes` are correct?",
     options: [
       "Checks if one range is subset of another",
       "Returns boolean",
@@ -1078,10 +1078,10 @@ export const QuestionBank: Question[] = [
     module: 6,
     question: "Which merging algorithms preserve all duplicates?",
     options: [
-      "std::merge",
-      "std::set_union",
-      "std::inplace_merge",
-      "std::set_intersection"
+      "`std::merge`",
+      "`std::set_union`",
+      "`std::inplace_merge`",
+      "`std::set_intersection`"
     ],
     correct: [0, 2],
     explanation: "merge and inplace_merge preserve all elements including duplicates. Set algorithms treat ranges as multisets with specific duplicate handling."
@@ -1090,7 +1090,7 @@ export const QuestionBank: Question[] = [
     id: 77,
     type: "multiple",
     module: 6,
-    question: "Which characteristics does std::merge have?",
+    question: "Which characteristics does `std::merge` have?",
     options: [
       "Stable operation",
       "Quadratic complexity",
@@ -1120,10 +1120,10 @@ export const QuestionBank: Question[] = [
     module: 6,
     question: "Which algorithms return an output iterator?",
     options: [
-      "std::merge",
-      "std::set_union",
-      "std::includes",
-      "std::set_intersection"
+      "`std::merge`",
+      "`std::set_union`",
+      "`std::includes`",
+      "`std::set_intersection`"
     ],
     correct: [0, 1, 3],
     explanation: "Algorithms that write output (merge, set_union, set_intersection, etc.) return output iterators. includes returns bool."
@@ -1132,7 +1132,7 @@ export const QuestionBank: Question[] = [
     id: 80,
     type: "multiple",
     module: 6,
-    question: "Which statements about std::inplace_merge complexity are correct?",
+    question: "Which statements about `std::inplace_merge` complexity are correct?",
     options: [
       "O(n log n) if extra memory unavailable",
       "O(n) if extra memory available",
@@ -1150,10 +1150,10 @@ export const QuestionBank: Question[] = [
     module: 7,
     question: "Which are standard arithmetic functional operators?",
     options: [
-      "std::plus",
-      "std::minus",
-      "std::multiplies",
-      "std::power"
+      "`std::plus`",
+      "`std::minus`",
+      "`std::multiplies`",
+      "`std::power`"
     ],
     correct: [0, 1, 2],
     explanation: "plus, minus, multiplies, divides, and modulus are provided. There's no power operator in <functional>."
@@ -1164,10 +1164,10 @@ export const QuestionBank: Question[] = [
     module: 7,
     question: "Which comparison operators exist in <functional>?",
     options: [
-      "std::less",
-      "std::greater",
-      "std::equal_to",
-      "std::not_equal"
+      "`std::less`",
+      "`std::greater`",
+      "`std::equal_to`",
+      "`std::not_equal`"
     ],
     correct: [0, 1, 2],
     explanation: "less, greater, equal_to, not_equal_to, less_equal, and greater_equal exist. not_equal doesn't exist (it's not_equal_to)."
@@ -1176,7 +1176,7 @@ export const QuestionBank: Question[] = [
     id: 83,
     type: "multiple",
     module: 7,
-    question: "Which statements about std::bind1st are correct?",
+    question: "Which statements about `std::bind1st` are correct?",
     options: [
       "It's deprecated in C++11",
       "Binds first argument of binary function",
@@ -1184,27 +1184,27 @@ export const QuestionBank: Question[] = [
       "Still recommended for new code"
     ],
     correct: [0, 1, 2],
-    explanation: "bind1st is deprecated - use std::bind or lambdas instead. It bound the first argument of a binary function."
+    explanation: "bind1st is deprecated - use `std::bind` or lambdas instead. It bound the first argument of a binary function."
   },
   {
     id: 84,
     type: "multiple",
     module: 7,
-    question: "Which statements about std::bind2nd are correct?",
+    question: "Which statements about `std::bind2nd` are correct?",
     options: [
       "Deprecated in C++11",
       "Binds second argument",
-      "Use std::bind or lambdas instead",
+      "Use `std::bind` or lambdas instead",
       "Required for modern code"
     ],
     correct: [0, 1, 2],
-    explanation: "bind2nd is deprecated. Modern code should use std::bind or lambda expressions."
+    explanation: "bind2nd is deprecated. Modern code should use `std::bind` or lambda expressions."
   },
   {
     id: 85,
     type: "multiple",
     module: 7,
-    question: "Which statements about std::ptr_fun are correct?",
+    question: "Which statements about `std::ptr_fun` are correct?",
     options: [
       "Adapts function pointers",
       "Deprecated in C++11",
@@ -1218,35 +1218,35 @@ export const QuestionBank: Question[] = [
     id: 86,
     type: "multiple",
     module: 7,
-    question: "Which statements about std::mem_fun are correct?",
+    question: "Which statements about `std::mem_fun` are correct?",
     options: [
       "Adapts member function pointers",
       "Deprecated in C++11",
       "Still recommended for new code",
-      "Use std::mem_fn instead"
+      "Use `std::mem_fn` instead"
     ],
     correct: [0, 1],
-    explanation: "mem_fun adapted member function pointers and was deprecated in C++11, removed in C++17. Use std::mem_fn or lambdas instead."
+    explanation: "mem_fun adapted member function pointers and was deprecated in C++11, removed in C++17. Use `std::mem_fn` or lambdas instead."
   },
   {
     id: 87,
     type: "multiple",
     module: 7,
-    question: "Which statements about std::not1 and std::not2 are correct?",
+    question: "Which statements about `std::not1` and `std::not2` are correct?",
     options: [
       "Negate unary and binary predicates",
       "Introduced in C++17",
       "Removed in C++20",
-      "Use std::not_fn in modern code"
+      "Use `std::not_fn` in modern code"
     ],
     correct: [0, 3],
-    explanation: "not1/not2 negated predicates and were deprecated in C++17, removed in C++20. Use std::not_fn in modern code."
+    explanation: "not1/not2 negated predicates and were deprecated in C++17, removed in C++20. Use `std::not_fn` in modern code."
   },
   {
     id: 88,
     type: "multiple",
     module: 7,
-    question: "Which statements about std::function are correct?",
+    question: "Which statements about `std::function` are correct?",
     options: [
       "Type-erased wrapper for callables",
       "Can store lambdas, functors, function pointers",
@@ -1260,7 +1260,7 @@ export const QuestionBank: Question[] = [
     id: 89,
     type: "multiple",
     module: 7,
-    question: "Which statements are true about std::bind?",
+    question: "Which statements are true about `std::bind`?",
     options: [
       "Binds arguments to callable",
       "Can reorder arguments with placeholders",
@@ -1274,10 +1274,10 @@ export const QuestionBank: Question[] = [
     id: 90,
     type: "multiple",
     module: 7,
-    question: "Which statements about std::reference_wrapper are correct?",
+    question: "Which statements about `std::reference_wrapper` are correct?",
     options: [
       "Allows references to be copied",
-      "Created with std::ref or std::cref",
+      "Created with `std::ref` or std::cref",
       "Cannot be used with containers",
       "Requires explicit .get() conversion"
     ],
@@ -1292,17 +1292,17 @@ export const QuestionBank: Question[] = [
     options: [
       "Lambda expressions",
       "std::bind with placeholders",
-      "std::ptr_fun",
-      "std::bind1st"
+      "`std::ptr_fun`",
+      "`std::bind1st`"
     ],
     correct: [0, 1],
-    explanation: "Use lambdas and std::bind instead of deprecated bind1st, bind2nd, mem_fun, and ptr_fun."
+    explanation: "Use lambdas and `std::bind` instead of deprecated bind1st, bind2nd, mem_fun, and ptr_fun."
   },
   {
     id: 92,
     type: "multiple",
     module: 7,
-    question: "Which statements about std::mem_fn are correct?",
+    question: "Which statements about `std::mem_fn` are correct?",
     options: [
       "Wraps member function pointers",
       "Works with both pointers and objects",
@@ -1316,7 +1316,7 @@ export const QuestionBank: Question[] = [
     id: 93,
     type: "multiple",
     module: 7,
-    question: "Which statements about std::not_fn are correct?",
+    question: "Which statements about `std::not_fn` are correct?",
     options: [
       "Negates any callable",
       "Replaces not1 and not2",
@@ -1334,10 +1334,10 @@ export const QuestionBank: Question[] = [
     module: 8,
     question: "Which are stream manipulators?",
     options: [
-      "std::setw",
-      "std::setprecision",
-      "std::endl",
-      "std::format"
+      "`std::setw`",
+      "`std::setprecision`",
+      "`std::endl`",
+      "`std::format`"
     ],
     correct: [0, 1, 2],
     explanation: "setw, setprecision, endl, hex, dec, fixed, etc. are manipulators. format is C++20 but not a stream manipulator."
@@ -1346,7 +1346,7 @@ export const QuestionBank: Question[] = [
     id: 95,
     type: "multiple",
     module: 8,
-    question: "Which statements about std::stringstream are correct?",
+    question: "Which statements about `std::stringstream` are correct?",
     options: [
       "Provides in-memory string I/O",
       "Can only read, not write",
@@ -1388,7 +1388,7 @@ export const QuestionBank: Question[] = [
     id: 98,
     type: "multiple",
     module: 8,
-    question: "Which statements about std::setw are correct?",
+    question: "Which statements about `std::setw` are correct?",
     options: [
       "Sets field width for next output",
       "Effect persists across outputs",
@@ -1402,7 +1402,7 @@ export const QuestionBank: Question[] = [
     id: 99,
     type: "multiple",
     module: 8,
-    question: "Which statements about std::setprecision are correct?",
+    question: "Which statements about `std::setprecision` are correct?",
     options: [
       "Sets decimal precision",
       "Applies to next output only",
@@ -1430,7 +1430,7 @@ export const QuestionBank: Question[] = [
     id: 101,
     type: "multiple",
     module: 8,
-    question: "Which statements about std::endl vs '\\n' are correct?",
+    question: "Which statements about `std::endl` vs '\\n' are correct?",
     options: [
       "endl flushes the buffer",
       "'\\n' doesn't flush",
@@ -1474,10 +1474,10 @@ export const QuestionBank: Question[] = [
     module: 8,
     question: "Which manipulators require <iomanip>?",
     options: [
-      "std::setw",
-      "std::setprecision",
-      "std::endl",
-      "std::boolalpha"
+      "`std::setw`",
+      "`std::setprecision`",
+      "`std::endl`",
+      "`std::boolalpha`"
     ],
     correct: [0, 1],
     explanation: "setw and setprecision require <iomanip>. endl and boolalpha are in <iostream>."
@@ -1486,7 +1486,7 @@ export const QuestionBank: Question[] = [
     id: 105,
     type: "multiple",
     module: 8,
-    question: "Which statements about std::getline are correct?",
+    question: "Which statements about `std::getline` are correct?",
     options: [
       "Includes delimiter in result",
       "Discards the delimiter",
@@ -1750,7 +1750,7 @@ export const QuestionBank: Question[] = [
       "Runtime exception"
     ],
     correct: [2],
-    explanation: "std::array has fixed size and doesn't provide push_back(). Compilation fails."
+    explanation: "`std::array` has fixed size and doesn't provide push_back(). Compilation fails."
   },
   {
     id: 124,
@@ -1806,7 +1806,7 @@ export const QuestionBank: Question[] = [
       "Undefined behavior"
     ],
     correct: [3],
-    explanation: "operator[] doesn't perform bounds checking. Accessing out-of-bounds is undefined behavior."
+    explanation: "`operator[]` doesn't perform bounds checking. Accessing out-of-bounds is undefined behavior."
   },
   {
     id: 128,
@@ -1878,7 +1878,7 @@ export const QuestionBank: Question[] = [
       "Compilation fails"
     ],
     correct: [0],
-    explanation: "operator[] creates entry with default-constructed value if key doesn't exist. Prints empty string."
+    explanation: "`operator[]` creates entry with default-constructed value if key doesn't exist. Prints empty string."
   },
   {
     id: 133,
@@ -1934,7 +1934,7 @@ export const QuestionBank: Question[] = [
       "Runtime exception"
     ],
     correct: [2],
-    explanation: "multimap doesn't provide operator[]. Compilation fails."
+    explanation: "multimap doesn't provide `operator[]`. Compilation fails."
   },
   {
     id: 137,
@@ -2395,7 +2395,7 @@ export const QuestionBank: Question[] = [
     id: 169,
     type: "multiple",
     module: 5,
-    question: "Which statements are true about std::partial_sort?",
+    question: "Which statements are true about `std::partial_sort`?",
     options: [
       "Sorts the entire range",
       "Guarantees that the range is fully sorted",
@@ -2461,7 +2461,7 @@ export const QuestionBank: Question[] = [
       "Creates min-heap by default"
     ],
     correct: [0, 2],
-    explanation: "make_heap creates max-heap by default. front() is maximum element: 9."
+    explanation: "make_heap creates max-heap by default. `front()` is maximum element: 9."
   },
   {
     id: 174,
@@ -2547,7 +2547,7 @@ export const QuestionBank: Question[] = [
       "Undefined behavior"
     ],
     correct: [1],
-    explanation: "Default-constructed std::function is empty (nullptr). Comparison is true (1)."
+    explanation: "Default-constructed `std::function` is empty (nullptr). Comparison is true (1)."
   },
   {
     id: 180,
@@ -2597,7 +2597,7 @@ export const QuestionBank: Question[] = [
     id: 183,
     type: "multiple",
     module: 8,
-    question: "What is the output?\n```cpp\nstd::cout << std::fixed << std::setprecision(2) << 3.14159;\n```",
+    question: "What is the output?\n```cpp\nstd::cout << `std::fixed` << std::setprecision(2) << 3.14159;\n```",
     options: [
       "Outputs 3.14",
       "Outputs 3.1",
@@ -2711,15 +2711,15 @@ export const QuestionBank: Question[] = [
     id: 191,
     type: "single",
     module: 1,
-    question: "Which operation on std::vector is most likely to invalidate all iterators?",
+    question: "Which operation on `std::vector` is most likely to invalidate all iterators?",
     options: [
       "push_back when capacity is sufficient",
       "push_back when reallocation occurs",
       "front()",
-      "operator[]"
+      "`operator[]`"
     ],
     correct: [1],
-    explanation: "When std::vector needs to reallocate (typically when size exceeds capacity), all iterators, pointers, and references to its elements are invalidated."
+    explanation: "When `std::vector` needs to reallocate (typically when size exceeds capacity), all iterators, pointers, and references to its elements are invalidated."
   },
   {
     id: 192,
@@ -2727,13 +2727,13 @@ export const QuestionBank: Question[] = [
     module: 1,
     question: "Which container is best suited for frequent insertions and erasures in the middle with stable iterators?",
     options: [
-      "std::vector",
-      "std::deque",
-      "std::list",
-      "std::array"
+      "`std::vector`",
+      "`std::deque`",
+      "`std::list`",
+      "`std::array`"
     ],
     correct: [2],
-    explanation: "std::list provides stable iterators and efficient insertion/erasure anywhere in the list given an iterator, at the cost of cache locality."
+    explanation: "`std::list` provides stable iterators and efficient insertion/erasure anywhere in the list given an iterator, at the cost of cache locality."
   },
   {
     id: 193,
@@ -2741,10 +2741,10 @@ export const QuestionBank: Question[] = [
     module: 1,
     question: "Which container guarantees that taking the address of an element remains valid as long as the element is not erased?",
     options: [
-      "std::vector",
-      "std::list",
-      "std::deque",
-      "std::forward_list"
+      "`std::vector`",
+      "`std::list`",
+      "`std::deque`",
+      "`std::forward_list`"
     ],
     correct: [1],
     explanation: "For std::list, elements are individually allocated nodes and are never moved in memory except when erased, so pointers and references remain valid."
@@ -2767,15 +2767,15 @@ export const QuestionBank: Question[] = [
     id: 195,
     type: "single",
     module: 1,
-    question: "Which container adapter exposes front() and back() but not random access by index?",
+    question: "Which container adapter exposes `front()` and `back()` but not random access by index?",
     options: [
-      "std::stack",
-      "std::queue",
-      "std::priority_queue",
-      "std::array"
+      "`std::stack`",
+      "`std::queue`",
+      "`std::priority_queue`",
+      "`std::array`"
     ],
     correct: [1],
-    explanation: "std::queue provides access to the front and back elements but deliberately hides random access to enforce FIFO semantics."
+    explanation: "`std::queue` provides access to the front and back elements but deliberately hides random access to enforce FIFO semantics."
   },
   {
     id: 196,
@@ -2783,19 +2783,19 @@ export const QuestionBank: Question[] = [
     module: 1,
     question: "Which container has the best cache locality for sequential iteration over many elements?",
     options: [
-      "std::list",
-      "std::vector",
-      "std::deque",
-      "std::forward_list"
+      "`std::list`",
+      "`std::vector`",
+      "`std::deque`",
+      "`std::forward_list`"
     ],
     correct: [1],
-    explanation: "std::vector stores elements contiguously in memory, which usually results in superior cache performance during sequential access."
+    explanation: "`std::vector` stores elements contiguously in memory, which usually results in superior cache performance during sequential access."
   },
   {
     id: 197,
     type: "single",
     module: 1,
-    question: "What is the effect of calling shrink_to_fit() on a std::vector?",
+    question: "What is the effect of calling `shrink_to_fit()` on a `std::vector`?",
     options: [
       "It must reduce capacity to match size",
       "It requests but does not guarantee capacity reduction",
@@ -2811,10 +2811,10 @@ export const QuestionBank: Question[] = [
     module: 1,
     question: "Which sequential container does NOT support constant-time size() in the C++ standard?",
     options: [
-      "std::vector",
-      "std::deque",
-      "std::list",
-      "std::forward_list"
+      "`std::vector`",
+      "`std::deque`",
+      "`std::list`",
+      "`std::forward_list`"
     ],
     correct: [3],
     explanation: "std::forward_list intentionally omits size() to avoid requiring O(n) tracking; size() can be computed manually by iterating if needed."
@@ -2825,19 +2825,19 @@ export const QuestionBank: Question[] = [
     module: 1,
     question: "Which container is most appropriate to implement a FIFO queue with efficient push and pop at opposite ends?",
     options: [
-      "std::vector",
-      "std::deque",
-      "std::list",
-      "std::array"
+      "`std::vector`",
+      "`std::deque`",
+      "`std::list`",
+      "`std::array`"
     ],
     correct: [1],
-    explanation: "std::deque supports efficient insertion and removal at both the front and back, making it a natural underlying container for queue-like behavior."
+    explanation: "`std::deque` supports efficient insertion and removal at both the front and back, making it a natural underlying container for queue-like behavior."
   },
   {
     id: 200,
     type: "single",
     module: 1,
-    question: "What is the complexity of inserting an element in the middle of a std::vector?",
+    question: "What is the complexity of inserting an element in the middle of a `std::vector`?",
     options: [
       "O(1)",
       "O(log n)",
@@ -2845,21 +2845,21 @@ export const QuestionBank: Question[] = [
       "Amortized O(1)"
     ],
     correct: [2],
-    explanation: "Insertion in the middle of a std::vector requires shifting all following elements, giving linear O(n) complexity."
+    explanation: "Insertion in the middle of a `std::vector` requires shifting all following elements, giving linear O(n) complexity."
   },
   {
     id: 201,
     type: "single",
     module: 1,
-    question: "Which statement about std::array is true?",
+    question: "Which statement about `std::array` is true?",
     options: [
-      "Its size() is computed in O(n)",
-      "It supports dynamic resizing via resize()",
+      "Its `size()` is computed in O(n)",
+      "It supports dynamic resizing via `resize()`",
       "It can be used with range-based for loops",
-      "It does not support begin() and end()"
+      "It does not support `begin()` and `end()`"
     ],
     correct: [2],
-    explanation: "std::array is a fixed-size container but provides begin()/end(), making it fully compatible with range-based for loops and algorithms."
+    explanation: "`std::array` is a fixed-size container but provides `begin()`/`end()`, making it fully compatible with range-based for loops and algorithms."
   },
   {
     id: 202,
@@ -2867,13 +2867,14 @@ export const QuestionBank: Question[] = [
     module: 1,
     question: "Which container is best if you frequently need to insert elements at both the front and back with minimal overhead?",
     options: [
-      "std::vector",
-      "std::deque",
-      "std::array",
-      "std::forward_list"
+      "`std::vector`",
+      "`std::deque`",
+      "`std::array`",
+      "`std::forward_list`"
     ],
     correct: [1],
-    explanation: "std::deque offers efficient push_front and push_back operations, unlike std::vector which is efficient only at the back."
+    explanation: "`std::deque` offers efficient `push_front()` and " +
+      "`push_back()` operations, unlike `std::vector` which is efficient only at the back."
   },
   {
     id: 203,
@@ -2881,33 +2882,33 @@ export const QuestionBank: Question[] = [
     module: 1,
     question: "Which sequential containers provide bidirectional iterators?",
     options: [
-      "std::vector",
-      "std::list",
-      "std::deque",
-      "std::forward_list"
+      "`std::vector`",
+      "`std::list`",
+      "`std::deque`",
+      "`std::forward_list`"
     ],
     correct: [0, 1, 2],
-    explanation: "std::vector and std::deque provide random-access iterators (which are bidirectional), and std::list provides bidirectional iterators. std::forward_list is singly linked and only provides forward iterators."
+    explanation: "`std::vector` and `std::deque` provide random-access iterators (which are bidirectional), and `std::list` provides bidirectional iterators. `std::forward_list` is singly linked and only provides forward iterators."
   },
   {
     id: 204,
     type: "multiple",
     module: 1,
-    question: "Which statements about container adapters like std::stack and std::queue are correct?",
+    question: "Which statements about container adapters like `std::stack` and `std::queue` are correct?",
     options: [
       "They provide a restricted interface on top of an underlying container",
-      "The default underlying container for std::stack is std::deque",
-      "They always use std::vector internally",
+      "The default underlying container for `std::stack` is std::deque",
+      "They always use `std::vector` internally",
       "They cannot be instantiated with user-specified underlying containers"
     ],
     correct: [0, 1],
-    explanation: "Adapters expose a limited interface over a configurable underlying container. By default, std::stack and std::queue use std::deque, but you can choose other containers that meet the requirements."
+    explanation: "Adapters expose a limited interface over a configurable underlying container. By default, `std::stack` and `std::queue` use std::deque, but you can choose other containers that meet the requirements."
   },
   {
     id: 205,
     type: "single",
     module: 1,
-    question: "Which operation is cheapest for std::forward_list compared to std::list?",
+    question: "Which operation is cheapest for `std::forward_list` compared to `std::list`?",
     options: [
       "Random access by index",
       "Insertion before a known position",
@@ -2923,13 +2924,13 @@ export const QuestionBank: Question[] = [
     module: 1,
     question: "Which container guarantees that iterators are not invalidated when inserting at either end, except for iterators to erased elements?",
     options: [
-      "std::deque",
-      "std::vector",
-      "std::array",
-      "std::forward_list"
+      "`std::deque`",
+      "`std::vector`",
+      "`std::array`",
+      "`std::forward_list`"
     ],
     correct: [0],
-    explanation: "std::deque typically keeps iterators valid when adding elements at either end, though insertions in the middle may invalidate them."
+    explanation: "`std::deque` typically keeps iterators valid when adding elements at either end, though insertions in the middle may invalidate them."
   },
   {
     id: 207,
@@ -2937,13 +2938,13 @@ export const QuestionBank: Question[] = [
     module: 1,
     question: "Which is the correct way to obtain a C-style array pointer from a std::vector<int> v?",
     options: [
-      "int* p = &v;",
-      "int* p = v.data();",
-      "int* p = &v[0];",
-      "int* p = std::begin(v);"
+      "`int* p = &v;`",
+      "`int* p = v.data();`",
+      "`int* p = &v[0];`",
+      "`int* p = std::begin(v);`"
     ],
     correct: [1],
-    explanation: "The idiomatic way in modern C++ is to use v.data(), which returns a pointer to the underlying array (or nullptr if empty). &v[0] also works if the vector is non-empty, but data() is safer and clearer."
+    explanation: "The idiomatic way in modern C++ is to use `v.data()`, which returns a pointer to the underlying array (or nullptr if empty). `&v[0]` also works if the vector is non-empty, but `data()` is safer and clearer."
   },
   {
     id: 208,
@@ -2951,13 +2952,13 @@ export const QuestionBank: Question[] = [
     module: 1,
     question: "Which container is most appropriate when you need a fixed-size sequence whose size is known at compile time and stored inline?",
     options: [
-      "std::vector",
-      "std::array",
-      "std::deque",
-      "std::list"
+      "`std::vector`",
+      "`std::array`",
+      "`std::deque`",
+      "`std::list`"
     ],
     correct: [1],
-    explanation: "std::array is designed for fixed-size sequences with compile-time length and typically stores elements inline (e.g., on the stack when used as a local variable)."
+    explanation: "`std::array` is designed for fixed-size sequences with compile-time length and typically stores elements inline (e.g., on the stack when used as a local variable)."
   },
 
   // Additional MODULE 2 questions
@@ -2967,10 +2968,10 @@ export const QuestionBank: Question[] = [
     module: 2,
     question: "Which associative container maintains elements in sorted key order by default?",
     options: [
-      "std::unordered_map",
-      "std::map",
-      "std::unordered_set",
-      "std::unordered_multimap"
+      "`std::unordered_map`",
+      "`std::map`",
+      "`std::unordered_set`",
+      "`std::unordered_multimap`"
     ],
     correct: [1],
     explanation: "std::map is an ordered associative container and maintains keys in sorted order according to its comparison function."
@@ -2979,26 +2980,26 @@ export const QuestionBank: Question[] = [
     id: 210,
     type: "single",
     module: 2,
-    question: "Which statement about the key type of std::unordered_map is true?",
+    question: "Which statement about the key type of `std::unordered_map` is true?",
     options: [
       "It must be an integral type",
-      "It must support operator<",
+      "It must support ``operator<``",
       "It must be hashable and equality comparable",
       "It must be default-constructible"
     ],
     correct: [2],
-    explanation: "std::unordered_map relies on hashing and equality comparison; it does not require operator< or integral keys."
+    explanation: "`std::unordered_map` relies on hashing and equality comparison; it does not require `operator<` or integral keys."
   },
   {
     id: 211,
     type: "multiple",
     module: 2,
-    question: "Which operations on std::unordered_map can cause rehashing?",
+    question: "Which operations on `std::unordered_map` can cause rehashing?",
     options: [
-      "insert",
-      "erase",
-      "reserve",
-      "clear"
+      "`insert()`",
+      "`erase()`",
+      "`reserve()`",
+      "`clear()`"
     ],
     correct: [0, 2],
     explanation: "Inserting new elements or reserving more buckets can trigger rehashing. Erase and clear remove elements but may or may not shrink buckets depending on the implementation."
@@ -3007,7 +3008,7 @@ export const QuestionBank: Question[] = [
     id: 212,
     type: "single",
     module: 2,
-    question: "Which method would you use to traverse all elements in a specific bucket of std::unordered_set?",
+    question: "Which method would you use to traverse all elements in a specific bucket of `std::unordered_set`?",
     options: [
       "begin() / end()",
       "bucket_count()",
@@ -3021,7 +3022,7 @@ export const QuestionBank: Question[] = [
     id: 213,
     type: "single",
     module: 2,
-    question: "What is the effect of calling clear() on a std::map?",
+    question: "What is the effect of calling clear() on a `std::map`?",
     options: [
       "Removes all elements but keeps allocated memory",
       "Removes all elements and deallocates all memory",
@@ -3035,7 +3036,7 @@ export const QuestionBank: Question[] = [
     id: 214,
     type: "multiple",
     module: 2,
-    question: "Which statements about std::set and std::multiset are correct?",
+    question: "Which statements about `std::set` and `std::multiset` are correct?",
     options: [
       "Both maintain elements in sorted order",
       "std::multiset allows duplicate keys",
@@ -3043,13 +3044,13 @@ export const QuestionBank: Question[] = [
       "std::set iterators are random-access"
     ],
     correct: [0, 1, 2],
-    explanation: "Both are ordered containers with tree-based iterators (bidirectional). std::multiset supports duplicates, and both offer lower_bound/upper_bound."
+    explanation: "Both are ordered containers with tree-based iterators (bidirectional). `std::multiset` supports duplicates, and both offer lower_bound/upper_bound."
   },
   {
     id: 215,
     type: "single",
     module: 2,
-    question: "Which is the usual complexity of inserting a single element into a std::map?",
+    question: "Which is the usual complexity of inserting a single element into a `std::map`?",
     options: [
       "Amortized O(1)",
       "O(log n)",
@@ -3065,13 +3066,13 @@ export const QuestionBank: Question[] = [
     module: 2,
     question: "Which container is best when you frequently need to check for existence of a key with average constant time and ordering is unimportant?",
     options: [
-      "std::map",
-      "std::unordered_map",
-      "std::set",
-      "std::multimap"
+      "`std::map`",
+      "`std::unordered_map`",
+      "`std::set`",
+      "`std::multimap`"
     ],
     correct: [1],
-    explanation: "std::unordered_map offers average O(1) lookup based on hashing when order does not matter."
+    explanation: "`std::unordered_map` offers average O(1) lookup based on hashing when order does not matter."
   },
   {
     id: 217,
@@ -3085,13 +3086,13 @@ export const QuestionBank: Question[] = [
       "Returns a null pointer"
     ],
     correct: [2],
-    explanation: "Unlike operator[], at() throws std::out_of_range if the key is not found, making it safer when you do not intend to insert."
+    explanation: "Unlike `operator[]`, at() throws `std::out_of_range` if the key is not found, making it safer when you do not intend to insert."
   },
   {
     id: 218,
     type: "multiple",
     module: 2,
-    question: "Which statements about custom key comparison in std::map are correct?",
+    question: "Which statements about custom key comparison in `std::map` are correct?",
     options: [
       "The comparison function must impose a strict weak ordering",
       "The comparison function is stored as part of the map type",
@@ -3107,10 +3108,10 @@ export const QuestionBank: Question[] = [
     module: 2,
     question: "Which container is most appropriate to store a set of unique keys and occasionally iterate over them in sorted order?",
     options: [
-      "std::unordered_set",
-      "std::set",
-      "std::multiset",
-      "std::unordered_multiset"
+      "`std::unordered_set`",
+      "`std::set`",
+      "`std::multiset`",
+      "`std::unordered_multiset`"
     ],
     correct: [1],
     explanation: "std::set maintains keys in sorted order and enforces uniqueness, which fits this scenario."
@@ -3119,7 +3120,7 @@ export const QuestionBank: Question[] = [
     id: 220,
     type: "single",
     module: 2,
-    question: "Which method on std::unordered_map reports the average number of elements per bucket?",
+    question: "Which method on `std::unordered_map` reports the average number of elements per bucket?",
     options: [
       "bucket_count()",
       "max_load_factor()",
@@ -3133,7 +3134,7 @@ export const QuestionBank: Question[] = [
     id: 221,
     type: "single",
     module: 2,
-    question: "Which operation on std::unordered_set is guaranteed not to invalidate iterators to existing elements (except erased ones)?",
+    question: "Which operation on `std::unordered_set` is guaranteed not to invalidate iterators to existing elements (except erased ones)?",
     options: [
       "rehash()",
       "insert()",
@@ -3149,10 +3150,10 @@ export const QuestionBank: Question[] = [
     module: 2,
     question: "Which associative containers provide equal_range(key)?",
     options: [
-      "std::map",
-      "std::multimap",
-      "std::set",
-      "std::unordered_map"
+      "`std::map`",
+      "`std::multimap`",
+      "`std::set`",
+      "`std::unordered_map`"
     ],
     correct: [0, 1, 2],
     explanation: "Ordered associative containers (map, multimap, set, multiset) provide equal_range. Unordered containers also provide it, but here the focus is on ordered ones; consult cppreference for precise signatures."
@@ -3175,7 +3176,7 @@ export const QuestionBank: Question[] = [
     id: 224,
     type: "single",
     module: 2,
-    question: "Which operation on std::map has average-case constant complexity?",
+    question: "Which operation on `std::map` has average-case constant complexity?",
     options: [
       "find()",
       "insert()",
@@ -3193,10 +3194,10 @@ export const QuestionBank: Question[] = [
     module: 3,
     question: "Which algorithm would you use to count how many elements in a sequence are equal to a specific value?",
     options: [
-      "std::count",
-      "std::find",
-      "std::for_each",
-      "std::accumulate"
+      "`std::count`",
+      "`std::find`",
+      "`std::for_each`",
+      "`std::accumulate`"
     ],
     correct: [0],
     explanation: "std::count iterates over the range and counts elements equal to a given value."
@@ -3207,10 +3208,10 @@ export const QuestionBank: Question[] = [
     module: 3,
     question: "Which algorithm checks if at least one element in a range satisfies a predicate?",
     options: [
-      "std::all_of",
-      "std::any_of",
-      "std::none_of",
-      "std::find"
+      "`std::all_of`",
+      "`std::any_of`",
+      "`std::none_of`",
+      "`std::find`"
     ],
     correct: [1],
     explanation: "std::any_of returns true if any element in the range makes the predicate true."
@@ -3219,7 +3220,7 @@ export const QuestionBank: Question[] = [
     id: 227,
     type: "multiple",
     module: 3,
-    question: "Which statements about std::find and std::find_if are correct?",
+    question: "Which statements about `std::find` and `std::find_if` are correct?",
     options: [
       "std::find compares elements to a given value",
       "std::find_if uses a predicate to test elements",
@@ -3235,19 +3236,19 @@ export const QuestionBank: Question[] = [
     module: 3,
     question: "Which algorithm would you use to compute the sum of a sequence of integers in a range?",
     options: [
-      "std::count_if",
-      "std::accumulate",
-      "std::for_each",
-      "std::mismatch"
+      "`std::count_if`",
+      "`std::accumulate`",
+      "`std::for_each`",
+      "`std::mismatch`"
     ],
     correct: [1],
-    explanation: "std::accumulate is the standard algorithm to reduce a range to a single value, such as a sum."
+    explanation: "`std::accumulate` is the standard algorithm to reduce a range to a single value, such as a sum."
   },
   {
     id: 229,
     type: "multiple",
     module: 3,
-    question: "Which statements about std::for_each are correct?",
+    question: "Which statements about `std::for_each` are correct?",
     options: [
       "It applies a function to each element in a range",
       "It can be used with lambdas that capture external state",
@@ -3263,10 +3264,10 @@ export const QuestionBank: Question[] = [
     module: 3,
     question: "Which algorithm checks if two ranges contain the same elements in the same order?",
     options: [
-      "std::mismatch",
-      "std::equal",
-      "std::search",
-      "std::adjacent_find"
+      "`std::mismatch`",
+      "`std::equal`",
+      "`std::search`",
+      "`std::adjacent_find`"
     ],
     correct: [1],
     explanation: "std::equal compares two ranges element-by-element and returns true if all corresponding elements are equal."
@@ -3277,10 +3278,10 @@ export const QuestionBank: Question[] = [
     module: 3,
     question: "Which algorithm would you use to determine whether any element of one range appears in another range?",
     options: [
-      "std::find",
-      "std::find_first_of",
-      "std::search",
-      "std::adjacent_find"
+      "`std::find`",
+      "`std::find_first_of`",
+      "`std::search`",
+      "`std::adjacent_find`"
     ],
     correct: [1],
     explanation: "std::find_first_of searches a range for any element from another range, returning the position of the first match."
@@ -3289,7 +3290,7 @@ export const QuestionBank: Question[] = [
     id: 232,
     type: "multiple",
     module: 3,
-    question: "Which statements about std::search and std::find_end are correct?",
+    question: "Which statements about `std::search` and `std::find_end` are correct?",
     options: [
       "Both look for a subsequence within a sequence",
       "std::search returns the first occurrence",
@@ -3305,10 +3306,10 @@ export const QuestionBank: Question[] = [
     module: 3,
     question: "Which algorithm would you use to check if two ranges are lexicographically ordered relative to each other?",
     options: [
-      "std::lexicographical_compare",
-      "std::mismatch",
-      "std::equal",
-      "std::all_of"
+      "`std::lexicographical_compare`",
+      "`std::mismatch`",
+      "`std::equal`",
+      "`std::all_of`"
     ],
     correct: [0],
     explanation: "lexicographical_compare performs a dictionary-style comparison of two ranges."
@@ -3319,10 +3320,10 @@ export const QuestionBank: Question[] = [
     module: 3,
     question: "Which algorithm checks if no elements in a range satisfy a predicate?",
     options: [
-      "std::any_of",
-      "std::none_of",
-      "std::all_of",
-      "std::count_if"
+      "`std::any_of`",
+      "`std::none_of`",
+      "`std::all_of`",
+      "`std::count_if`"
     ],
     correct: [1],
     explanation: "std::none_of returns true if the predicate is false for all elements in the range."
@@ -3333,10 +3334,10 @@ export const QuestionBank: Question[] = [
     module: 3,
     question: "Which algorithm can you use to find the first position where two ranges differ?",
     options: [
-      "std::equal",
-      "std::mismatch",
-      "std::search",
-      "std::find_if"
+      "`std::equal`",
+      "`std::mismatch`",
+      "`std::search`",
+      "`std::find_if`"
     ],
     correct: [1],
     explanation: "std::mismatch returns a pair of iterators to the first elements that differ between two ranges."
@@ -3347,10 +3348,10 @@ export const QuestionBank: Question[] = [
     module: 3,
     question: "Which algorithm would you use to determine how many elements in a range satisfy a given predicate?",
     options: [
-      "std::count_if",
-      "std::count",
-      "std::for_each",
-      "std::any_of"
+      "`std::count_if`",
+      "`std::count`",
+      "`std::for_each`",
+      "`std::any_of`"
     ],
     correct: [0],
     explanation: "std::count_if counts the number of elements for which the predicate returns true."
@@ -3375,10 +3376,10 @@ export const QuestionBank: Question[] = [
     module: 3,
     question: "Which algorithm would you use to efficiently find the minimum element in a range?",
     options: [
-      "std::min_element",
-      "std::min",
-      "std::accumulate",
-      "std::lower_bound"
+      "`std::min_element`",
+      "`std::min`",
+      "`std::accumulate`",
+      "`std::lower_bound`"
     ],
     correct: [0],
     explanation: "min_element scans the range and returns an iterator to the minimal element according to the comparison function."
@@ -3389,10 +3390,10 @@ export const QuestionBank: Question[] = [
     module: 3,
     question: "Which algorithm checks whether two ranges are permutations of each other (ignoring order)?",
     options: [
-      "std::equal",
-      "std::is_permutation",
-      "std::search",
-      "std::find_first_of"
+      "`std::equal`",
+      "`std::is_permutation`",
+      "`std::search`",
+      "`std::find_first_of`"
     ],
     correct: [1],
     explanation: "is_permutation determines whether two ranges contain the same elements, possibly in different orders."
@@ -3403,10 +3404,10 @@ export const QuestionBank: Question[] = [
     module: 3,
     question: "Which algorithm can be used to test whether a range is partitioned according to a predicate?",
     options: [
-      "std::is_partitioned",
-      "std::partition",
-      "std::adjacent_find",
-      "std::search"
+      "`std::is_partitioned`",
+      "`std::partition`",
+      "`std::adjacent_find`",
+      "`std::search`"
     ],
     correct: [0],
     explanation: "is_partitioned checks whether a range is already partitioned into elements for which the predicate is true followed by those for which it is false."
@@ -3419,10 +3420,10 @@ export const QuestionBank: Question[] = [
     module: 4,
     question: "Which algorithm would you use to reverse a sequence into another sequence, leaving the original unchanged?",
     options: [
-      "std::reverse",
-      "std::reverse_copy",
-      "std::rotate",
-      "std::copy"
+      "`std::reverse`",
+      "`std::reverse_copy`",
+      "`std::rotate`",
+      "`std::copy`"
     ],
     correct: [1],
     explanation: "reverse_copy writes the reversed sequence into an output range while leaving the input range intact."
@@ -3431,7 +3432,7 @@ export const QuestionBank: Question[] = [
     id: 242,
     type: "single",
     module: 4,
-    question: "Which pair of algorithms is commonly used together to remove elements equal to a given value from a std::vector?",
+    question: "Which pair of algorithms is commonly used together to remove elements equal to a given value from a `std::vector`?",
     options: [
       "std::remove and std::erase",
       "std::remove_if and std::copy",
@@ -3439,13 +3440,13 @@ export const QuestionBank: Question[] = [
       "std::replace and std::fill"
     ],
     correct: [0],
-    explanation: "The remove-erase idiom uses std::remove (or remove_if) followed by container.erase(new_end, end()) to actually shrink the container."
+    explanation: "The remove-erase idiom uses `std::remove` (or remove_if) followed by container.erase(new_end, end()) to actually shrink the container."
   },
   {
     id: 243,
     type: "multiple",
     module: 4,
-    question: "Which statements about std::transform are correct?",
+    question: "Which statements about `std::transform` are correct?",
     options: [
       "It can operate in-place by using the same input and output range",
       "It can combine two input ranges into one output range",
@@ -3461,10 +3462,10 @@ export const QuestionBank: Question[] = [
     module: 4,
     question: "Which algorithm is best suited for shuffling elements randomly in a container?",
     options: [
-      "std::shuffle",
-      "std::random_shuffle",
-      "std::rotate",
-      "std::swap_ranges"
+      "`std::shuffle`",
+      "`std::random_shuffle`",
+      "`std::rotate`",
+      "`std::swap_ranges`"
     ],
     correct: [0],
     explanation: "std::shuffle is the modern algorithm for randomizing the order of elements using a uniform random bit generator. random_shuffle is deprecated."
@@ -3489,10 +3490,10 @@ export const QuestionBank: Question[] = [
     module: 4,
     question: "Which algorithm removes consecutive duplicates from a range in-place (logically), returning a new logical end?",
     options: [
-      "std::unique",
-      "std::remove",
-      "std::remove_if",
-      "std::partition"
+      "`std::unique`",
+      "`std::remove`",
+      "`std::remove_if`",
+      "`std::partition`"
     ],
     correct: [0],
     explanation: "unique compacts the range by removing consecutive duplicates, returning an iterator to the new logical end of the unique sequence."
@@ -3501,7 +3502,7 @@ export const QuestionBank: Question[] = [
     id: 247,
     type: "multiple",
     module: 4,
-    question: "Which statements about std::copy and std::copy_backward are correct?",
+    question: "Which statements about `std::copy` and `std::copy_backward` are correct?",
     options: [
       "std::copy is safe for non-overlapping ranges",
       "std::copy_backward can handle some overlapping cases",
@@ -3518,9 +3519,9 @@ export const QuestionBank: Question[] = [
     question: "Which algorithm would you use to generate a sequence of increasing integers starting from 1 into an existing vector?",
     options: [
       "`std::generate`",
-      "std::iota",
-      "std::fill_n",
-      "std::accumulate"
+      "`std::iota`",
+      "`std::fill_n`",
+      "`std::accumulate`"
     ],
     correct: [1],
     explanation: "iota assigns sequentially increasing values starting from a given initial value into a range."
@@ -3531,10 +3532,10 @@ export const QuestionBank: Question[] = [
     module: 4,
     question: "Which algorithm divides a range into two groups based on a predicate but does not preserve the relative order within groups?",
     options: [
-      "std::stable_partition",
-      "std::partition",
-      "std::sort",
-      "std::rotate"
+      "`std::stable_partition`",
+      "`std::partition`",
+      "`std::sort`",
+      "`std::rotate`"
     ],
     correct: [1],
     explanation: "partition groups elements by predicate result but does not guarantee stability. stable_partition maintains relative order."
@@ -3545,10 +3546,10 @@ export const QuestionBank: Question[] = [
     module: 4,
     question: "Which algorithm can be used to swap elements at corresponding positions between two ranges?",
     options: [
-      "std::swap",
-      "std::swap_ranges",
-      "std::copy",
-      "std::transform"
+      "`std::swap`",
+      "`std::swap_ranges`",
+      "`std::copy`",
+      "`std::transform`"
     ],
     correct: [1],
     explanation: "swap_ranges exchanges elements between two ranges element-wise."
@@ -3559,10 +3560,10 @@ export const QuestionBank: Question[] = [
     module: 4,
     question: "Which algorithm is specifically designed to randomly rearrange elements using a generator?",
     options: [
-      "std::shuffle",
-      "std::random_shuffle",
-      "std::partition",
-      "std::generate_n"
+      "`std::shuffle`",
+      "`std::random_shuffle`",
+      "`std::partition`",
+      "`std::generate_n`"
     ],
     correct: [0],
     explanation: "std::shuffle takes a uniform random bit generator and produces a random permutation of the input range. random_shuffle is deprecated."
@@ -3589,7 +3590,7 @@ export const QuestionBank: Question[] = [
     options: [
       "`std::fill`",
       "`std::generate`",
-      "`std::copy_if`",
+      "``std::copy_if``",
       "`std::minmax_element`"
     ],
     correct: [1],
@@ -3601,10 +3602,10 @@ export const QuestionBank: Question[] = [
     module: 4,
     question: "Which algorithm would you use to place all elements greater than a pivot value after all elements less than or equal to it, without fully sorting the range?",
     options: [
-      "std::sort",
-      "std::partition",
-      "std::nth_element",
-      "std::lower_bound"
+      "`std::sort`",
+      "`std::partition`",
+      "``std::nth_element``",
+      "`std::lower_bound`"
     ],
     correct: [1],
     explanation: "partition groups elements according to a predicate (e.g., x <= pivot) without fully sorting."
@@ -3615,10 +3616,10 @@ export const QuestionBank: Question[] = [
     module: 4,
     question: "Which algorithm applies a binary operation to corresponding elements of two ranges and writes the result into a third range?",
     options: [
-      "std::transform",
-      "std::copy_if",
-      "std::accumulate",
-      "std::adjacent_difference"
+      "`std::transform`",
+      "`std::copy_if`",
+      "`std::accumulate`",
+      "`std::adjacent_difference`"
     ],
     correct: [0],
     explanation: "The binary overload of transform takes two input ranges and applies a binary operation to compute each element of the output range."
@@ -3629,7 +3630,7 @@ export const QuestionBank: Question[] = [
     id: 256,
     type: "single",
     module: 5,
-    question: "Which iterator category is required by std::sort?",
+    question: "Which iterator category is required by `std::sort`?",
     options: [
       "Input iterators",
       "Forward iterators",
@@ -3637,7 +3638,7 @@ export const QuestionBank: Question[] = [
       "Random-access iterators"
     ],
     correct: [3],
-    explanation: "std::sort requires random-access iterators for efficiency and to perform partitioning operations."
+    explanation: "`std::sort` requires random-access iterators for efficiency and to perform partitioning operations."
   },
   {
     id: 257,
@@ -3645,13 +3646,13 @@ export const QuestionBank: Question[] = [
     module: 5,
     question: "Which algorithm would you use to check if a range is sorted according to a custom comparator?",
     options: [
-      "std::is_sorted",
-      "std::is_heap",
-      "std::binary_search",
-      "std::stable_sort"
+      "`std::is_sorted`",
+      "`std::is_heap`",
+      "`std::binary_search`",
+      "`std::stable_sort`"
     ],
     correct: [0],
-    explanation: "is_sorted accepts an optional comparator and reports whether the range is sorted according to it."
+    explanation: "`is_sorted` accepts an optional comparator and reports whether the range is sorted according to it."
   },
   {
     id: 258,
@@ -3659,13 +3660,13 @@ export const QuestionBank: Question[] = [
     module: 5,
     question: "Which algorithm partially sorts a range so that the smallest k elements are sorted at the beginning, leaving the rest unspecified?",
     options: [
-      "std::nth_element",
-      "std::partial_sort",
-      "std::sort",
-      "std::stable_sort"
+      "``std::nth_element``",
+      "`std::partial_sort`",
+      "`std::sort`",
+      "`std::stable_sort`"
     ],
     correct: [1],
-    explanation: "partial_sort sorts the subrange [first, middle) and ensures those elements are the smallest in the full range."
+    explanation: "`partial_sort` sorts the subrange [first, middle) and ensures those elements are the smallest in the full range."
   },
   {
     id: 259,
@@ -3673,27 +3674,27 @@ export const QuestionBank: Question[] = [
     module: 5,
     question: "Which algorithm can be used to verify that a range is a heap according to a given comparator?",
     options: [
-      "std::is_sorted",
-      "std::is_heap",
-      "std::is_partitioned",
-      "std::binary_search"
+      "`std::is_sorted`",
+      "`std::is_heap`",
+      "`std::is_partitioned`",
+      "`std::binary_search`"
     ],
     correct: [1],
-    explanation: "is_heap checks whether the range satisfies the heap property under the given comparator."
+    explanation: "`is_heap` checks whether the range satisfies the heap property under the given comparator."
   },
   {
     id: 260,
     type: "multiple",
     module: 5,
-    question: "Which statements about std::binary_search are correct?",
+    question: "Which statements about `std::binary_search` are correct?",
     options: [
       "The range must be sorted according to the same comparator",
       "It returns a boolean indicating presence",
-      "It can be combined with lower_bound to find the element",
+      "It can be combined with `lower_bound` to find the element",
       "It can be used safely on unsorted ranges"
     ],
     correct: [0, 1, 2],
-    explanation: "binary_search assumes the range is sorted using the same ordering; it reports only whether the value is present. To locate it, use lower_bound or equal_range."
+    explanation: "`binary_search` assumes the range is sorted using the same ordering; it reports only whether the value is present. To locate it, use `lower_bound` or `equal_range`."
   },
   {
     id: 261,
@@ -3701,13 +3702,13 @@ export const QuestionBank: Question[] = [
     module: 5,
     question: "Which pair of algorithms would you typically use to find the range of equal elements in a sorted sequence?",
     options: [
-      "std::lower_bound and std::upper_bound",
-      "std::sort and std::reverse",
-      "std::partial_sort and std::nth_element",
-      "std::make_heap and std::sort_heap"
+      "`std::lower_bound` and `std::upper_bound`",
+      "`std::sort` and `std::reverse`",
+      "`std::partial_sort` and ``std::nth_element``",
+      "`std::make_heap` and `std::sort_heap`"
     ],
     correct: [0],
-    explanation: "lower_bound and upper_bound locate the first element >= value and first element > value, defining the equal range."
+    explanation: "`lower_bound` and `upper_bound` locate the first element >= value and first element > value, defining the equal range."
   },
   {
     id: 262,
@@ -3715,13 +3716,13 @@ export const QuestionBank: Question[] = [
     module: 5,
     question: "Which algorithm rearranges a range into the next lexicographically greater permutation?",
     options: [
-      "std::sort",
-      "std::next_permutation",
-      "std::rotate",
-      "std::partial_sort"
+      "`std::sort`",
+      "`std::next_permutation`",
+      "`std::rotate`",
+      "`std::partial_sort`"
     ],
     correct: [1],
-    explanation: "next_permutation transforms the range into the next lexicographical ordering, or the first if none exists."
+    explanation: "`next_permutation` transforms the range into the next lexicographical ordering, or the first if none exists."
   },
   {
     id: 263,
@@ -3729,27 +3730,27 @@ export const QuestionBank: Question[] = [
     module: 5,
     question: "Which algorithm checks if two sorted ranges contain the same elements (as sets)?",
     options: [
-      "std::equal",
-      "std::includes",
-      "std::lexicographical_compare",
-      "std::set_union"
+      "`std::equal`",
+      "`std::includes`",
+      "`std::lexicographical_compare`",
+      "`std::set_union`"
     ],
     correct: [1],
-    explanation: "includes can be used symmetrically to check whether each range is a subset of the other, implying equality as sets."
+    explanation: "`includes` can be used symmetrically to check whether each range is a subset of the other, implying equality as sets."
   },
   {
     id: 264,
     type: "multiple",
     module: 5,
-    question: "Which statements about std::stable_sort are correct?",
+    question: "Which statements about `std::stable_sort` are correct?",
     options: [
       "It preserves the relative order of equal elements",
       "It may use extra memory internally",
-      "It is usually faster than std::sort",
+      "It is usually faster than `std::sort`",
       "It can be used with forward iterators"
     ],
     correct: [0, 1],
-    explanation: "stable_sort trades some performance and memory for stability; it still requires random-access iterators."
+    explanation: "`stable_sort` trades some performance and memory for stability; it still requires random-access iterators."
   },
   {
     id: 265,
@@ -3757,13 +3758,13 @@ export const QuestionBank: Question[] = [
     module: 5,
     question: "Which algorithm can be used to partition a sorted range into elements less than a value and those greater or equal, without fully sorting again?",
     options: [
-      "std::sort",
-      "std::partition",
-      "std::nth_element",
-      "std::lower_bound"
+      "`std::sort`",
+      "`std::partition`",
+      "`std::nth_element`",
+      "`std::lower_bound`"
     ],
     correct: [3],
-    explanation: "lower_bound finds the first element not less than the value, effectively splitting the sorted range into < value and >= value subranges."
+    explanation: "`lower_bound` finds the first element not less than the value, effectively splitting the sorted range into < value and >= value subranges."
   },
   {
     id: 266,
@@ -3771,10 +3772,10 @@ export const QuestionBank: Question[] = [
     module: 5,
     question: "Which algorithm can you use to check if a range is sorted until some position and to get that position?",
     options: [
-      "std::is_sorted",
-      "std::is_sorted_until",
-      "std::is_heap_until",
-      "std::is_partitioned"
+      "`std::is_sorted`",
+      "`std::is_sorted_until`",
+      "`std::is_heap_until`",
+      "`std::is_partitioned`"
     ],
     correct: [1],
     explanation: "is_sorted_until returns an iterator to the first element that violates sorted order, or end() if the entire range is sorted."
@@ -3785,10 +3786,10 @@ export const QuestionBank: Question[] = [
     module: 5,
     question: "Which algorithm can be used to create a heap from an unsorted range?",
     options: [
-      "std::make_heap",
-      "std::push_heap",
-      "std::pop_heap",
-      "std::is_heap"
+      "`std::make_heap`",
+      "`std::push_heap`",
+      "`std::pop_heap`",
+      "`std::is_heap`"
     ],
     correct: [0],
     explanation: "make_heap rearranges the elements into a heap in-place. push_heap assumes the range is already a heap with one extra element appended."
@@ -3799,10 +3800,10 @@ export const QuestionBank: Question[] = [
     module: 5,
     question: "Which algorithm would you use after push_heap to remove the largest element while maintaining the heap property?",
     options: [
-      "std::pop_heap",
-      "std::sort_heap",
-      "std::next_permutation",
-      "std::remove"
+      "`std::pop_heap`",
+      "`std::sort_heap`",
+      "`std::next_permutation`",
+      "`std::remove`"
     ],
     correct: [0],
     explanation: "pop_heap moves the largest element to the end of the range and restores the heap property on the remaining elements."
@@ -3811,7 +3812,7 @@ export const QuestionBank: Question[] = [
     id: 269,
     type: "multiple",
     module: 5,
-    question: "Which statements about the comparator used with std::sort are correct?",
+    question: "Which statements about the comparator used with `std::sort` are correct?",
     options: [
       "It must impose a strict weak ordering",
       "It must return true if the arguments are equal",
@@ -3829,10 +3830,10 @@ export const QuestionBank: Question[] = [
     module: 6,
     question: "Which algorithm merges two sorted ranges into a single sorted range stored in-place when the ranges are adjacent?",
     options: [
-      "std::merge",
-      "std::inplace_merge",
-      "std::set_union",
-      "std::copy"
+      "`std::merge`",
+      "`std::inplace_merge`",
+      "`std::set_union`",
+      "`std::copy`"
     ],
     correct: [1],
     explanation: "inplace_merge merges two consecutive sorted subranges in-place. merge writes to a separate output range."
@@ -3843,10 +3844,10 @@ export const QuestionBank: Question[] = [
     module: 6,
     question: "Which algorithm computes the union of two sorted ranges treating them as sets (or multisets)?",
     options: [
-      "std::set_union",
-      "std::merge",
-      "std::includes",
-      "std::set_difference"
+      "`std::set_union`",
+      "`std::merge`",
+      "`std::includes`",
+      "`std::set_difference`"
     ],
     correct: [0],
     explanation: "set_union computes the union of elements from both ranges according to multiset semantics."
@@ -3855,7 +3856,7 @@ export const QuestionBank: Question[] = [
     id: 272,
     type: "multiple",
     module: 6,
-    question: "Which statements about std::set_intersection are correct?",
+    question: "Which statements about `std::set_intersection` are correct?",
     options: [
       "It requires both input ranges to be sorted",
       "It writes common elements into an output range",
@@ -3871,10 +3872,10 @@ export const QuestionBank: Question[] = [
     module: 6,
     question: "Which algorithm checks whether every element of one sorted range is contained in another sorted range?",
     options: [
-      "std::set_union",
-      "std::includes",
-      "std::set_difference",
-      "std::set_symmetric_difference"
+      "`std::set_union`",
+      "`std::includes`",
+      "`std::set_difference`",
+      "`std::set_symmetric_difference`"
     ],
     correct: [1],
     explanation: "includes returns true if the second range is a subset of the first when both are sorted under the same comparator."
@@ -3885,10 +3886,10 @@ export const QuestionBank: Question[] = [
     module: 6,
     question: "Which algorithm computes elements that belong to exactly one of the two sorted ranges (but not both)?",
     options: [
-      "std::set_difference",
-      "std::set_intersection",
-      "std::set_symmetric_difference",
-      "std::merge"
+      "`std::set_difference`",
+      "`std::set_intersection`",
+      "`std::set_symmetric_difference`",
+      "`std::merge`"
     ],
     correct: [2],
     explanation: "set_symmetric_difference yields elements that are present in one range or the other, but not both."
@@ -3897,7 +3898,7 @@ export const QuestionBank: Question[] = [
     id: 275,
     type: "multiple",
     module: 6,
-    question: "Which statements about std::merge are correct?",
+    question: "Which statements about `std::merge` are correct?",
     options: [
       "It preserves the relative order of equivalent elements from each range",
       "It runs in linear time O(n + m)",
@@ -3913,10 +3914,10 @@ export const QuestionBank: Question[] = [
     module: 6,
     question: "Which standard algorithm would you use to transform a range into a max-heap?",
     options: [
-      "std::make_heap",
-      "std::push_heap",
-      "std::pop_heap",
-      "std::sort_heap"
+      "`std::make_heap`",
+      "`std::push_heap`",
+      "`std::pop_heap`",
+      "`std::sort_heap`"
     ],
     correct: [0],
     explanation: "make_heap rearranges the elements of a range so that they form a max-heap."
@@ -3925,7 +3926,7 @@ export const QuestionBank: Question[] = [
     id: 277,
     type: "single",
     module: 6,
-    question: "After calling std::pop_heap on a heap range [first, last), where is the largest element placed?",
+    question: "After calling `std::pop_heap` on a heap range [first, last), where is the largest element placed?",
     options: [
       "At position first",
       "At position last - 1",
@@ -3941,10 +3942,10 @@ export const QuestionBank: Question[] = [
     module: 6,
     question: "Which algorithm can be used to sort a heap range into ascending order?",
     options: [
-      "std::sort",
-      "std::sort_heap",
-      "std::make_heap",
-      "std::next_permutation"
+      "`std::sort`",
+      "`std::sort_heap`",
+      "`std::make_heap`",
+      "`std::next_permutation`"
     ],
     correct: [1],
     explanation: "sort_heap assumes the range is a heap and sorts it into ascending order."
@@ -3953,7 +3954,7 @@ export const QuestionBank: Question[] = [
     id: 279,
     type: "multiple",
     module: 6,
-    question: "Which statements about std::minmax_element are correct?",
+    question: "Which statements about `std::minmax_element` are correct?",
     options: [
       "It finds both the minimum and maximum elements in a single pass",
       "It returns a pair of iterators",
@@ -3969,10 +3970,10 @@ export const QuestionBank: Question[] = [
     module: 6,
     question: "Which algorithm computes A − B for two sorted ranges A and B (elements in A that are not in B)?",
     options: [
-      "std::set_difference",
-      "std::set_union",
-      "std::set_intersection",
-      "std::set_symmetric_difference"
+      "`std::set_difference`",
+      "`std::set_union`",
+      "`std::set_intersection`",
+      "`std::set_symmetric_difference`"
     ],
     correct: [0],
     explanation: "set_difference produces elements present in the first sorted range but not in the second."
@@ -3983,10 +3984,10 @@ export const QuestionBank: Question[] = [
     module: 6,
     question: "Which algorithm would you use to test if a given range already satisfies the heap property?",
     options: [
-      "std::is_heap",
-      "std::is_sorted",
-      "std::is_partitioned",
-      "std::is_permutation"
+      "`std::is_heap`",
+      "`std::is_sorted`",
+      "`std::is_partitioned`",
+      "`std::is_permutation`"
     ],
     correct: [0],
     explanation: "is_heap returns true if the range conforms to the heap property under the default or provided comparator."
@@ -4011,7 +4012,7 @@ export const QuestionBank: Question[] = [
     id: 283,
     type: "single",
     module: 7,
-    question: "What is std::function primarily used for?",
+    question: "What is `std::function` primarily used for?",
     options: [
       "Defining compile-time constants",
       "Type-erased storage and invocation of callables",
@@ -4025,7 +4026,7 @@ export const QuestionBank: Question[] = [
     id: 284,
     type: "single",
     module: 7,
-    question: "Which header must you include to use std::function and std::bind?",
+    question: "Which header must you include to use `std::function` and `std::bind`?",
     options: [
       "<utility>",
       "<functional>",
@@ -4033,7 +4034,7 @@ export const QuestionBank: Question[] = [
       "<memory>"
     ],
     correct: [1],
-    explanation: "Both std::function and std::bind are declared in the <functional> header."
+    explanation: "Both `std::function` and `std::bind` are declared in the <functional> header."
   },
   {
     id: 285,
@@ -4067,21 +4068,21 @@ export const QuestionBank: Question[] = [
     id: 287,
     type: "single",
     module: 7,
-    question: "In modern C++, what is usually preferred for simple function objects over std::bind?",
+    question: "In modern C++, what is usually preferred for simple function objects over `std::bind`?",
     options: [
-      "std::mem_fun",
+      "`std::mem_fun`",
       "Lambda expressions",
-      "std::bind1st",
-      "std::not1"
+      "`std::bind1st`",
+      "`std::not1`"
     ],
     correct: [1],
-    explanation: "Lambdas are generally clearer, safer, and more efficient than std::bind for most use cases."
+    explanation: "Lambdas are generally clearer, safer, and more efficient than `std::bind` for most use cases."
   },
   {
     id: 288,
     type: "multiple",
     module: 7,
-    question: "Which statements about std::bind are correct?",
+    question: "Which statements about `std::bind` are correct?",
     options: [
       "It can reorder arguments using placeholders",
       "It can bind some arguments while leaving others unbound",
@@ -4111,10 +4112,10 @@ export const QuestionBank: Question[] = [
     module: 7,
     question: "Which functor from <functional> represents logical AND on boolean values?",
     options: [
-      "std::logical_and",
-      "std::logical_or",
-      "std::bit_and",
-      "std::plus"
+      "`std::logical_and`",
+      "`std::logical_or`",
+      "`std::bit_and`",
+      "`std::plus`"
     ],
     correct: [0],
     explanation: "logical_and performs short-circuiting logical conjunction; bit_and operates on bits."
@@ -4125,10 +4126,10 @@ export const QuestionBank: Question[] = [
     module: 7,
     question: "Which utility allows you to call a member function pointer as if it were a regular function object?",
     options: [
-      "std::mem_fn",
-      "std::bind1st",
-      "std::ptr_fun",
-      "std::not1"
+      "`std::mem_fn`",
+      "`std::bind1st`",
+      "`std::ptr_fun`",
+      "`std::not1`"
     ],
     correct: [0],
     explanation: "mem_fn wraps a pointer-to-member so that it can be called with an object or pointer to object like a regular callable."
@@ -4137,7 +4138,7 @@ export const QuestionBank: Question[] = [
     id: 292,
     type: "multiple",
     module: 7,
-    question: "Which statements about std::reference_wrapper are correct?",
+    question: "Which statements about `std::reference_wrapper` are correct?",
     options: [
       "It can be stored in standard containers",
       "It can be used to simulate containers of references",
@@ -4151,7 +4152,7 @@ export const QuestionBank: Question[] = [
     id: 293,
     type: "single",
     module: 7,
-    question: "Which is a disadvantage of std::function compared to a templated callable parameter?",
+    question: "Which is a disadvantage of `std::function` compared to a templated callable parameter?",
     options: [
       "It cannot store lambdas",
       "It incurs runtime overhead due to type erasure",
@@ -4165,7 +4166,7 @@ export const QuestionBank: Question[] = [
     id: 294,
     type: "single",
     module: 7,
-    question: "Which placeholder would you use in std::bind to represent the second argument of the resulting callable?",
+    question: "Which placeholder would you use in `std::bind` to represent the second argument of the resulting callable?",
     options: [
       "std::placeholders::_1",
       "std::placeholders::_2",
@@ -4181,10 +4182,10 @@ export const QuestionBank: Question[] = [
     module: 7,
     question: "Which functional object template computes the sum of two values?",
     options: [
-      "std::minus",
-      "std::plus",
-      "std::multiplies",
-      "std::divides"
+      "`std::minus`",
+      "`std::plus`",
+      "`std::multiplies`",
+      "`std::divides`"
     ],
     correct: [1],
     explanation: "plus<T> implements operator+ for its operands."
@@ -4193,7 +4194,7 @@ export const QuestionBank: Question[] = [
     id: 296,
     type: "single",
     module: 7,
-    question: "Which header provides std::hash for hashing standard types?",
+    question: "Which header provides `std::hash` for hashing standard types?",
     options: [
       "<functional>",
       "<algorithm>",
@@ -4211,10 +4212,10 @@ export const QuestionBank: Question[] = [
     module: 8,
     question: "Which manipulator prints boolean values as 'true' or 'false' instead of '1' or '0'?",
     options: [
-      "std::boolalpha",
-      "std::showpos",
-      "std::showbase",
-      "std::fixed"
+      "`std::boolalpha`",
+      "`std::showpos`",
+      "`std::showbase`",
+      "`std::fixed`"
     ],
     correct: [0],
     explanation: "boolalpha switches the stream to textual representation of bool values."
@@ -4225,13 +4226,13 @@ export const QuestionBank: Question[] = [
     module: 8,
     question: "Which ios flag do you use to open a file for appending output at the end?",
     options: [
-      "std::ios::in",
-      "std::ios::out",
-      "std::ios::app",
-      "std::ios::trunc"
+      "`std::ios::in`",
+      "`std::ios::out`",
+      "`std::ios::app`",
+      "`std::ios::trunc`"
     ],
     correct: [2],
-    explanation: "app opens a file in append mode so that writes always go to the end."
+    explanation: "`app` opens a file in append mode so that writes always go to the end."
   },
   {
     id: 299,
@@ -4239,10 +4240,10 @@ export const QuestionBank: Question[] = [
     module: 8,
     question: "Which statements about stream state flags are correct?",
     options: [
-      "fail() indicates a logical input/output error",
-      "bad() indicates a serious error such as loss of integrity",
-      "eof() indicates that end-of-file has been reached",
-      "good() is true if no error flags are set"
+      "`fail()` indicates a logical input/output error",
+      "`bad()` indicates a serious error such as loss of integrity",
+      "`eof()` indicates that end-of-file has been reached",
+      "`good()` is true if no error flags are set"
     ],
     correct: [0, 1, 2, 3],
     explanation: "These functions query different aspects of stream state; good() is true only when none of the error flags (fail, bad, eof) are set."
@@ -4253,10 +4254,10 @@ export const QuestionBank: Question[] = [
     module: 8,
     question: "Which manipulator forces a plus sign to be shown for positive numbers?",
     options: [
-      "std::showbase",
-      "std::showpos",
-      "std::uppercase",
-      "std::boolalpha"
+      "`std::showbase`",
+      "`std::showpos`",
+      "`std::uppercase`",
+      "`std::boolalpha`"
     ],
     correct: [1],
     explanation: "showpos requests that a leading + be shown for positive numbers."
@@ -4265,7 +4266,7 @@ export const QuestionBank: Question[] = [
     id: 301,
     type: "single",
     module: 8,
-    question: "Which header must you include to use std::ostringstream and std::istringstream?",
+    question: "Which header must you include to use `std::ostringstream` and `std::istringstream`?",
     options: [
       "<iostream>",
       "<fstream>",
@@ -4279,7 +4280,7 @@ export const QuestionBank: Question[] = [
     id: 302,
     type: "single",
     module: 8,
-    question: "What is the typical effect of calling std::flush on an output stream?",
+    question: "What is the typical effect of calling `std::flush` on an output stream?",
     options: [
       "It clears any error flags",
       "It discards the output buffer",
@@ -4293,7 +4294,7 @@ export const QuestionBank: Question[] = [
     id: 303,
     type: "multiple",
     module: 8,
-    question: "Which statements about std::getline are correct?",
+    question: "Which statements about `std::getline` are correct?",
     options: [
       "It reads characters up to a delimiter",
       "By default, the delimiter is '\n'",
@@ -4323,10 +4324,10 @@ export const QuestionBank: Question[] = [
     module: 8,
     question: "Which manipulator changes the base used for integer output to hexadecimal?",
     options: [
-      "std::dec",
-      "std::hex",
-      "std::oct",
-      "std::fixed"
+      "`std::dec`",
+      "`std::hex`",
+      "`std::oct`",
+      "`std::fixed`"
     ],
     correct: [1],
     explanation: "hex switches the integer base to hexadecimal for subsequent outputs."
@@ -4363,7 +4364,7 @@ export const QuestionBank: Question[] = [
     id: 308,
     type: "single",
     module: 8,
-    question: "What happens if an extraction operation (operator>>) fails to read the expected type from a stream?",
+    question: "What happens if an extraction operation (`operator>>`) fails to read the expected type from a stream?",
     options: [
       "The stream closes automatically",
       "The failbit is set on the stream",
@@ -4379,10 +4380,10 @@ export const QuestionBank: Question[] = [
     module: 8,
     question: "Which manipulator prints floating-point values in scientific notation?",
     options: [
-      "std::fixed",
-      "std::scientific",
-      "std::hexfloat",
-      "std::showpos"
+      "`std::fixed`",
+      "`std::scientific`",
+      "`std::hexfloat`",
+      "`std::showpos`"
     ],
     correct: [1],
     explanation: "scientific switches floating-point formatting to exponential notation like 1.23e+03."
